@@ -783,10 +783,11 @@ class TestSavedModelFormatAllModes(keras_parameterized.TestCase):
                         predictions)
 
   @parameterized.named_parameters([
-      ('with_unrolling', True),
-      ('no_unrolling', False)
+      ('with_unrolling', True, False),
+      ('no_unrolling', False, False),
+      ('with_unrolling_and_wrapper', True, False),
   ])
-  def testSaveStatefulRNN(self, unroll):
+  def testSaveStatefulRNN(self, unroll, wrapper_layer):
     batch = 12
     timesteps = 10
     input_dim = 8
@@ -798,6 +799,8 @@ class TestSavedModelFormatAllModes(keras_parameterized.TestCase):
     else:
       x = keras.Input(batch_shape=(batch, None, input_dim))
     layer = keras.layers.RNN(cells, stateful=True, unroll=unroll)
+    if wrapper_layer:
+      layer = keras.layers.Bidirectional(layer)
     y = layer(x)
 
     model = keras.Model(x, y)
