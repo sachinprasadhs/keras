@@ -72,9 +72,9 @@ def np_conv1d(
             x_in.strides[2],
         )
         inner_dim = kernel_size * ch_in
-        x_strided = as_strided(
-            x_in, shape=stride_shape, strides=strides
-        ).reshape(n_batch, h_out, inner_dim)
+        x_strided = as_strided(x_in, shape=stride_shape, strides=strides).reshape(
+            n_batch, h_out, inner_dim
+        )
         ch_out_groups = ch_out // groups
         kernel_weights_grp = kernel_weights[
             ..., (grp - 1) * ch_out_groups : grp * ch_out_groups
@@ -151,9 +151,9 @@ def np_conv2d(
             x_in.strides[3],
         )
         inner_dim = h_kernel * w_kernel * ch_in
-        x_strided = as_strided(
-            x_in, shape=stride_shape, strides=strides
-        ).reshape(-1, inner_dim)
+        x_strided = as_strided(x_in, shape=stride_shape, strides=strides).reshape(
+            -1, inner_dim
+        )
         ch_out_groups = ch_out // groups
         kernel_weights_grp = kernel_weights[
             ..., (grp - 1) * ch_out_groups : grp * ch_out_groups
@@ -162,9 +162,7 @@ def np_conv2d(
             ..., (grp - 1) * ch_out_groups : grp * ch_out_groups
         ]
         out_grps.append(x_strided @ kernel_weights_grp + bias_weights_grp)
-    out = np.concatenate(out_grps, axis=-1).reshape(
-        n_batch, h_out, w_out, ch_out
-    )
+    out = np.concatenate(out_grps, axis=-1).reshape(n_batch, h_out, w_out, ch_out)
     if data_format == "channels_first":
         out = out.transpose((0, 3, 1, 2))
     return out
@@ -206,9 +204,7 @@ def np_conv3d(
             (*new_kenel_size_tuple, ch_in, ch_out),
             dtype=kernel_weights.dtype,
         )
-        new_kernel_weights[::h_dilation, ::w_dilation, ::d_dilation] = (
-            kernel_weights
-        )
+        new_kernel_weights[::h_dilation, ::w_dilation, ::d_dilation] = kernel_weights
         kernel_weights = new_kernel_weights
         h_kernel, w_kernel, d_kernel = kernel_weights.shape[:3]
 
@@ -252,9 +248,9 @@ def np_conv3d(
             x_in.strides[4],
         )
         inner_dim = h_kernel * w_kernel * d_kernel * ch_in
-        x_strided = as_strided(
-            x_in, shape=stride_shape, strides=strides
-        ).reshape(-1, inner_dim)
+        x_strided = as_strided(x_in, shape=stride_shape, strides=strides).reshape(
+            -1, inner_dim
+        )
         ch_out_groups = ch_out // groups
         kernel_weights_grp = kernel_weights[
             ..., (grp - 1) * ch_out_groups : grp * ch_out_groups
@@ -525,8 +521,7 @@ class ConvBasicTest(testing.TestCase, parameterized.TestCase):
         # `groups` is not strictly positive.
         with self.assertRaisesRegex(
             ValueError,
-            "The number of groups must be a positive integer. "
-            "Received: groups=0.",
+            "The number of groups must be a positive integer. " "Received: groups=0.",
         ):
             layers.Conv2D(filters=5, kernel_size=(2, 2), groups=0)
 

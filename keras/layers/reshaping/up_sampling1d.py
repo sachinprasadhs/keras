@@ -47,9 +47,7 @@ class UpSampling1D(Layer):
         self.input_spec = InputSpec(ndim=3)
 
     def compute_output_shape(self, input_shape):
-        size = (
-            self.size * input_shape[1] if input_shape[1] is not None else None
-        )
+        size = self.size * input_shape[1] if input_shape[1] is not None else None
         return [input_shape[0], size, input_shape[2]]
 
     def call(self, inputs):

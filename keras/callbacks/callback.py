@@ -75,9 +75,7 @@ class Callback:
 
     @property
     def model(self):
-        if backend.backend() == "jax" and hasattr(
-            self._model, "jax_state_sync"
-        ):
+        if backend.backend() == "jax" and hasattr(self._model, "jax_state_sync"):
             # With JAX, by default the model state is not
             # attached to the model in the middle of an
             # epoch. We have to force a sync before

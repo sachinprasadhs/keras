@@ -30,9 +30,7 @@ def normal(shape, mean=0.0, stddev=1.0, dtype=None, seed=None):
     dtype = to_torch_dtype(dtype)
     # Do not use generator during symbolic execution.
     if get_device() == "meta":
-        return torch.normal(
-            mean, stddev, size=shape, dtype=dtype, device=get_device()
-        )
+        return torch.normal(mean, stddev, size=shape, dtype=dtype, device=get_device())
     generator = torch_seed_generator(seed)
     return torch.normal(
         mean,
@@ -142,9 +140,7 @@ def dropout(inputs, rate, noise_shape=None, seed=None):
     ):
         keep_prob = 1.0 - rate
         noise_shape = _get_concrete_noise_shape(inputs, noise_shape)
-        keep_prob_matrix = torch.full(
-            noise_shape, keep_prob, device=get_device()
-        )
+        keep_prob_matrix = torch.full(noise_shape, keep_prob, device=get_device())
         generator = torch_seed_generator(seed)
 
         # Do not use generator during symbolic execution.
@@ -162,9 +158,7 @@ def dropout(inputs, rate, noise_shape=None, seed=None):
         )
     # Fast path, unseeded (since torch doesn't support seeding dropout!!!!)
     # Using the above implementation is possible, but much slower.
-    return torch.nn.functional.dropout(
-        inputs, p=rate, training=True, inplace=False
-    )
+    return torch.nn.functional.dropout(inputs, p=rate, training=True, inplace=False)
 
 
 def shuffle(x, axis=0, seed=None):
@@ -174,9 +168,7 @@ def shuffle(x, axis=0, seed=None):
     # Get permutation indices
     # Do not use generator during symbolic execution.
     if get_device() == "meta":
-        row_perm = torch.rand(x.shape[: axis + 1], device=get_device()).argsort(
-            axis
-        )
+        row_perm = torch.rand(x.shape[: axis + 1], device=get_device()).argsort(axis)
     else:
         generator = torch_seed_generator(seed)
         row_perm = torch.rand(
@@ -186,9 +178,7 @@ def shuffle(x, axis=0, seed=None):
         row_perm.unsqueeze_(-1)
 
     # Reformat this for the gather operation
-    row_perm = row_perm.repeat(
-        *[1 for _ in range(axis + 1)], *(x.shape[axis + 1 :])
-    )
+    row_perm = row_perm.repeat(*[1 for _ in range(axis + 1)], *(x.shape[axis + 1 :]))
     return x.gather(axis, row_perm)
 
 

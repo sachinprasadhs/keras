@@ -40,9 +40,7 @@ ALL_OBJECTS = {
 }
 
 ALL_OBJECTS_DICT = {cls.__name__: cls for cls in ALL_OBJECTS}
-ALL_OBJECTS_DICT.update(
-    {to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS}
-)
+ALL_OBJECTS_DICT.update({to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS})
 # Aliases
 ALL_OBJECTS_DICT.update(
     {
@@ -115,6 +113,4 @@ def get(identifier):
             obj = obj()
         return obj
     else:
-        raise ValueError(
-            f"Could not interpret initializer identifier: {identifier}"
-        )
+        raise ValueError(f"Could not interpret initializer identifier: {identifier}")

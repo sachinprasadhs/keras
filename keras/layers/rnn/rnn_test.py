@@ -172,9 +172,7 @@ class RNNTest(testing.TestCase):
         self.assertEqual(output_shape[0], (3, 8))
         self.assertEqual(output_shape[1], (3, 8))
 
-        layer = layers.RNN(
-            OneStateRNNCell(8), return_sequences=True, return_state=True
-        )
+        layer = layers.RNN(OneStateRNNCell(8), return_sequences=True, return_state=True)
         output_shape = layer.compute_output_shape(sequence.shape)
         self.assertEqual(output_shape[0], (3, 4, 8))
         self.assertEqual(output_shape[1], (3, 8))
@@ -222,9 +220,7 @@ class RNNTest(testing.TestCase):
         self.assertEqual(output_shape[0], (None, 8))
         self.assertEqual(output_shape[1], (None, 8))
 
-        layer = layers.RNN(
-            OneStateRNNCell(8), return_sequences=True, return_state=True
-        )
+        layer = layers.RNN(OneStateRNNCell(8), return_sequences=True, return_state=True)
         output_shape = layer.compute_output_shape(sequence_shape)
         self.assertEqual(output_shape[0], (None, None, 8))
         self.assertEqual(output_shape[1], (None, 8))
@@ -270,9 +266,7 @@ class RNNTest(testing.TestCase):
         self.assertAllClose(np.array([[9.0, 9.0]]), output)
         self.assertAllClose(np.array([[9.0, 9.0]]), state)
 
-        layer = layers.RNN(
-            OneStateRNNCell(2), return_sequences=True, return_state=True
-        )
+        layer = layers.RNN(OneStateRNNCell(2), return_sequences=True, return_state=True)
         output, state = layer(sequence)
         self.assertAllClose(np.array([[[3.0, 3.0], [9.0, 9.0]]]), output)
         self.assertAllClose(np.array([[9.0, 9.0]]), state)
@@ -352,9 +346,7 @@ class RNNTest(testing.TestCase):
         output = layer(sequence)
         self.assertAllClose(np.array([[90.0, 90.0]]), output)
 
-        layer = layers.RNN(
-            TwoStatesRNNCell(2), stateful=True, return_state=True
-        )
+        layer = layers.RNN(TwoStatesRNNCell(2), stateful=True, return_state=True)
         layer(sequence)
         output, state_1, state_2 = layer(sequence)
         self.assertAllClose(np.array([[90.0, 90.0]]), output)
@@ -371,9 +363,7 @@ class RNNTest(testing.TestCase):
         layer = layers.RNN(OneStateRNNCell(2), stateful=True, return_state=True)
         layer(sequence)
         output, state = layer(sequence)
-        self.assertAllClose(
-            np.array([[954.0, 954.0], [3978.0, 3978.0]]), output
-        )
+        self.assertAllClose(np.array([[954.0, 954.0], [3978.0, 3978.0]]), output)
         self.assertAllClose(np.array([[954.0, 954.0], [3978.0, 3978.0]]), state)
 
     def test_serialization(self):

@@ -49,12 +49,8 @@ class AdditiveAttentionTest(testing.TestCase):
             [query, value, key],
             return_attention_scores=True,
         )
-        self.assertAllClose(
-            output, [[[1.727, 2.727], [2.272, 3.272]]], atol=1e-3
-        )
-        self.assertAllClose(
-            scores, [[[0.636, 0.363], [0.363, 0.636]]], atol=1e-3
-        )
+        self.assertAllClose(output, [[[1.727, 2.727], [2.272, 3.272]]], atol=1e-3)
+        self.assertAllClose(scores, [[[0.636, 0.363], [0.363, 0.636]]], atol=1e-3)
 
     def test_attention_with_mask(self):
         layer = layers.AdditiveAttention(use_scale=False)

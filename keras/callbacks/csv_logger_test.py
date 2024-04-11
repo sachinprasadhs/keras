@@ -122,9 +122,7 @@ class CSVLoggerTest(testing.TestCase):
             for idx, row in enumerate(rows, 1):
                 self.assertIn("val_loss", row)
                 if idx == 3:
-                    self.assertEqual(
-                        row["val_loss"], str(hist.history["val_loss"][0])
-                    )
+                    self.assertEqual(row["val_loss"], str(hist.history["val_loss"][0]))
                 else:
                     self.assertEqual(row["val_loss"], "NA")
 

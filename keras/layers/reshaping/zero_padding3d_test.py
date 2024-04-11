@@ -46,9 +46,7 @@ class ZeroPadding3DTest(testing.TestCase, parameterized.TestCase):
     )
     def test_zero_padding_3d_with_same_padding(self, padding, data_format):
         inputs = np.random.rand(1, 2, 3, 4, 5)
-        outputs = layers.ZeroPadding3D(
-            padding=padding, data_format=data_format
-        )(inputs)
+        outputs = layers.ZeroPadding3D(padding=padding, data_format=data_format)(inputs)
 
         if data_format == "channels_first":
             for index in [0, 1, -1, -2]:

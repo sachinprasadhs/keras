@@ -104,9 +104,7 @@ class TFLayer(KerasAutoTrackable):
             shapes_dict = self._build_shapes_dict
             if len(shapes_dict) == 1:
                 input_shape = tuple(shapes_dict.values())[0]
-                input_signature = [
-                    tf.TensorSpec(input_shape, self.compute_dtype)
-                ]
+                input_signature = [tf.TensorSpec(input_shape, self.compute_dtype)]
             else:
                 input_signature = [
                     tree.map_structure(

@@ -24,9 +24,7 @@ def ResNet50V2(
         x = resnet.stack_residual_blocks_v2(x, 64, 3, name="conv2")
         x = resnet.stack_residual_blocks_v2(x, 128, 4, name="conv3")
         x = resnet.stack_residual_blocks_v2(x, 256, 6, name="conv4")
-        return resnet.stack_residual_blocks_v2(
-            x, 512, 3, stride1=1, name="conv5"
-        )
+        return resnet.stack_residual_blocks_v2(x, 512, 3, stride1=1, name="conv5")
 
     return resnet.ResNet(
         stack_fn,
@@ -64,9 +62,7 @@ def ResNet101V2(
         x = resnet.stack_residual_blocks_v2(x, 64, 3, name="conv2")
         x = resnet.stack_residual_blocks_v2(x, 128, 4, name="conv3")
         x = resnet.stack_residual_blocks_v2(x, 256, 23, name="conv4")
-        return resnet.stack_residual_blocks_v2(
-            x, 512, 3, stride1=1, name="conv5"
-        )
+        return resnet.stack_residual_blocks_v2(x, 512, 3, stride1=1, name="conv5")
 
     return resnet.ResNet(
         stack_fn,
@@ -104,9 +100,7 @@ def ResNet152V2(
         x = resnet.stack_residual_blocks_v2(x, 64, 3, name="conv2")
         x = resnet.stack_residual_blocks_v2(x, 128, 8, name="conv3")
         x = resnet.stack_residual_blocks_v2(x, 256, 36, name="conv4")
-        return resnet.stack_residual_blocks_v2(
-            x, 512, 3, stride1=1, name="conv5"
-        )
+        return resnet.stack_residual_blocks_v2(x, 512, 3, stride1=1, name="conv5")
 
     return resnet.ResNet(
         stack_fn,
@@ -125,9 +119,7 @@ def ResNet152V2(
 
 @keras_export("keras.applications.resnet_v2.preprocess_input")
 def preprocess_input(x, data_format=None):
-    return imagenet_utils.preprocess_input(
-        x, data_format=data_format, mode="tf"
-    )
+    return imagenet_utils.preprocess_input(x, data_format=data_format, mode="tf")
 
 
 @keras_export("keras.applications.resnet_v2.decode_predictions")

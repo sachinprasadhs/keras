@@ -54,9 +54,7 @@ class JaxDistributionLibTest(testing.TestCase):
         )
 
     def test_initialize_validate_job_and_process(self):
-        with self.assertRaisesRegex(
-            ValueError, "has 2 jobs, but num_processes is 3"
-        ):
+        with self.assertRaisesRegex(ValueError, "has 2 jobs, but num_processes is 3"):
             backend_dlib.initialize("10.0.0.1:1234,10.0.0.2:2345", 3, 0)
 
     @mock.patch.object(jax.distributed, "initialize", return_value=None)
@@ -173,9 +171,7 @@ class JaxDistributionLibTest(testing.TestCase):
             shape, axis_names, backend_dlib.list_devices()
         )
         layout_map = distribution_lib.LayoutMap(device_mesh)
-        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout(
-            [None, "model"]
-        )
+        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout([None, "model"])
         layout_map[".*dense.*bias"] = distribution_lib.TensorLayout(["model"])
 
         distribution = distribution_lib.ModelParallel(
@@ -186,9 +182,7 @@ class JaxDistributionLibTest(testing.TestCase):
             dense_layer = layers.Dense(8)
             dense_layer.build((16, 16))
 
-        self.assertEqual(
-            dense_layer.kernel._value.sharding.spec, (None, "model")
-        )
+        self.assertEqual(dense_layer.kernel._value.sharding.spec, (None, "model"))
         self.assertEqual(dense_layer.bias._value.sharding.spec, ("model",))
 
         # Assign a numpy value to dense layer to mimic the model weight loading
@@ -199,9 +193,7 @@ class JaxDistributionLibTest(testing.TestCase):
 
         # Make sure the loaded value still use the layout when it is
         # initialized, even outside of the distribution scope.
-        self.assertEqual(
-            dense_layer.kernel._value.sharding.spec, (None, "model")
-        )
+        self.assertEqual(dense_layer.kernel._value.sharding.spec, (None, "model"))
         self.assertEqual(dense_layer.bias._value.sharding.spec, ("model",))
 
     def test_e2e_data_parallel_model(self):
@@ -236,9 +228,7 @@ class JaxDistributionLibTest(testing.TestCase):
         )
 
         layout_map = distribution_lib.LayoutMap(device_mesh)
-        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout(
-            [None, "model"]
-        )
+        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout([None, "model"])
         layout_map[".*dense.*bias"] = distribution_lib.TensorLayout(["model"])
 
         distribution = distribution_lib.ModelParallel(
@@ -275,9 +265,7 @@ class JaxDistributionLibTest(testing.TestCase):
         )
 
         layout_map = distribution_lib.LayoutMap(device_mesh)
-        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout(
-            [None, "model"]
-        )
+        layout_map[".*dense.*kernel"] = distribution_lib.TensorLayout([None, "model"])
         layout_map[".*dense.*bias"] = distribution_lib.TensorLayout(["model"])
         # Force the dense layer output to be batch parallel only, and not
         # sharded on model dimension.

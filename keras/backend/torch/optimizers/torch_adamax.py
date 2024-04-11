@@ -5,9 +5,7 @@ from keras import optimizers
 from keras.backend.torch.optimizers import torch_parallel_optimizer
 
 
-class Adamax(
-    torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adamax
-):
+class Adamax(torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adamax):
     def _parallel_update_step(
         self,
         grads,

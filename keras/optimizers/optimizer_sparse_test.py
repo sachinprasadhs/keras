@@ -18,8 +18,7 @@ class ScatterUpdateOptimizer(optimizers.Optimizer):
             return
         super().build(variables)
         self.momentums = [
-            self.add_variable_from_reference(v, name="momentum")
-            for v in variables
+            self.add_variable_from_reference(v, name="momentum") for v in variables
         ]
 
     def update_step(self, grad, variable, learning_rate):
@@ -239,9 +238,7 @@ class OptimizerSparseTest(testing.TestCase, parameterized.TestCase):
         )
 
     @parameterized.named_parameters(TEST_CASES)
-    def test_sparse_correctness(
-        self, optimizer_class, init_kwargs={}, **kwargs
-    ):
+    def test_sparse_correctness(self, optimizer_class, init_kwargs={}, **kwargs):
         # This test verifies that applying a sparse gradient gives the same
         # numerical results as the same dense gradient.
 
@@ -276,9 +273,7 @@ class OptimizerSparseTest(testing.TestCase, parameterized.TestCase):
                     shape=(5, 3, 2),
                 )
             else:
-                self.fail(
-                    f"Sparse is unsupported with backend {backend.backend()}"
-                )
+                self.fail(f"Sparse is unsupported with backend {backend.backend()}")
 
             grad_dense = ops.convert_to_tensor(grad_sparse, sparse=False)
             if stateless:

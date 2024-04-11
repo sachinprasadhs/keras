@@ -191,8 +191,7 @@ class RNN(Layer):
             cell = StackedRNNCells(cell)
         if "call" not in dir(cell):
             raise ValueError(
-                "Argument `cell` should have a `call` method. "
-                f"Received: cell={cell}"
+                "Argument `cell` should have a `call` method. " f"Received: cell={cell}"
             )
         if "state_size" not in dir(cell):
             raise ValueError(
@@ -391,17 +390,13 @@ class RNN(Layer):
         # Note that states may be deeply nested
         # (e.g. in the stacked cells case).
         initial_state = tree.map_structure(
-            lambda x: backend.convert_to_tensor(
-                x, dtype=self.cell.compute_dtype
-            ),
+            lambda x: backend.convert_to_tensor(x, dtype=self.cell.compute_dtype),
             initial_state,
         )
 
         # Prepopulate the dropout state so that the inner_loop is stateless
         # this is particularly important for JAX backend.
-        self._maybe_config_dropout_masks(
-            self.cell, sequences[:, 0, :], initial_state
-        )
+        self._maybe_config_dropout_masks(self.cell, sequences[:, 0, :], initial_state)
 
         last_output, outputs, states = self.inner_loop(
             sequences=sequences,
@@ -436,9 +431,7 @@ class RNN(Layer):
 
     def _maybe_config_dropout_masks(self, cell, input_sequence, input_state):
         state = (
-            input_state[0]
-            if isinstance(input_state, (list, tuple))
-            else input_state
+            input_state[0] if isinstance(input_state, (list, tuple)) else input_state
         )
         if isinstance(cell, DropoutRNNCell):
             cell.get_dropout_mask(input_sequence)

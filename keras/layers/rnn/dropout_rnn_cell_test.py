@@ -8,9 +8,7 @@ from keras.layers.rnn.dropout_rnn_cell import DropoutRNNCell
 
 
 class RNNCellWithDropout(layers.Layer, DropoutRNNCell):
-    def __init__(
-        self, units, dropout=0.5, recurrent_dropout=0.5, seed=None, **kwargs
-    ):
+    def __init__(self, units, dropout=0.5, recurrent_dropout=0.5, seed=None, **kwargs):
         super().__init__(**kwargs)
         self.seed = seed
         self.seed_generator = backend.random.SeedGenerator(seed)
@@ -77,9 +75,7 @@ class DropoutRNNCellTest(testing.TestCase):
             self.run_layer_test(
                 layers.RNN,
                 init_kwargs={
-                    "cell": RNNCellWithDropout(
-                        5, seed=1337, dtype="mixed_float16"
-                    ),
+                    "cell": RNNCellWithDropout(5, seed=1337, dtype="mixed_float16"),
                     "dtype": "mixed_float16",
                 },
                 input_shape=(3, 2, 4),

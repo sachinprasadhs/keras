@@ -58,9 +58,7 @@ class TestObjectRegistration(testing.TestCase):
         self.assertEqual(10, new_inst._value)
 
     def test_serialize_custom_class_with_custom_name(self):
-        @object_registration.register_keras_serializable(
-            "TestPackage", "CustomName"
-        )
+        @object_registration.register_keras_serializable("TestPackage", "CustomName")
         class OtherTestClass:
             def __init__(self, val):
                 self._val = val
@@ -113,9 +111,7 @@ class TestObjectRegistration(testing.TestCase):
             "Cannot register a class that does not have a get_config.*",
         ):
 
-            @object_registration.register_keras_serializable(
-                "TestPackage", "TestClass"
-            )
+            @object_registration.register_keras_serializable("TestPackage", "TestClass")
             class TestClass:
                 def __init__(self, value):
                     self._value = value

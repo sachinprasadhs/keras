@@ -147,9 +147,7 @@ def get_dataset():
     x_train = x_train[:-num_val_samples]
     y_train = y_train[:-num_val_samples]
     return (
-        tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(
-            batch_size
-        ),
+        tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(batch_size),
         tf.data.Dataset.from_tensor_slices((x_val, y_val)).batch(batch_size),
         tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(batch_size),
     )
@@ -193,9 +191,7 @@ if not os.path.exists(checkpoint_dir):
 def make_or_restore_model():
     # Either restore the latest model, or create a fresh one
     # if there is no checkpoint available.
-    checkpoints = [
-        checkpoint_dir + "/" + name for name in os.listdir(checkpoint_dir)
-    ]
+    checkpoints = [checkpoint_dir + "/" + name for name in os.listdir(checkpoint_dir)]
     if checkpoints:
         latest_checkpoint = max(checkpoints, key=os.path.getctime)
         print("Restoring from", latest_checkpoint)

@@ -36,9 +36,7 @@ class ConstantInitializersTest(testing.TestCase):
         values = initializer(shape=shape)
         self.assertEqual(values.shape, shape)
         np_values = backend.convert_to_numpy(values)
-        self.assertAllClose(
-            np_values, np.full(shape=shape, fill_value=constant_value)
-        )
+        self.assertAllClose(np_values, np.full(shape=shape, fill_value=constant_value))
 
         self.run_class_serialization_test(initializer)
 
@@ -50,9 +48,7 @@ class ConstantInitializersTest(testing.TestCase):
         values = initializer(shape=shape)
         self.assertEqual(values.shape, shape)
         np_values = backend.convert_to_numpy(values)
-        self.assertAllClose(
-            np_values, np.full(shape=shape, fill_value=constant_value)
-        )
+        self.assertAllClose(np_values, np.full(shape=shape, fill_value=constant_value))
 
         self.run_class_serialization_test(initializer)
 

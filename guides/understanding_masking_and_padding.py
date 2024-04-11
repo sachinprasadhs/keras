@@ -173,9 +173,7 @@ to the `__call__` method of a mask-consuming layer, like this:
 class MyLayer(layers.Layer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.embedding = layers.Embedding(
-            input_dim=5000, output_dim=16, mask_zero=True
-        )
+        self.embedding = layers.Embedding(input_dim=5000, output_dim=16, mask_zero=True)
         self.lstm = layers.LSTM(32)
 
     def call(self, inputs):
@@ -184,9 +182,7 @@ class MyLayer(layers.Layer):
         # It only needs to be a boolean tensor
         # with the right shape, i.e. (batch_size, timesteps).
         mask = self.embedding.compute_mask(inputs)
-        output = self.lstm(
-            x, mask=mask
-        )  # The layer will ignore the masked values
+        output = self.lstm(x, mask=mask)  # The layer will ignore the masked values
         return output
 
 
@@ -346,9 +342,7 @@ class TemporalSoftmax(keras.layers.Layer):
         assert mask is not None
         broadcast_float_mask = ops.expand_dims(ops.cast(mask, "float32"), -1)
         inputs_exp = ops.exp(inputs) * broadcast_float_mask
-        inputs_sum = ops.sum(
-            inputs_exp * broadcast_float_mask, axis=-1, keepdims=True
-        )
+        inputs_sum = ops.sum(inputs_exp * broadcast_float_mask, axis=-1, keepdims=True)
         return inputs_exp / inputs_sum
 
 

@@ -76,9 +76,9 @@ class GlobalAveragePooling1D(BaseGlobalPooling):
                 mask, 2 if self.data_format == "channels_last" else 1
             )
             inputs *= mask
-            return ops.sum(
-                inputs, axis=steps_axis, keepdims=self.keepdims
-            ) / ops.sum(mask, axis=steps_axis, keepdims=self.keepdims)
+            return ops.sum(inputs, axis=steps_axis, keepdims=self.keepdims) / ops.sum(
+                mask, axis=steps_axis, keepdims=self.keepdims
+            )
         else:
             return ops.mean(inputs, axis=steps_axis, keepdims=self.keepdims)
 

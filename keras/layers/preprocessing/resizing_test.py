@@ -98,9 +98,7 @@ class ResizingTest(testing.TestCase, parameterized.TestCase):
             height=2, width=2, interpolation="nearest", data_format=data_format
         )(img)
         ref_out = (
-            np.asarray([[5, 7], [13, 15]])
-            .astype(np.float32)
-            .reshape((1, 2, 2, 1))
+            np.asarray([[5, 7], [13, 15]]).astype(np.float32).reshape((1, 2, 2, 1))
         )
         if data_format == "channels_first":
             ref_out = ref_out.transpose(0, 3, 1, 2)
@@ -159,9 +157,9 @@ class ResizingTest(testing.TestCase, parameterized.TestCase):
         img = np.reshape(np.arange(0, 16), (4, 4, 1)).astype("float32")
         if data_format == "channels_first":
             img = img.transpose(2, 0, 1)
-        out = layers.Resizing(
-            2, 2, interpolation="nearest", data_format=data_format
-        )(img)
+        out = layers.Resizing(2, 2, interpolation="nearest", data_format=data_format)(
+            img
+        )
         ref_out = (
             np.asarray(
                 [

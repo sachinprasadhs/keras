@@ -173,33 +173,21 @@ class SimpleRNNCell(Layer, DropoutRNNCell):
         return output, new_state
 
     def get_initial_state(self, batch_size=None):
-        return [
-            ops.zeros((batch_size, self.state_size), dtype=self.compute_dtype)
-        ]
+        return [ops.zeros((batch_size, self.state_size), dtype=self.compute_dtype)]
 
     def get_config(self):
         config = {
             "units": self.units,
             "activation": activations.serialize(self.activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,
@@ -416,27 +404,15 @@ class SimpleRNN(RNN):
             "units": self.units,
             "activation": activations.serialize(self.activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,

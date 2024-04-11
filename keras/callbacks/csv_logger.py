@@ -55,10 +55,7 @@ class CSVLogger(Callback):
             is_zero_dim_ndarray = isinstance(k, np.ndarray) and k.ndim == 0
             if isinstance(k, str):
                 return k
-            elif (
-                isinstance(k, collections.abc.Iterable)
-                and not is_zero_dim_ndarray
-            ):
+            elif isinstance(k, collections.abc.Iterable) and not is_zero_dim_ndarray:
                 return f"\"[{', '.join(map(str, k))}]\""
             else:
                 return k
@@ -89,9 +86,7 @@ class CSVLogger(Callback):
                 self.writer.writeheader()
 
         row_dict = collections.OrderedDict({"epoch": epoch})
-        row_dict.update(
-            (key, handle_value(logs.get(key, "NA"))) for key in self.keys
-        )
+        row_dict.update((key, handle_value(logs.get(key, "NA"))) for key in self.keys)
         self.writer.writerow(row_dict)
         self.csv_file.flush()
 

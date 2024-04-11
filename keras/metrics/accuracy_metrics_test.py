@@ -57,9 +57,7 @@ class BinaryAccuracyTest(testing.TestCase):
         self.assertEqual(bin_acc_obj_config["dtype"], "float32")
 
         # Check save and restore config
-        bin_acc_obj2 = accuracy_metrics.BinaryAccuracy.from_config(
-            bin_acc_obj_config
-        )
+        bin_acc_obj2 = accuracy_metrics.BinaryAccuracy.from_config(bin_acc_obj_config)
         self.assertEqual(bin_acc_obj2.name, "binary_accuracy")
         self.assertEqual(len(bin_acc_obj2.variables), 2)
         self.assertEqual(bin_acc_obj2._dtype, "float32")
@@ -182,16 +180,12 @@ class SparseCategoricalAccuracyTest(testing.TestCase):
 
         # Test get_config
         sp_cat_acc_obj_config = sp_cat_acc_obj.get_config()
-        self.assertEqual(
-            sp_cat_acc_obj_config["name"], "sparse_categorical_accuracy"
-        )
+        self.assertEqual(sp_cat_acc_obj_config["name"], "sparse_categorical_accuracy")
         self.assertEqual(sp_cat_acc_obj_config["dtype"], "float32")
 
         # Check save and restore config
-        sp_cat_acc_obj2 = (
-            accuracy_metrics.SparseCategoricalAccuracy.from_config(
-                sp_cat_acc_obj_config
-            )
+        sp_cat_acc_obj2 = accuracy_metrics.SparseCategoricalAccuracy.from_config(
+            sp_cat_acc_obj_config
         )
         self.assertEqual(sp_cat_acc_obj2.name, "sparse_categorical_accuracy")
         self.assertEqual(len(sp_cat_acc_obj2.variables), 2)
@@ -225,9 +219,7 @@ class SparseCategoricalAccuracyTest(testing.TestCase):
         # Scenario with 100% accuracy for simplicity.
         # y_true is a 2D tensor with shape (3, 1) to test squeeze.
         y_true = np.array([[0], [1], [2]])
-        y_pred = np.array(
-            [[0.9, 0.05, 0.05], [0.05, 0.9, 0.05], [0.05, 0.05, 0.9]]
-        )
+        y_pred = np.array([[0.9, 0.05, 0.05], [0.05, 0.9, 0.05], [0.05, 0.05, 0.9]])
         sp_cat_acc_obj.update_state(y_true, y_pred)
         result = sp_cat_acc_obj.result()
         self.assertAllClose(result, 1.0, atol=1e-4)
@@ -251,9 +243,7 @@ class SparseCategoricalAccuracyTest(testing.TestCase):
         # Scenario with 100% accuracy for simplicity.
         # y_true is a 2D tensor with shape (2, 1) to test reshape.
         y_true = np.array([[0], [0]], dtype=np.int64)
-        y_pred = np.array(
-            [[[0.9, 0.1, 0.0], [0.8, 0.15, 0.05]]], dtype=np.float32
-        )
+        y_pred = np.array([[[0.9, 0.1, 0.0], [0.8, 0.15, 0.05]]], dtype=np.float32)
         sp_cat_acc_obj.update_state(y_true, y_pred)
         result = sp_cat_acc_obj.result()
         self.assertAllClose(result, np.array([1.0, 1.0]))
@@ -321,17 +311,13 @@ class TopKCategoricalAccuracyTest(testing.TestCase):
 
         # Test get_config
         top_k_cat_acc_obj_config = top_k_cat_acc_obj.get_config()
-        self.assertEqual(
-            top_k_cat_acc_obj_config["name"], "top_k_categorical_accuracy"
-        )
+        self.assertEqual(top_k_cat_acc_obj_config["name"], "top_k_categorical_accuracy")
         self.assertEqual(top_k_cat_acc_obj_config["dtype"], "float32")
         self.assertEqual(top_k_cat_acc_obj_config["k"], 1)
 
         # Check save and restore config
-        top_k_cat_acc_obj2 = (
-            accuracy_metrics.TopKCategoricalAccuracy.from_config(
-                top_k_cat_acc_obj_config
-            )
+        top_k_cat_acc_obj2 = accuracy_metrics.TopKCategoricalAccuracy.from_config(
+            top_k_cat_acc_obj_config
         )
         self.assertEqual(top_k_cat_acc_obj2.name, "top_k_categorical_accuracy")
         self.assertEqual(len(top_k_cat_acc_obj2.variables), 2)
@@ -355,9 +341,7 @@ class TopKCategoricalAccuracyTest(testing.TestCase):
         y_true = np.array([[0, 0, 1], [0, 1, 0]])
         y_pred = np.array([[0.1, 0.9, 0.8], [0.05, 0.95, 0]], dtype="float32")
         sample_weight = np.array([0.7, 0.3])
-        top_k_cat_acc_obj.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        top_k_cat_acc_obj.update_state(y_true, y_pred, sample_weight=sample_weight)
         result = top_k_cat_acc_obj.result()
         self.assertAllClose(result, 0.3, atol=1e-3)
 
@@ -367,9 +351,7 @@ class SparseTopKCategoricalAccuracyTest(testing.TestCase):
         sp_top_k_cat_acc_obj = accuracy_metrics.SparseTopKCategoricalAccuracy(
             k=1, name="sparse_top_k_categorical_accuracy", dtype="float32"
         )
-        self.assertEqual(
-            sp_top_k_cat_acc_obj.name, "sparse_top_k_categorical_accuracy"
-        )
+        self.assertEqual(sp_top_k_cat_acc_obj.name, "sparse_top_k_categorical_accuracy")
         self.assertEqual(len(sp_top_k_cat_acc_obj.variables), 2)
         self.assertEqual(sp_top_k_cat_acc_obj._dtype, "float32")
 
@@ -412,8 +394,6 @@ class SparseTopKCategoricalAccuracyTest(testing.TestCase):
         y_true = np.array([2, 1])
         y_pred = np.array([[0.1, 0.9, 0.8], [0.05, 0.95, 0]], dtype="float32")
         sample_weight = np.array([0.7, 0.3])
-        sp_top_k_cat_acc_obj.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        sp_top_k_cat_acc_obj.update_state(y_true, y_pred, sample_weight=sample_weight)
         result = sp_top_k_cat_acc_obj.result()
         self.assertAllClose(result, 0.3, atol=1e-3)

@@ -158,9 +158,7 @@ class EmbeddingTest(test_case.TestCase):
         self.assertAllClose(model.predict(x), new_model.predict(x))
 
         # Try saving and reloading the model's weights only
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "lora_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "lora_model.weights.h5")
         model.save_weights(temp_filepath)
 
         # Load the file into a fresh, non-lora model
@@ -224,9 +222,7 @@ class EmbeddingTest(test_case.TestCase):
         layer.quantize("int8")
 
         # Verify weights dtype
-        self.assertEqual(
-            backend.standardize_dtype(layer._embeddings.dtype), "int8"
-        )
+        self.assertEqual(backend.standardize_dtype(layer._embeddings.dtype), "int8")
         self.assertEqual(
             backend.standardize_dtype(layer.embeddings_scale.dtype),
             layer.variable_dtype,
@@ -239,17 +235,13 @@ class EmbeddingTest(test_case.TestCase):
 
         # Try saving and reloading the model
         model = models.Sequential([layer])
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_model.keras"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_model.keras")
         model.save(temp_filepath)
         new_model = saving.load_model(temp_filepath)
         self.assertAllClose(model.predict(x), new_model.predict(x))
 
         # Try saving and reloading the model's weights only
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_model.weights.h5")
         model.save_weights(temp_filepath)
 
         # Try lora
@@ -262,9 +254,7 @@ class EmbeddingTest(test_case.TestCase):
         # Try building with quantized dtype policy
         layer = layers.Embedding(10, 16, dtype="int8_from_mixed_bfloat16")
         layer.build()
-        self.assertEqual(
-            backend.standardize_dtype(layer._embeddings.dtype), "int8"
-        )
+        self.assertEqual(backend.standardize_dtype(layer._embeddings.dtype), "int8")
         self.assertEqual(
             backend.standardize_dtype(layer.embeddings_scale.dtype), "float32"
         )
@@ -359,9 +349,7 @@ class EmbeddingTest(test_case.TestCase):
         self.assertGreater(diff_b, 0.0)
 
         # Try saving and reloading the model
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_lora_model.keras"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_lora_model.keras")
         model.save(temp_filepath)
         new_model = saving.load_model(temp_filepath)
         self.assertTrue(new_model.layers[0].lora_enabled)
@@ -394,9 +382,7 @@ class EmbeddingTest(test_case.TestCase):
             ref_output = model(ref_input)
             export_lib.export_model(model, temp_filepath)
             reloaded_layer = export_lib.TFSMLayer(temp_filepath)
-            self.assertAllClose(
-                reloaded_layer(ref_input), ref_output, atol=1e-7
-            )
+            self.assertAllClose(reloaded_layer(ref_input), ref_output, atol=1e-7)
             self.assertLen(reloaded_layer.weights, len(model.weights))
             self.assertLen(
                 reloaded_layer.trainable_weights, len(model.trainable_weights)

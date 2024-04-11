@@ -27,9 +27,7 @@ class TestNumericalUtils(testing.TestCase, parameterized.TestCase):
         # Make sure there is only one 1 in a row
         self.assertTrue(np.all(one_hot.sum(axis=-1) == 1))
         # Get original labels back from one hots
-        self.assertTrue(
-            np.all(np.argmax(one_hot, -1).reshape(label.shape) == label)
-        )
+        self.assertTrue(np.all(np.argmax(one_hot, -1).reshape(label.shape) == label))
 
     def test_to_categorial_without_num_classes(self):
         label = [0, 2, 5]

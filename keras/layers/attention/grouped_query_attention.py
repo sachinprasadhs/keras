@@ -101,8 +101,7 @@ class GroupedQueryAttention(Layer):
         self.num_key_value_heads = num_key_value_heads
         if num_query_heads % num_key_value_heads != 0:
             raise ValueError(
-                "`num_query_heads` must be divisible"
-                " by `num_key_value_heads`."
+                "`num_query_heads` must be divisible" " by `num_key_value_heads`."
             )
         self.num_repeats = num_query_heads // num_key_value_heads
         self.dropout = dropout
@@ -159,9 +158,7 @@ class GroupedQueryAttention(Layer):
         self._value_dense.build(value_shape)
 
         self._softmax = Softmax(axis=-1, dtype=self.dtype_policy)
-        self._dropout_layer = Dropout(
-            rate=self.dropout, dtype=self.dtype_policy
-        )
+        self._dropout_layer = Dropout(rate=self.dropout, dtype=self.dtype_policy)
 
         self._dot_product_equation = "bquh,bkuh->buqk"
         self._combine_equation = "buqk,bkuh->bquh"
@@ -173,9 +170,7 @@ class GroupedQueryAttention(Layer):
             name="attention_output",
             **self._get_common_kwargs_for_sublayer(),
         )
-        self._output_dense.build(
-            (None, None, self.num_query_heads, self.head_dim)
-        )
+        self._output_dense.build((None, None, self.num_query_heads, self.head_dim))
         self.built = True
 
     def _get_common_kwargs_for_sublayer(self):
@@ -245,9 +240,7 @@ class GroupedQueryAttention(Layer):
             training=training,
         )
 
-        output = self._output_dense(
-            output
-        )  # (batch_dim, target_seq_len, feature_dim)
+        output = self._output_dense(output)  # (batch_dim, target_seq_len, feature_dim)
 
         if return_attention_scores:
             return output, scores
@@ -350,9 +343,7 @@ class GroupedQueryAttention(Layer):
         col_index = ops.cumsum(ones_mask, axis=-1)
         return ops.greater_equal(row_index, col_index)
 
-    def _compute_attention(
-        self, query, key, value, attention_mask=None, training=None
-    ):
+    def _compute_attention(self, query, key, value, attention_mask=None, training=None):
         query = ops.multiply(
             query,
             1.0 / ops.sqrt(ops.cast(self.head_dim, query.dtype)),
@@ -415,17 +406,11 @@ class GroupedQueryAttention(Layer):
             "num_key_value_heads": self.num_key_value_heads,
             "use_bias": self.use_bias,
             "dropout": self.dropout,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
         }

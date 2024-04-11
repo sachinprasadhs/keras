@@ -171,9 +171,7 @@ def _get_subclassed_model(compile=True):
 
 
 def _get_custom_sequential_model(compile=True):
-    sequential_model = keras.Sequential(
-        [MyDense(1), MyDense(1)], name="sequential"
-    )
+    sequential_model = keras.Sequential([MyDense(1), MyDense(1)], name="sequential")
     if compile:
         sequential_model.compile(
             optimizer="adam",
@@ -294,9 +292,7 @@ class SavingTest(testing.TestCase):
             self.assertAllClose(w_ref, w)
         self.assertAllClose(out_ref, loaded_model(x_ref))
 
-        self.assertEqual(
-            model.optimizer.__class__, loaded_model.optimizer.__class__
-        )
+        self.assertEqual(model.optimizer.__class__, loaded_model.optimizer.__class__)
         self.assertEqual(
             model.optimizer.get_config(), loaded_model.optimizer.get_config()
         )
@@ -418,9 +414,7 @@ class SavingTest(testing.TestCase):
         self._test_compile_overridden_warnings("subclassed")
 
     def test_metadata(self):
-        temp_filepath = Path(
-            os.path.join(self.get_temp_dir(), "my_model.keras")
-        )
+        temp_filepath = Path(os.path.join(self.get_temp_dir(), "my_model.keras"))
         model = CompileOverridingModel()
         model.save(temp_filepath)
         with zipfile.ZipFile(temp_filepath, "r") as z:
@@ -449,9 +443,7 @@ class SavingTest(testing.TestCase):
     #         self.assertIn(str(temp_filepath), mock_copy.call_args.args)
 
     def test_save_load_weights_only(self):
-        temp_filepath = Path(
-            os.path.join(self.get_temp_dir(), "mymodel.weights.h5")
-        )
+        temp_filepath = Path(os.path.join(self.get_temp_dir(), "mymodel.weights.h5"))
         model = _get_basic_functional_model()
         ref_input = np.random.random((2, 4))
         ref_output = model.predict(ref_input)
@@ -482,9 +474,7 @@ class SavingTest(testing.TestCase):
     def test_save_weights_subclassed_functional(self):
         # The subclassed and basic functional model should have the same
         # weights structure.
-        temp_filepath = Path(
-            os.path.join(self.get_temp_dir(), "mymodel.weights.h5")
-        )
+        temp_filepath = Path(os.path.join(self.get_temp_dir(), "mymodel.weights.h5"))
         model = _get_basic_functional_model()
         ref_input = np.random.random((2, 4))
         ref_output = model.predict(ref_input)
@@ -780,9 +770,7 @@ class ComplexModel(keras.layers.Layer):
 
 class SavingBattleTest(testing.TestCase):
     def test_custom_object_without_from_config(self):
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "custom_fn_model.keras"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "custom_fn_model.keras")
 
         inputs = keras.Input(shape=(4, 4))
         outputs = keras.layers.Dense(1, activation=GrowthFactor(0.5))(inputs)
@@ -790,9 +778,7 @@ class SavingBattleTest(testing.TestCase):
 
         model.save(temp_filepath)
 
-        with self.assertRaisesRegex(
-            TypeError, "Unable to reconstruct an instance"
-        ):
+        with self.assertRaisesRegex(TypeError, "Unable to reconstruct an instance"):
             _ = saving_lib.load_model(temp_filepath)
 
     def test_complex_model_without_explicit_deserialization(self):
@@ -833,15 +819,11 @@ class SavingBattleTest(testing.TestCase):
             def call(self, x):
                 return self.dense(x)
 
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "normal_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "normal_model.weights.h5")
         model_a = NormalModel()
         model_a(np.random.random((2, 2)))
         model_a.save_weights(temp_filepath)
         model_b = WeirdModel()
         model_b(np.random.random((2, 2)))
         model_b.load_weights(temp_filepath)
-        self.assertAllClose(
-            model_a.dense.kernel.numpy(), model_b.dense.kernel.numpy()
-        )
+        self.assertAllClose(model_a.dense.kernel.numpy(), model_b.dense.kernel.numpy())

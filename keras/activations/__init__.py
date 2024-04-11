@@ -65,14 +65,9 @@ def serialize(activation):
     if not isinstance(activation, types.FunctionType):
         # Case for additional custom activations represented by objects
         return fn_config
-    if (
-        isinstance(fn_config["config"], str)
-        and fn_config["config"] not in globals()
-    ):
+    if isinstance(fn_config["config"], str) and fn_config["config"] not in globals():
         # Case for custom activation functions from external activations modules
-        fn_config["config"] = object_registration.get_registered_name(
-            activation
-        )
+        fn_config["config"] = object_registration.get_registered_name(activation)
         return fn_config
     # Case for keras.activations builtins (simply return name)
     return fn_config["config"]

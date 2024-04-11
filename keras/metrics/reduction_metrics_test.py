@@ -91,9 +91,7 @@ class MetricWrapperTest(testing.TestCase):
         self.assertEqual(len(mse_obj.variables), 2)
         self.assertEqual(mse_obj._dtype, "float32")
         # Check save and restore config
-        mse_obj2 = reduction_metrics.MeanMetricWrapper.from_config(
-            mse_obj.get_config()
-        )
+        mse_obj2 = reduction_metrics.MeanMetricWrapper.from_config(mse_obj.get_config())
         self.assertEqual(mse_obj2.name, "mse")
         self.assertEqual(len(mse_obj2.variables), 2)
         self.assertEqual(mse_obj2._dtype, "float32")

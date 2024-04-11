@@ -138,9 +138,7 @@ class Discretization(TFDataLayer):
                 )
 
         self.input_bin_boundaries = bin_boundaries
-        self.bin_boundaries = (
-            bin_boundaries if bin_boundaries is not None else []
-        )
+        self.bin_boundaries = bin_boundaries if bin_boundaries is not None else []
         self.num_bins = num_bins
         self.epsilon = epsilon
         self.output_mode = output_mode
@@ -207,9 +205,7 @@ class Discretization(TFDataLayer):
     def finalize_state(self):
         if self.input_bin_boundaries is not None:
             return
-        self.bin_boundaries = get_bin_boundaries(
-            self.summary, self.num_bins
-        ).tolist()
+        self.bin_boundaries = get_bin_boundaries(self.summary, self.num_bins).tolist()
 
     def reset_state(self):
         if self.input_bin_boundaries is not None:
@@ -333,8 +329,6 @@ def compress_summary(summary, epsilon):
     cum_weight_percents = cum_weights / cum_weights[-1]
     new_bins = np.interp(percents, cum_weight_percents, summary[0])
     cum_weights = np.interp(percents, cum_weight_percents, cum_weights)
-    new_weights = cum_weights - np.concatenate(
-        (np.array([0]), cum_weights[:-1])
-    )
+    new_weights = cum_weights - np.concatenate((np.array([0]), cum_weights[:-1]))
     summary = np.stack((new_bins, new_weights))
     return summary.astype("float32")

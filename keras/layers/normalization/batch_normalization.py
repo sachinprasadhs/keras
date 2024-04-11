@@ -157,9 +157,7 @@ class BatchNormalization(Layer):
         self.beta_initializer = initializers.get(beta_initializer)
         self.gamma_initializer = initializers.get(gamma_initializer)
         self.moving_mean_initializer = initializers.get(moving_mean_initializer)
-        self.moving_variance_initializer = initializers.get(
-            moving_variance_initializer
-        )
+        self.moving_variance_initializer = initializers.get(moving_variance_initializer)
         self.beta_regularizer = regularizers.get(beta_regularizer)
         self.gamma_regularizer = regularizers.get(gamma_regularizer)
         self.beta_constraint = constraints.get(beta_constraint)
@@ -228,8 +226,7 @@ class BatchNormalization(Layer):
                 moving_mean * self.momentum + mean * (1.0 - self.momentum)
             )
             self.moving_variance.assign(
-                moving_variance * self.momentum
-                + variance * (1.0 - self.momentum)
+                moving_variance * self.momentum + variance * (1.0 - self.momentum)
             )
         else:
             moving_mean = ops.cast(self.moving_mean, inputs.dtype)

@@ -51,9 +51,7 @@ class Permute(Layer):
 
     def compute_output_spec(self, inputs):
         output_shape = self.compute_output_shape(inputs.shape)
-        return KerasTensor(
-            shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse
-        )
+        return KerasTensor(shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse)
 
     def call(self, inputs):
         return ops.transpose(inputs, axes=(0,) + self.dims)

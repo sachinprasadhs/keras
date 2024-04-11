@@ -68,13 +68,9 @@ def make_layer_label(layer, **kwargs):
     if kwargs:
         raise ValueError(f"Invalid kwargs: {kwargs}")
 
-    table = (
-        '<<table border="0" cellborder="1" bgcolor="black" cellpadding="10">'
-    )
+    table = '<<table border="0" cellborder="1" bgcolor="black" cellpadding="10">'
 
-    colspan = max(
-        1, sum(int(x) for x in (show_dtype, show_shapes, show_trainable))
-    )
+    colspan = max(1, sum(int(x) for x in (show_dtype, show_shapes, show_trainable)))
 
     if show_layer_names:
         table += (
@@ -218,8 +214,7 @@ def model_to_dot(
 
     if not check_pydot():
         raise ImportError(
-            "You must install pydot (`pip install pydot`) for "
-            "model_to_dot to work."
+            "You must install pydot (`pip install pydot`) for " "model_to_dot to work."
         )
 
     if subgraph:
@@ -324,13 +319,9 @@ def model_to_dot(
                                 )
                         # if inbound_layer is Functional
                         elif isinstance(inbound_layer, functional.Functional):
-                            name = sub_n_last_node[
-                                inbound_layer.name
-                            ].get_name()
+                            name = sub_n_last_node[inbound_layer.name].get_name()
                             if isinstance(layer, functional.Functional):
-                                output_name = sub_n_first_node[
-                                    layer.name
-                                ].get_name()
+                                output_name = sub_n_first_node[layer.name].get_name()
                                 add_edge(dot, name, output_name)
                             else:
                                 add_edge(dot, name, layer_id)
@@ -393,8 +384,7 @@ def plot_model(
         )
     if not check_pydot():
         message = (
-            "You must install pydot (`pip install pydot`) "
-            "for `plot_model` to work."
+            "You must install pydot (`pip install pydot`) " "for `plot_model` to work."
         )
         if "IPython.core.magics.namespace" in sys.modules:
             # We don't raise an exception here in order to avoid crashing

@@ -83,9 +83,7 @@ class Embedding(Layer):
     ):
         input_length = kwargs.pop("input_length", None)
         if input_length is not None:
-            warnings.warn(
-                "Argument `input_length` is deprecated. Just remove it."
-            )
+            warnings.warn("Argument `input_length` is deprecated. Just remove it.")
         super().__init__(**kwargs)
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -100,9 +98,7 @@ class Embedding(Layer):
 
     def build(self, input_shape=None):
         if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
-            self.quantized_build(
-                input_shape, mode=self.dtype_policy.quantization_mode
-            )
+            self.quantized_build(input_shape, mode=self.dtype_policy.quantization_mode)
         else:
             self._embeddings = self.add_weight(
                 shape=(self.input_dim, self.output_dim),
@@ -138,9 +134,7 @@ class Embedding(Layer):
     def compute_output_shape(self, input_shape):
         return input_shape + (self.output_dim,)
 
-    def enable_lora(
-        self, rank, a_initializer="he_uniform", b_initializer="zeros"
-    ):
+    def enable_lora(self, rank, a_initializer="he_uniform", b_initializer="zeros"):
         if self.embeddings_constraint:
             raise ValueError(
                 "Lora is incompatible with embedding constraints. "
@@ -148,13 +142,10 @@ class Embedding(Layer):
                 "`embeddings_constraint` argument."
             )
         if not self.built:
-            raise ValueError(
-                "Cannot enable lora on a layer that isn't yet built."
-            )
+            raise ValueError("Cannot enable lora on a layer that isn't yet built.")
         if self.lora_enabled:
             raise ValueError(
-                "lora is already enabled. "
-                "This can only be done once per layer."
+                "lora is already enabled. " "This can only be done once per layer."
             )
         self._tracker.unlock()
         self.lora_embeddings_a = self.add_weight(
@@ -180,9 +171,7 @@ class Embedding(Layer):
             return
         # The keys of the `store` will be saved as determined because the
         # default ordering will change after quantization
-        embeddings_value, embeddings_scale = (
-            self._get_embeddings_with_merged_lora()
-        )
+        embeddings_value, embeddings_scale = self._get_embeddings_with_merged_lora()
         store["0"] = embeddings_value
         if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
             store["1"] = embeddings_scale
@@ -199,12 +188,8 @@ class Embedding(Layer):
         if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
             self.embeddings_scale.assign(store["1"])
         if self.lora_enabled:
-            self.lora_embeddings_a.assign(
-                ops.zeros(self.lora_embeddings_a.shape)
-            )
-            self.lora_embeddings_b.assign(
-                ops.zeros(self.lora_embeddings_b.shape)
-            )
+            self.lora_embeddings_a.assign(ops.zeros(self.lora_embeddings_a.shape))
+            self.lora_embeddings_b.assign(ops.zeros(self.lora_embeddings_b.shape))
 
     def get_config(self):
         base_config = super().get_config()
@@ -217,12 +202,8 @@ class Embedding(Layer):
             "embeddings_regularizer": regularizers.serialize(
                 self.embeddings_regularizer
             ),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
-            "embeddings_constraint": constraints.serialize(
-                self.embeddings_constraint
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
+            "embeddings_constraint": constraints.serialize(self.embeddings_constraint),
             "mask_zero": self.mask_zero,
         }
         if self.lora_rank:
@@ -290,9 +271,7 @@ class Embedding(Layer):
         outputs = ops.take(self._embeddings, inputs, axis=0)
         # De-scale outputs
         outputs = ops.cast(outputs, self.compute_dtype)
-        outputs = ops.divide(
-            outputs, ops.expand_dims(self.embeddings_scale, axis=0)
-        )
+        outputs = ops.divide(outputs, ops.expand_dims(self.embeddings_scale, axis=0))
         if self.lora_enabled:
             lora_outputs = ops.take(self.lora_embeddings_a, inputs, axis=0)
             lora_outputs = ops.matmul(lora_outputs, self.lora_embeddings_b)
@@ -341,14 +320,11 @@ class Embedding(Layer):
             self._tracker.lock()
         else:
             NotImplementedError(
-                "Invalid quantization mode. Expected 'int8'. "
-                f"Received: mode={mode}"
+                "Invalid quantization mode. Expected 'int8'. " f"Received: mode={mode}"
             )
 
         # Set new dtype policy
-        if not isinstance(
-            self.dtype_policy, dtype_policies.QuantizedDTypePolicy
-        ):
+        if not isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
             quantized_dtype = f"{mode}_from_{self.dtype_policy.name}"
             self.dtype_policy = dtype_policies.get(quantized_dtype)
 
@@ -362,15 +338,13 @@ class Embedding(Layer):
             if self.lora_enabled:
                 # Dequantize & quantize to merge lora weights into embeddings
                 # Note that this is a lossy compression
-                embeddings_value = ops.divide(
-                    embeddings_value, embeddings_scale
-                )
+                embeddings_value = ops.divide(embeddings_value, embeddings_scale)
                 embeddings_value = ops.add(
                     embeddings_value,
                     ops.matmul(self.lora_embeddings_a, self.lora_embeddings_b),
                 )
-                embeddings_value, embeddings_scale = (
-                    quantizers.abs_max_quantize(embeddings_value, axis=0)
+                embeddings_value, embeddings_scale = quantizers.abs_max_quantize(
+                    embeddings_value, axis=0
                 )
                 embeddings_scale = ops.squeeze(embeddings_scale, axis=0)
             return embeddings_value, embeddings_scale

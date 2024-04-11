@@ -135,8 +135,7 @@ def batch_dot(x, y, axes=None):
             + str(y_shape)
             + " with axes="
             + str(axes)
-            + ". x.shape[%d] != y.shape[%d] (%d != %d)."
-            % (axes[0], axes[1], d1, d2)
+            + ". x.shape[%d] != y.shape[%d] (%d != %d)." % (axes[0], axes[1], d1, d2)
         )
 
     # backup ndims. Need them later.
@@ -196,9 +195,7 @@ def batch_dot(x, y, axes=None):
     do_reshape = False
 
     if x_squashed:
-        output_shape = tf.concat(
-            [output_shape[:1], x_mid_dims, output_shape[-1:]], 0
-        )
+        output_shape = tf.concat([output_shape[:1], x_mid_dims, output_shape[-1:]], 0)
         do_reshape = True
 
     if y_squashed:
@@ -278,9 +275,7 @@ def binary_crossentropy(target, output, from_logits=False):
     output = tf.convert_to_tensor(output)
 
     if from_logits:
-        return tf.nn.sigmoid_cross_entropy_with_logits(
-            labels=target, logits=output
-        )
+        return tf.nn.sigmoid_cross_entropy_with_logits(labels=target, logits=output)
 
     epsilon_ = tf.convert_to_tensor(backend.epsilon(), output.dtype)
     output = tf.clip_by_value(output, epsilon_, 1.0 - epsilon_)
@@ -403,9 +398,7 @@ def categorical_focal_crossentropy(
 @keras_export("keras._legacy.backend.clip")
 def clip(x, min_value, max_value):
     """DEPRECATED."""
-    if isinstance(min_value, (int, float)) and isinstance(
-        max_value, (int, float)
-    ):
+    if isinstance(min_value, (int, float)) and isinstance(max_value, (int, float)):
         if max_value < min_value:
             max_value = min_value
     if min_value is None:
@@ -477,9 +470,7 @@ def _preprocess_padding(padding):
 
 
 @keras_export("keras._legacy.backend.conv1d")
-def conv1d(
-    x, kernel, strides=1, padding="valid", data_format=None, dilation_rate=1
-):
+def conv1d(x, kernel, strides=1, padding="valid", data_format=None, dilation_rate=1):
     """DEPRECATED."""
     if data_format is None:
         data_format = backend.image_data_format()
@@ -560,9 +551,7 @@ def conv2d_transpose(
     else:
         force_transpose = False
 
-    x, tf_data_format = _preprocess_conv2d_input(
-        x, data_format, force_transpose
-    )
+    x, tf_data_format = _preprocess_conv2d_input(x, data_format, force_transpose)
 
     if data_format == "channels_first" and tf_data_format == "NHWC":
         output_shape = (
@@ -654,13 +643,9 @@ def ctc_batch_cost(y_true, y_pred, input_length, label_length):
     """DEPRECATED."""
     label_length = tf.cast(tf.squeeze(label_length, axis=-1), tf.int32)
     input_length = tf.cast(tf.squeeze(input_length, axis=-1), tf.int32)
-    sparse_labels = tf.cast(
-        ctc_label_dense_to_sparse(y_true, label_length), tf.int32
-    )
+    sparse_labels = tf.cast(ctc_label_dense_to_sparse(y_true, label_length), tf.int32)
 
-    y_pred = tf.math.log(
-        tf.transpose(y_pred, perm=[1, 0, 2]) + backend.epsilon()
-    )
+    y_pred = tf.math.log(tf.transpose(y_pred, perm=[1, 0, 2]) + backend.epsilon())
 
     return tf.expand_dims(
         tf.compat.v1.nn.ctc_loss(
@@ -716,9 +701,7 @@ def ctc_decode(y_pred, input_length, greedy=True, beam_width=100, top_paths=1):
     """DEPRECATED."""
     input_shape = tf.shape(y_pred)
     num_samples, num_steps = input_shape[0], input_shape[1]
-    y_pred = tf.math.log(
-        tf.transpose(y_pred, perm=[1, 0, 2]) + backend.epsilon()
-    )
+    y_pred = tf.math.log(tf.transpose(y_pred, perm=[1, 0, 2]) + backend.epsilon())
     input_length = tf.cast(input_length, tf.int32)
 
     if greedy:
@@ -808,9 +791,7 @@ def dot(x, y):
         y_permute_dim = [y_permute_dim.pop(-2)] + y_permute_dim
         xt = tf.reshape(x, [-1, x_shape[-1]])
         yt = tf.reshape(tf.transpose(y, perm=y_permute_dim), [y_shape[-2], -1])
-        return tf.reshape(
-            tf.matmul(xt, yt), x_shape[:-1] + y_shape[:-2] + y_shape[-1:]
-        )
+        return tf.reshape(tf.matmul(xt, yt), x_shape[:-1] + y_shape[:-2] + y_shape[-1:])
     if is_sparse(x):
         out = tf.sparse.sparse_dense_matmul(x, y)
     else:
@@ -918,9 +899,7 @@ def get_value(x):
 @keras_export("keras._legacy.backend.gradients")
 def gradients(loss, variables):
     """DEPRECATED."""
-    return tf.compat.v1.gradients(
-        loss, variables, colocate_gradients_with_ops=True
-    )
+    return tf.compat.v1.gradients(loss, variables, colocate_gradients_with_ops=True)
 
 
 @keras_export("keras._legacy.backend.greater")
@@ -1209,15 +1188,11 @@ def random_normal(shape, mean=0.0, stddev=1.0, dtype=None, seed=None):
         dtype = backend.floatx()
     if seed is None:
         seed = np.random.randint(10e6)
-    return tf.random.normal(
-        shape, mean=mean, stddev=stddev, dtype=dtype, seed=seed
-    )
+    return tf.random.normal(shape, mean=mean, stddev=stddev, dtype=dtype, seed=seed)
 
 
 @keras_export("keras._legacy.backend.random_normal_variable")
-def random_normal_variable(
-    shape, mean, scale, dtype=None, name=None, seed=None
-):
+def random_normal_variable(shape, mean, scale, dtype=None, name=None, seed=None):
     """DEPRECATED."""
     if dtype is None:
         dtype = backend.floatx()
@@ -1351,9 +1326,7 @@ def repeat_elements(x, rep, axis):
 
 
 @keras_export("keras._legacy.backend.resize_images")
-def resize_images(
-    x, height_factor, width_factor, data_format, interpolation="nearest"
-):
+def resize_images(x, height_factor, width_factor, data_format, interpolation="nearest"):
     """DEPRECATED."""
     if data_format == "channels_first":
         rows, cols = 2, 3
@@ -1367,9 +1340,7 @@ def resize_images(
         new_shape = tf.constant(new_shape.as_list(), dtype="int32")
     else:
         new_shape = tf.shape(x)[rows : cols + 1]
-    new_shape *= tf.constant(
-        np.array([height_factor, width_factor], dtype="int32")
-    )
+    new_shape *= tf.constant(np.array([height_factor, width_factor], dtype="int32"))
 
     if data_format == "channels_first":
         x = permute_dimensions(x, [0, 2, 3, 1])
@@ -1476,13 +1447,9 @@ def rnn(
     # second dimension n times.
     def _expand_mask(mask_t, input_t, fixed_dim=1):
         if tf.nest.is_nested(mask_t):
-            raise ValueError(
-                f"mask_t is expected to be tensor, but got {mask_t}"
-            )
+            raise ValueError(f"mask_t is expected to be tensor, but got {mask_t}")
         if tf.nest.is_nested(input_t):
-            raise ValueError(
-                f"input_t is expected to be tensor, but got {input_t}"
-            )
+            raise ValueError(f"input_t is expected to be tensor, but got {input_t}")
         rank_diff = len(input_t.shape) - len(mask_t.shape)
         for _ in range(rank_diff):
             mask_t = tf.expand_dims(mask_t, -1)
@@ -1508,9 +1475,7 @@ def rnn(
             return input_t
 
         if tf.nest.is_nested(inputs):
-            processed_input = tf.nest.map_structure(
-                _process_single_input_t, inputs
-            )
+            processed_input = tf.nest.map_structure(_process_single_input_t, inputs)
         else:
             processed_input = (_process_single_input_t(inputs),)
 
@@ -1540,14 +1505,10 @@ def rnn(
 
                 flat_states = tf.nest.flatten(states)
                 flat_new_states = tf.nest.flatten(new_states)
-                tiled_mask_t = tuple(
-                    _expand_mask(mask_t, s) for s in flat_states
-                )
+                tiled_mask_t = tuple(_expand_mask(mask_t, s) for s in flat_states)
                 flat_final_states = tuple(
                     tf.where(m, s, ps)
-                    for m, s, ps in zip(
-                        tiled_mask_t, flat_new_states, flat_states
-                    )
+                    for m, s, ps in zip(tiled_mask_t, flat_new_states, flat_states)
                 )
                 states = tf.nest.pack_sequence_as(states, flat_final_states)
 
@@ -1576,9 +1537,7 @@ def rnn(
         else:  # mask is None
             for i in range(time_steps):
                 inp = _get_input_tensor(i)
-                output, states = step_function(
-                    inp, tuple(states) + tuple(constants)
-                )
+                output, states = step_function(inp, tuple(states) + tuple(constants))
                 if return_all_outputs:
                     successive_outputs.append(output)
                     successive_states.append(states)
@@ -1604,11 +1563,7 @@ def rnn(
             for i, inp in enumerate(flatted_inputs)
         )
         input_ta = tuple(
-            (
-                ta.unstack(input_)
-                if not go_backwards
-                else ta.unstack(reverse(input_, 0))
-            )
+            (ta.unstack(input_) if not go_backwards else ta.unstack(reverse(input_, 0)))
             for ta, input_ in zip(input_ta, flatted_inputs)
         )
 
@@ -1738,9 +1693,7 @@ def rnn(
                 flat_final_state = compute_masked_output(
                     mask_t, flat_new_state, flat_state
                 )
-                new_states = tf.nest.pack_sequence_as(
-                    new_states, flat_final_state
-                )
+                new_states = tf.nest.pack_sequence_as(new_states, flat_final_state)
 
                 ta_index_to_write = time if return_all_outputs else 0
                 output_ta_t = tuple(
@@ -1790,9 +1743,7 @@ def rnn(
                     for ta, out in zip(output_ta_t, flat_output)
                 )
 
-                new_states = tf.nest.pack_sequence_as(
-                    initial_states, flat_new_state
-                )
+                new_states = tf.nest.pack_sequence_as(initial_states, flat_new_state)
                 return (time + 1, output_ta_t) + tuple(new_states)
 
             final_outputs = tf.compat.v1.while_loop(
@@ -1966,9 +1917,7 @@ def sparse_categorical_crossentropy(
         axis %= output_rank
         if axis != output_rank - 1:
             permutation = list(
-                itertools.chain(
-                    range(axis), range(axis + 1, output_rank), [axis]
-                )
+                itertools.chain(range(axis), range(axis + 1, output_rank), [axis])
             )
             output = tf.transpose(output, perm=permutation)
     elif axis != -1:
@@ -1995,9 +1944,7 @@ def sparse_categorical_crossentropy(
         target = target[valid_mask]
         output = output[valid_mask]
 
-    res = tf.nn.sparse_softmax_cross_entropy_with_logits(
-        labels=target, logits=output
-    )
+    res = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=target, logits=output)
 
     if ignore_class is not None:
         res_shape = cast(output_shape[:-1], "int64")
@@ -2154,15 +2101,11 @@ def switch(condition, then_expression, else_expression):
             )
         if cond_ndim > 1:
             ndim_diff = expr_ndim - cond_ndim
-            cond_shape = tf.concat(
-                [tf.shape(condition), [1] * ndim_diff], axis=0
-            )
+            cond_shape = tf.concat([tf.shape(condition), [1] * ndim_diff], axis=0)
             condition = tf.reshape(condition, cond_shape)
             expr_shape = tf.shape(then_expression)
             shape_diff = expr_shape - cond_shape
-            tile_shape = tf.where(
-                shape_diff > 0, expr_shape, tf.ones_like(expr_shape)
-            )
+            tile_shape = tf.where(shape_diff > 0, expr_shape, tf.ones_like(expr_shape))
             condition = tf.tile(condition, tile_shape)
         x = tf.where(condition, then_expression, else_expression)
     return x
@@ -2212,9 +2155,7 @@ def truncated_normal(shape, mean=0.0, stddev=1.0, dtype=None, seed=None):
         dtype = backend.floatx()
     if seed is None:
         seed = np.random.randint(10e6)
-    return tf.random.truncated_normal(
-        shape, mean, stddev, dtype=dtype, seed=seed
-    )
+    return tf.random.truncated_normal(shape, mean, stddev, dtype=dtype, seed=seed)
 
 
 @keras_export("keras._legacy.backend.update")
@@ -2264,9 +2205,7 @@ def variable(value, dtype=None, name=None, constraint=None):
         )
         v._keras_shape = sparse_coo.shape
         return v
-    v = tf.Variable(
-        value, dtype=tf.as_dtype(dtype), name=name, constraint=constraint
-    )
+    v = tf.Variable(value, dtype=tf.as_dtype(dtype), name=name, constraint=constraint)
     return v
 
 

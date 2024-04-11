@@ -12,9 +12,7 @@ from keras.backend.common.keras_tensor import KerasTensor
 from keras.ops import math as kmath
 
 
-def _stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def _stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     # pure numpy version of stft that matches librosa's implementation
     x = np.array(x)
     ori_dtype = x.dtype
@@ -63,9 +61,9 @@ def _istft(
 ):
     # pure numpy version of istft that matches librosa's implementation
     complex_input = x[0] + 1j * x[1]
-    x = np.fft.irfft(
-        complex_input, n=fft_length, axis=-1, norm="backward"
-    ).astype(x[0].dtype)
+    x = np.fft.irfft(complex_input, n=fft_length, axis=-1, norm="backward").astype(
+        x[0].dtype
+    )
 
     expected_output_len = fft_length + sequence_stride * (x.shape[-2] - 1)
 
@@ -84,9 +82,7 @@ def _istft(
         _sequence_length = sequence_length + l_pad + r_pad
         denom = np.square(win)
         overlaps = -(-_sequence_length // sequence_stride)
-        denom = np.pad(
-            denom, [(0, overlaps * sequence_stride - _sequence_length)]
-        )
+        denom = np.pad(denom, [(0, overlaps * sequence_stride - _sequence_length)])
         denom = np.reshape(denom, [overlaps, sequence_stride])
         denom = np.sum(denom, 0, keepdims=True)
         denom = np.tile(denom, [overlaps, 1])
@@ -102,9 +98,7 @@ def _istft(
         output_size = sequence_stride * (num_sequences - 1) + sequence_length
         nstep_per_segment = 1 + (sequence_length - 1) // sequence_stride
         padded_segment_len = nstep_per_segment * sequence_stride
-        x = np.pad(
-            x, ((0, 0), (0, 0), (0, padded_segment_len - sequence_length))
-        )
+        x = np.pad(x, ((0, 0), (0, 0), (0, padded_segment_len - sequence_length)))
         x = np.reshape(
             x,
             (flat_batchsize, num_sequences, nstep_per_segment, sequence_stride),
@@ -167,9 +161,7 @@ class MathOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
     def test_in_top_k(self):
         targets = KerasTensor((None,))
         predictions = KerasTensor((None, 10))
-        self.assertEqual(
-            kmath.in_top_k(targets, predictions, k=1).shape, (None,)
-        )
+        self.assertEqual(kmath.in_top_k(targets, predictions, k=1).shape, (None,))
 
     def test_logsumexp(self):
         x = KerasTensor((None, 2, 3), dtype="float32")
@@ -250,9 +242,7 @@ class MathOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
         fft_length = 15
         real = KerasTensor((None, 32), dtype="float32")
         imag = KerasTensor((None, 32), dtype="float32")
-        output = kmath.istft(
-            (real, imag), sequence_length, sequence_stride, fft_length
-        )
+        output = kmath.istft((real, imag), sequence_length, sequence_stride, fft_length)
         ref = _istft(
             (np.ones((5, 32)), np.ones((5, 32))),
             sequence_length,
@@ -381,9 +371,7 @@ class MathOpsStaticShapeTest(testing.TestCase):
         num_sequences = fft_length // sequence_stride + 1
         real = KerasTensor((num_sequences, 32), dtype="float32")
         imag = KerasTensor((num_sequences, 32), dtype="float32")
-        output = kmath.istft(
-            (real, imag), sequence_length, sequence_stride, fft_length
-        )
+        output = kmath.istft((real, imag), sequence_length, sequence_stride, fft_length)
         ref = _istft(
             (np.ones((num_sequences, 32)), np.ones((num_sequences, 32))),
             sequence_length,
@@ -693,9 +681,7 @@ class MathOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             (32, 8, 32, None, True),
         ]
     )
-    def test_stft(
-        self, sequence_length, sequence_stride, fft_length, window, center
-    ):
+    def test_stft(self, sequence_length, sequence_stride, fft_length, window, center):
         # Test 1D case.
         x = np.random.random((32,))
         real_output, imag_output = kmath.stft(
@@ -729,9 +715,7 @@ class MathOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             (32, 8, 32, None, True),
         ]
     )
-    def test_istft(
-        self, sequence_length, sequence_stride, fft_length, window, center
-    ):
+    def test_istft(self, sequence_length, sequence_stride, fft_length, window, center):
         # sequence_stride must <= x[0].shape[-1]
         # sequence_stride must >= fft_length / num_sequences
         # Test 1D case.
@@ -848,18 +832,14 @@ class MathOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             )
             expected_output = scipy.special.erfinv(sample_values)
             output_from_erfinv_op = kmath.erfinv(sample_values)
-            self.assertAllClose(
-                expected_output, output_from_erfinv_op, atol=1e-4
-            )
+            self.assertAllClose(expected_output, output_from_erfinv_op, atol=1e-4)
 
     def test_erfinv_operation_edge_cases(self):
         # Test for edge cases
         edge_values = np.array([1e5, -1e5, 1e-5, -1e-5], dtype=np.float64)
         expected_output = scipy.special.erfinv(edge_values)
         output_from_edge_erfinv_op = kmath.erfinv(edge_values)
-        self.assertAllClose(
-            expected_output, output_from_edge_erfinv_op, atol=1e-4
-        )
+        self.assertAllClose(expected_output, output_from_edge_erfinv_op, atol=1e-4)
 
 
 class MathDtypeTest(testing.TestCase, parameterized.TestCase):
@@ -868,20 +848,16 @@ class MathDtypeTest(testing.TestCase, parameterized.TestCase):
     # TODO: Using uint64 will lead to weak type promotion (`float`),
     # resulting in different behavior between JAX and Keras. Currently, we
     # are skipping the test for uint64
-    ALL_DTYPES = [
-        x for x in dtypes.ALLOWED_DTYPES if x not in ["string", "uint64"]
-    ] + [None]
+    ALL_DTYPES = [x for x in dtypes.ALLOWED_DTYPES if x not in ["string", "uint64"]] + [
+        None
+    ]
     INT_DTYPES = [x for x in dtypes.INT_TYPES if x != "uint64"]
     FLOAT_DTYPES = dtypes.FLOAT_TYPES
 
     if backend.backend() == "torch":
         # TODO: torch doesn't support uint16, uint32 and uint64
-        ALL_DTYPES = [
-            x for x in ALL_DTYPES if x not in ["uint16", "uint32", "uint64"]
-        ]
-        INT_DTYPES = [
-            x for x in INT_DTYPES if x not in ["uint16", "uint32", "uint64"]
-        ]
+        ALL_DTYPES = [x for x in ALL_DTYPES if x not in ["uint16", "uint32", "uint64"]]
+        INT_DTYPES = [x for x in INT_DTYPES if x not in ["uint16", "uint32", "uint64"]]
 
     def setUp(self):
         from jax.experimental import enable_x64
@@ -897,25 +873,19 @@ class MathDtypeTest(testing.TestCase, parameterized.TestCase):
 
 class ExtractSequencesOpTest(testing.TestCase):
     def test_extract_sequences_init_length_1_stride_1(self):
-        extract_op = kmath.ExtractSequences(
-            sequence_length=1, sequence_stride=1
-        )
+        extract_op = kmath.ExtractSequences(sequence_length=1, sequence_stride=1)
         self.assertIsNotNone(extract_op)
         self.assertEqual(extract_op.sequence_length, 1)
         self.assertEqual(extract_op.sequence_stride, 1)
 
     def test_extract_sequences_init_length_5_stride_2(self):
-        extract_op = kmath.ExtractSequences(
-            sequence_length=5, sequence_stride=2
-        )
+        extract_op = kmath.ExtractSequences(sequence_length=5, sequence_stride=2)
         self.assertIsNotNone(extract_op)
         self.assertEqual(extract_op.sequence_length, 5)
         self.assertEqual(extract_op.sequence_stride, 2)
 
     def test_compute_output_spec_low_rank(self):
-        extract_op = kmath.ExtractSequences(
-            sequence_length=5, sequence_stride=1
-        )
+        extract_op = kmath.ExtractSequences(sequence_length=5, sequence_stride=1)
         low_rank_input = np.array(42)
         error_message = r"Input should have rank >= 1. Received: .*"
         with self.assertRaisesRegex(ValueError, error_message):
@@ -932,12 +902,8 @@ class ExtractSequencesOpTest(testing.TestCase):
         )
         self.assertEqual(result.shape, expected_shape)
 
-    def calculate_expected_shape(
-        self, input_shape, sequence_length, sequence_stride
-    ):
-        num_sequences = (
-            (input_shape[1] - sequence_length) // sequence_stride
-        ) + 1
+    def calculate_expected_shape(self, input_shape, sequence_length, sequence_stride):
+        num_sequences = ((input_shape[1] - sequence_length) // sequence_stride) + 1
         return (input_shape[0], num_sequences, sequence_length)
 
 
@@ -1010,9 +976,7 @@ class LogsumexpTest(testing.TestCase):
         keepdims = True
         logsumexp_op = kmath.Logsumexp(axis=axis, keepdims=keepdims)
         output = logsumexp_op.call(x)
-        expected_output = np.log(
-            np.sum(np.exp(x), axis=axis, keepdims=keepdims)
-        )
+        expected_output = np.log(np.sum(np.exp(x), axis=axis, keepdims=keepdims))
         self.assertAllClose(output, expected_output)
 
 
@@ -1066,9 +1030,7 @@ class FFT2Test(testing.TestCase):
     def test_fft2_incorrect_input_type(self):
         fft2_op = kmath.FFT2()
         incorrect_input = np.array([1, 2, 3])  # Not a tuple or list
-        with self.assertRaisesRegex(
-            ValueError, "should be a tuple of two tensors"
-        ):
+        with self.assertRaisesRegex(ValueError, "should be a tuple of two tensors"):
             fft2_op.compute_output_spec(incorrect_input)
 
     def test_fft2_mismatched_shapes(self):
@@ -1120,9 +1082,7 @@ class RFFTTest(testing.TestCase):
             rfft_op = kmath.RFFT()
             input_tensor = np.random.rand(3, 8)
             expected_last_dimension = input_tensor.shape[-1] // 2 + 1
-            expected_shape = input_tensor.shape[:-1] + (
-                expected_last_dimension,
-            )
+            expected_shape = input_tensor.shape[:-1] + (expected_last_dimension,)
             output_tensors = rfft_op.compute_output_spec(input_tensor)
             for output_tensor in output_tensors:
                 self.assertEqual(output_tensor.shape, expected_shape)
@@ -1138,19 +1098,13 @@ class RFFTTest(testing.TestCase):
 
 class ISTFTTest(testing.TestCase):
     def test_istft_incorrect_input_type(self):
-        istft_op = kmath.ISTFT(
-            sequence_length=5, sequence_stride=2, fft_length=10
-        )
+        istft_op = kmath.ISTFT(sequence_length=5, sequence_stride=2, fft_length=10)
         incorrect_input = np.array([1, 2, 3])
-        with self.assertRaisesRegex(
-            ValueError, "should be a tuple of two tensors"
-        ):
+        with self.assertRaisesRegex(ValueError, "should be a tuple of two tensors"):
             istft_op.compute_output_spec(incorrect_input)
 
     def test_istft_mismatched_shapes(self):
-        istft_op = kmath.ISTFT(
-            sequence_length=5, sequence_stride=2, fft_length=10
-        )
+        istft_op = kmath.ISTFT(sequence_length=5, sequence_stride=2, fft_length=10)
         real_part = np.random.rand(2, 3, 4)
         imag_part = np.random.rand(2, 3)
         with self.assertRaisesRegex(
@@ -1160,9 +1114,7 @@ class ISTFTTest(testing.TestCase):
             istft_op.compute_output_spec((real_part, imag_part))
 
     def test_istft_low_rank_input(self):
-        istft_op = kmath.ISTFT(
-            sequence_length=5, sequence_stride=2, fft_length=10
-        )
+        istft_op = kmath.ISTFT(sequence_length=5, sequence_stride=2, fft_length=10)
         low_rank_input = np.random.rand(3)
         with self.assertRaisesRegex(ValueError, "Input should have rank >= 2"):
             istft_op.compute_output_spec((low_rank_input, low_rank_input))
@@ -1226,9 +1178,7 @@ class ISTFTTest(testing.TestCase):
         imag_part = np.random.rand(4, 8)
 
         expected_shape = real_part.shape[:-1] + (fft_length,)
-        output_shape = irfft_op.compute_output_spec(
-            (real_part, imag_part)
-        ).shape
+        output_shape = irfft_op.compute_output_spec((real_part, imag_part)).shape
 
         self.assertEqual(output_shape, expected_shape)
 
@@ -1240,9 +1190,7 @@ class ISTFTTest(testing.TestCase):
 
         inferred_fft_length = 2 * (real_part.shape[-1] - 1)
         expected_shape = real_part.shape[:-1] + (inferred_fft_length,)
-        output_shape = irfft_op.compute_output_spec(
-            (real_part, imag_part)
-        ).shape
+        output_shape = irfft_op.compute_output_spec((real_part, imag_part)).shape
 
         self.assertEqual(output_shape, expected_shape)
 

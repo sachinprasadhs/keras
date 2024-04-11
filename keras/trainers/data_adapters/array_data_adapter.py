@@ -31,8 +31,7 @@ class ArrayDataAdapter(DataAdapter):
         if sample_weight is not None:
             if class_weight is not None:
                 raise ValueError(
-                    "You cannot `class_weight` and `sample_weight` "
-                    "at the same time."
+                    "You cannot `class_weight` and `sample_weight` " "at the same time."
                 )
             if tree.is_nested(y):
                 if isinstance(sample_weight, (list, tuple, dict)):
@@ -47,8 +46,7 @@ class ArrayDataAdapter(DataAdapter):
                         )
                 else:
                     is_samplewise = len(sample_weight.shape) == 1 or (
-                        len(sample_weight.shape) == 2
-                        and sample_weight.shape[1] == 1
+                        len(sample_weight.shape) == 2 and sample_weight.shape[1] == 1
                     )
                     if not is_samplewise:
                         raise ValueError(
@@ -60,9 +58,7 @@ class ArrayDataAdapter(DataAdapter):
                             "argument with one array per model output."
                         )
                     # Replicate the same sample_weight array on all outputs.
-                    sample_weight = tree.map_structure(
-                        lambda _: sample_weight, y
-                    )
+                    sample_weight = tree.map_structure(lambda _: sample_weight, y)
         if class_weight is not None:
             if tree.is_nested(y):
                 raise ValueError(
@@ -165,9 +161,7 @@ class ArrayDataAdapter(DataAdapter):
             flat_dataset = tf.data.Dataset.from_tensor_slices(first_k_indices)
             if self._partial_batch_size:
                 index_remainder = tf.data.Dataset.from_tensors(
-                    tf.slice(
-                        indices, [num_in_full_batch], [self._partial_batch_size]
-                    )
+                    tf.slice(indices, [num_in_full_batch], [self._partial_batch_size])
                 )
                 flat_dataset = flat_dataset.concatenate(index_remainder)
 
@@ -201,9 +195,7 @@ class ArrayDataAdapter(DataAdapter):
 
                 def grab_one(x):
                     if isinstance(x, array_slicing.TensorflowSparseWrapper):
-                        return array_slicing.slice_tensorflow_sparse_wrapper(
-                            x, i
-                        )
+                        return array_slicing.slice_tensorflow_sparse_wrapper(x, i)
                     if isinstance(x, (list, tuple, dict)):
                         return None
                     if tf.is_tensor(x):
@@ -212,16 +204,12 @@ class ArrayDataAdapter(DataAdapter):
 
                 return tree.traverse(grab_one, data)
 
-            dataset = dataset.map(
-                grab_batch, num_parallel_calls=tf.data.AUTOTUNE
-            )
+            dataset = dataset.map(grab_batch, num_parallel_calls=tf.data.AUTOTUNE)
 
             # Default optimizations are disabled to avoid the overhead of
             # (unnecessary) input pipeline graph serialization & deserialization
             options = tf.data.Options()
-            options.experimental_optimization.apply_default_optimizations = (
-                False
-            )
+            options.experimental_optimization.apply_default_optimizations = False
             if self._shuffle:
                 options.experimental_external_state_policy = (
                     tf.data.experimental.ExternalStatePolicy.IGNORE
@@ -245,9 +233,7 @@ class ArrayDataAdapter(DataAdapter):
     def get_jax_iterator(self):
         from keras.backend.jax.core import convert_to_tensor
 
-        inputs = array_slicing.convert_to_sliceable(
-            self._inputs, target_backend="jax"
-        )
+        inputs = array_slicing.convert_to_sliceable(self._inputs, target_backend="jax")
 
         def slice_and_convert_to_jax(sliceable, indices=None):
             x = sliceable[indices]
@@ -371,6 +357,4 @@ def can_convert_arrays(arrays):
         otherwise.
     """
 
-    return all(
-        tree.flatten(tree.map_structure(array_slicing.can_slice_array, arrays))
-    )
+    return all(tree.flatten(tree.map_structure(array_slicing.can_slice_array, arrays)))

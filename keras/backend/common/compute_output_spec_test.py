@@ -12,21 +12,15 @@ def example_fn(x):
 
 class ComputeOutputSpecTest(testing.TestCase):
     def test_basics(self):
-        out = backend.compute_output_spec(
-            example_fn, backend.KerasTensor((2, 3))
-        )
+        out = backend.compute_output_spec(example_fn, backend.KerasTensor((2, 3)))
         self.assertIsInstance(out, backend.KerasTensor)
         self.assertEqual(out.shape, (2, 3, 2))
 
-        out = backend.compute_output_spec(
-            example_fn, backend.KerasTensor((None, 3))
-        )
+        out = backend.compute_output_spec(example_fn, backend.KerasTensor((None, 3)))
         self.assertIsInstance(out, backend.KerasTensor)
         self.assertEqual(out.shape, (None, 3, 2))
 
-        out = backend.compute_output_spec(
-            example_fn, backend.KerasTensor((2, None))
-        )
+        out = backend.compute_output_spec(example_fn, backend.KerasTensor((2, None)))
         self.assertIsInstance(out, backend.KerasTensor)
         self.assertEqual(out.shape, (2, None, 2))
 

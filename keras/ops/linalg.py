@@ -239,8 +239,7 @@ class Norm(Operation):
         num_axes = len(axis)
         if num_axes == 1 and isinstance(self.ord, str):
             raise ValueError(
-                "Invalid `ord` argument for vector norm. "
-                f"Received: ord={self.ord}"
+                "Invalid `ord` argument for vector norm. " f"Received: ord={self.ord}"
             )
         elif num_axes == 2 and self.ord not in (
             None,
@@ -254,8 +253,7 @@ class Norm(Operation):
             -2,
         ):
             raise ValueError(
-                "Invalid `ord` argument for matrix norm. "
-                f"Received: ord={self.ord}"
+                "Invalid `ord` argument for matrix norm. " f"Received: ord={self.ord}"
             )
         return KerasTensor(
             reduce_shape(x.shape, axis=self.axis, keepdims=self.keepdims),
@@ -345,8 +343,7 @@ class Qr(Operation):
     def compute_output_spec(self, x):
         if len(x.shape) < 2:
             raise ValueError(
-                "Input should have rank >= 2. Received: "
-                f"input.shape = {x.shape}"
+                "Input should have rank >= 2. Received: " f"input.shape = {x.shape}"
             )
         m = x.shape[-2]
         n = x.shape[-1]
@@ -466,9 +463,7 @@ class SolveTriangular(Operation):
         return KerasTensor(b.shape, b.dtype)
 
 
-@keras_export(
-    ["keras.ops.solve_triangular", "keras.ops.linalg.solve_triangular"]
-)
+@keras_export(["keras.ops.solve_triangular", "keras.ops.linalg.solve_triangular"])
 def solve_triangular(a, b, lower=False):
     """Solves a linear system of equations given by `a x = b`.
 
@@ -557,8 +552,7 @@ def _assert_1d(*arrays):
     for a in arrays:
         if a.ndim < 1:
             raise ValueError(
-                "Expected input to have rank >= 1. "
-                "Received scalar input {a}."
+                "Expected input to have rank >= 1. " "Received scalar input {a}."
             )
 
 

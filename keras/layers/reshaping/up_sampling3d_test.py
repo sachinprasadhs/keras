@@ -15,9 +15,7 @@ class UpSampling3dTest(testing.TestCase, parameterized.TestCase):
         length_dim3=[3],
     )
     @pytest.mark.requires_trainable_backend
-    def test_upsampling_3d(
-        self, data_format, length_dim1, length_dim2, length_dim3
-    ):
+    def test_upsampling_3d(self, data_format, length_dim1, length_dim2, length_dim3):
         num_samples = 2
         stack_size = 2
         input_len_dim1 = 10
@@ -125,6 +123,4 @@ class UpSampling3dTest(testing.TestCase, parameterized.TestCase):
         if backend.config.image_data_format() == "channels_first":
             expected_output = expected_output.transpose((0, 4, 1, 2, 3))
             x = x.transpose((0, 4, 1, 2, 3))
-        self.assertAllClose(
-            layers.UpSampling3D(size=(2, 2, 2))(x), expected_output
-        )
+        self.assertAllClose(layers.UpSampling3D(size=(2, 2, 2))(x), expected_output)

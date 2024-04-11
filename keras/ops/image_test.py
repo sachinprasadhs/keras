@@ -103,9 +103,7 @@ class ImageOpsStaticShapeTest(testing.TestCase):
         self.assertEqual(out.shape, (20, 30, 3))
 
         x_batch = KerasTensor([2, 15, 25, 3])
-        out_batch = kimage.pad_images(
-            x_batch, 2, 3, target_height=20, target_width=30
-        )
+        out_batch = kimage.pad_images(x_batch, 2, 3, target_height=20, target_width=30)
         self.assertEqual(out_batch.shape, (2, 20, 30, 3))
 
     def test_crop_images(self):
@@ -114,9 +112,7 @@ class ImageOpsStaticShapeTest(testing.TestCase):
         self.assertEqual(out.shape, (10, 20, 3))
 
         x_batch = KerasTensor([2, 15, 25, 3])
-        out_batch = kimage.crop_images(
-            x_batch, 2, 3, target_height=10, target_width=20
-        )
+        out_batch = kimage.crop_images(x_batch, 2, 3, target_height=10, target_width=20)
         self.assertEqual(out_batch.shape, (2, 10, 20, 3))
 
 
@@ -137,9 +133,7 @@ def _compute_affine_transform_coordinates(image, transform):
     meshgrid = np.meshgrid(
         *[np.arange(size) for size in image.shape[1:]], indexing="ij"
     )
-    indices = np.concatenate(
-        [np.expand_dims(x, axis=-1) for x in meshgrid], axis=-1
-    )
+    indices = np.concatenate([np.expand_dims(x, axis=-1) for x in meshgrid], axis=-1)
     indices = np.tile(indices, (batch_size, 1, 1, 1, 1))
     # swap the values
     transform[:, 4], transform[:, 0] = (
@@ -185,9 +179,7 @@ def _fixed_map_coordinates(
         "reflect": "symmetric",
     }.get(fill_mode, fill_mode)
     if fill_mode == "constant":
-        padded = np.pad(
-            input, padding, mode=pad_mode, constant_values=fill_value
-        )
+        padded = np.pad(input, padding, mode=pad_mode, constant_values=fill_value)
     else:
         padded = np.pad(input, padding, mode=pad_mode)
     result = scipy.ndimage.map_coordinates(
@@ -431,13 +423,8 @@ class ImageOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             ((5, 5), (2, 2), 3, "same", "channels_last"),
         ]
     )
-    def test_extract_patches(
-        self, size, strides, dilation_rate, padding, data_format
-    ):
-        if (
-            data_format == "channels_first"
-            and backend.backend() == "tensorflow"
-        ):
+    def test_extract_patches(self, size, strides, dilation_rate, padding, data_format):
+        if data_format == "channels_first" and backend.backend() == "tensorflow":
             pytest.skip("channels_first unsupported on CPU with TF")
 
         if (
@@ -465,9 +452,7 @@ class ImageOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         if data_format == "channels_first":
-            patches_out = backend.numpy.transpose(
-                patches_out, axes=[0, 2, 3, 1]
-            )
+            patches_out = backend.numpy.transpose(patches_out, axes=[0, 2, 3, 1])
         if data_format == "channels_first":
             image = np.transpose(image, [0, 2, 3, 1])
         patches_ref = tf.image.extract_patches(
@@ -493,15 +478,11 @@ class ImageOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
     )
     def test_map_coordinates(self, shape, dtype, order, fill_mode):
         input_shape, coordinates_shape = shape
-        input = np.arange(math.prod(input_shape), dtype=dtype).reshape(
-            input_shape
-        )
+        input = np.arange(math.prod(input_shape), dtype=dtype).reshape(input_shape)
         coordinates_dtype = "float32" if "int" in dtype else dtype
         coordinates = [
             (size - 1)
-            * np.random.uniform(size=coordinates_shape).astype(
-                coordinates_dtype
-            )
+            * np.random.uniform(size=coordinates_shape).astype(coordinates_dtype)
             for size in input_shape
         ]
         output = kimage.map_coordinates(input, coordinates, order, fill_mode)
@@ -547,9 +528,7 @@ class ImageOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
         ref_padded_image = tf.image.pad_to_bounding_box(
             image, top_padding, left_padding, target_height, target_width
         )
-        self.assertEqual(
-            tuple(padded_image.shape), tuple(ref_padded_image.shape)
-        )
+        self.assertEqual(tuple(padded_image.shape), tuple(ref_padded_image.shape))
         self.assertAllClose(
             ref_padded_image.numpy(),
             backend.convert_to_numpy(padded_image),
@@ -594,9 +573,7 @@ class ImageOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
         ref_cropped_image = tf.image.crop_to_bounding_box(
             image, top_cropping, left_cropping, target_height, target_width
         )
-        self.assertEqual(
-            tuple(cropped_image.shape), tuple(ref_cropped_image.shape)
-        )
+        self.assertEqual(tuple(cropped_image.shape), tuple(ref_cropped_image.shape))
         self.assertAllClose(
             ref_cropped_image.numpy(),
             backend.convert_to_numpy(cropped_image),

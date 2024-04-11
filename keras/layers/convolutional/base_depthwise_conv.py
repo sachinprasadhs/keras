@@ -113,9 +113,7 @@ class BaseDepthwiseConv(Layer):
         self.depth_multiplier = depth_multiplier
         self.kernel_size = standardize_tuple(kernel_size, rank, "kernel_size")
         self.strides = standardize_tuple(strides, rank, "strides")
-        self.dilation_rate = standardize_tuple(
-            dilation_rate, rank, "dilation_rate"
-        )
+        self.dilation_rate = standardize_tuple(dilation_rate, rank, "dilation_rate")
         self.padding = standardize_padding(padding)
         self.data_format = standardize_data_format(data_format)
         self.activation = activations.get(activation)
@@ -253,15 +251,11 @@ class BaseDepthwiseConv(Layer):
                 "depthwise_initializer": initializers.serialize(
                     self.depthwise_initializer
                 ),
-                "bias_initializer": initializers.serialize(
-                    self.bias_initializer
-                ),
+                "bias_initializer": initializers.serialize(self.bias_initializer),
                 "depthwise_regularizer": regularizers.serialize(
                     self.depthwise_regularizer
                 ),
-                "bias_regularizer": regularizers.serialize(
-                    self.bias_regularizer
-                ),
+                "bias_regularizer": regularizers.serialize(self.bias_regularizer),
                 "activity_regularizer": regularizers.serialize(
                     self.activity_regularizer
                 ),

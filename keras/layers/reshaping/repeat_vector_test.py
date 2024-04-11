@@ -31,17 +31,11 @@ class FlattenTest(testing.TestCase):
         self.assertEqual(repeated.shape, (2, 3, None))
 
     def test_repeat_vector_with_invalid_n(self):
-        with self.assertRaisesRegex(
-            TypeError, "Expected an integer value for `n`"
-        ):
+        with self.assertRaisesRegex(TypeError, "Expected an integer value for `n`"):
             layers.RepeatVector(n="3")
 
-        with self.assertRaisesRegex(
-            TypeError, "Expected an integer value for `n`"
-        ):
+        with self.assertRaisesRegex(TypeError, "Expected an integer value for `n`"):
             layers.RepeatVector(n=3.5)
 
-        with self.assertRaisesRegex(
-            TypeError, "Expected an integer value for `n`"
-        ):
+        with self.assertRaisesRegex(TypeError, "Expected an integer value for `n`"):
             layers.RepeatVector(n=[3])

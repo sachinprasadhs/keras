@@ -69,9 +69,7 @@ def categorical(logits, num_samples, dtype="int32", seed=None):
             "`logits` should be a 2-D tensor with shape "
             f"[batch_size, num_classes]. Received: logits={logits}"
         )
-    return backend.random.categorical(
-        logits, num_samples, dtype=dtype, seed=seed
-    )
+    return backend.random.categorical(logits, num_samples, dtype=dtype, seed=seed)
 
 
 @keras_export("keras.random.uniform")
@@ -185,9 +183,7 @@ def truncated_normal(shape, mean=0.0, stddev=1.0, dtype=None, seed=None):
 
 @keras_export("keras.random.dropout")
 def dropout(inputs, rate, noise_shape=None, seed=None):
-    return backend.random.dropout(
-        inputs, rate, noise_shape=noise_shape, seed=seed
-    )
+    return backend.random.dropout(inputs, rate, noise_shape=noise_shape, seed=seed)
 
 
 @keras_export("keras.random.shuffle")

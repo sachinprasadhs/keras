@@ -18,9 +18,7 @@ ALL_OBJECTS = {
 }
 
 ALL_OBJECTS_DICT = {cls.__name__: cls for cls in ALL_OBJECTS}
-ALL_OBJECTS_DICT.update(
-    {to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS}
-)
+ALL_OBJECTS_DICT.update({to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS})
 
 
 @keras_export("keras.regularizers.serialize")
@@ -55,6 +53,4 @@ def get(identifier):
             obj = obj()
         return obj
     else:
-        raise ValueError(
-            f"Could not interpret regularizer identifier: {identifier}"
-        )
+        raise ValueError(f"Could not interpret regularizer identifier: {identifier}")

@@ -128,9 +128,7 @@ class PyDatasetAdapterTest(testing.TestCase, parameterized.TestCase):
             use_multiprocessing=use_multiprocessing,
             max_queue_size=max_queue_size,
         )
-        adapter = py_dataset_adapter.PyDatasetAdapter(
-            py_dataset, shuffle=shuffle
-        )
+        adapter = py_dataset_adapter.PyDatasetAdapter(py_dataset, shuffle=shuffle)
 
         if iterator_type == "np":
             it = adapter.get_numpy_iterator()
@@ -196,9 +194,7 @@ class PyDatasetAdapterTest(testing.TestCase, parameterized.TestCase):
             max_queue_size=8,
             delay=0.5,
         )
-        adapter = py_dataset_adapter.PyDatasetAdapter(
-            speedup_py_dataset, shuffle=False
-        )
+        adapter = py_dataset_adapter.PyDatasetAdapter(speedup_py_dataset, shuffle=False)
         gen = adapter.get_numpy_iterator()
         t0 = time.time()
         for batch in gen:
@@ -245,21 +241,13 @@ class PyDatasetAdapterTest(testing.TestCase, parameterized.TestCase):
 
             def __getitem__(self, idx):
                 if idx == 0:
-                    return np.ones([16, 4], "float32"), np.ones(
-                        [16, 2], "float32"
-                    )
+                    return np.ones([16, 4], "float32"), np.ones([16, 2], "float32")
                 if idx == 1:
-                    return np.ones([16, 5], "float32"), np.ones(
-                        [16, 2], "float32"
-                    )
+                    return np.ones([16, 5], "float32"), np.ones([16, 2], "float32")
                 else:
-                    return np.ones([2, 6], "float32"), np.ones(
-                        [2, 2], "float32"
-                    )
+                    return np.ones([2, 6], "float32"), np.ones([2, 2], "float32")
 
-        adapter = py_dataset_adapter.PyDatasetAdapter(
-            TestPyDataset(), shuffle=False
-        )
+        adapter = py_dataset_adapter.PyDatasetAdapter(TestPyDataset(), shuffle=False)
 
         if iterator_type == "np":
             it = adapter.get_numpy_iterator()

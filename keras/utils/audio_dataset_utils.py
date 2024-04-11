@@ -140,9 +140,7 @@ def audio_dataset_from_directory(
         )
 
     if ragged and output_sequence_length is not None:
-        raise ValueError(
-            "Cannot set both `ragged` and `output_sequence_length`"
-        )
+        raise ValueError("Cannot set both `ragged` and `output_sequence_length`")
 
     if sampling_rate is not None:
         if not isinstance(sampling_rate, int):
@@ -168,9 +166,7 @@ def audio_dataset_from_directory(
         labels = None
         label_mode = None
 
-    dataset_utils.check_validation_split_arg(
-        validation_split, subset, shuffle, seed
-    )
+    dataset_utils.check_validation_split_arg(validation_split, subset, shuffle, seed)
 
     if seed is None:
         seed = np.random.randint(1e6)
@@ -264,9 +260,7 @@ def prepare_dataset(
             dataset = dataset.shuffle(buffer_size=batch_size * 8, seed=seed)
 
         if output_sequence_length is None and not ragged:
-            dataset = dataset.padded_batch(
-                batch_size, padded_shapes=([None, None], [])
-            )
+            dataset = dataset.padded_batch(batch_size, padded_shapes=([None, None], []))
         else:
             dataset = dataset.batch(batch_size)
     else:
@@ -367,9 +361,7 @@ def get_dataset(
     return dataset
 
 
-def read_and_decode_audio(
-    path, sampling_rate=None, output_sequence_length=None
-):
+def read_and_decode_audio(path, sampling_rate=None, output_sequence_length=None):
     """Reads and decodes audio file."""
     audio = tf.io.read_file(path)
 
@@ -400,9 +392,7 @@ def paths_and_labels_to_dataset(
     """Constructs a fixed-size dataset of audio and labels."""
     path_ds = tf.data.Dataset.from_tensor_slices(file_paths)
     audio_ds = path_ds.map(
-        lambda x: read_and_decode_audio(
-            x, sampling_rate, output_sequence_length
-        ),
+        lambda x: read_and_decode_audio(x, sampling_rate, output_sequence_length),
         num_parallel_calls=tf.data.AUTOTUNE,
     )
 
@@ -413,8 +403,6 @@ def paths_and_labels_to_dataset(
         )
 
     if label_mode:
-        label_ds = dataset_utils.labels_to_dataset(
-            labels, label_mode, num_classes
-        )
+        label_ds = dataset_utils.labels_to_dataset(labels, label_mode, num_classes)
         audio_ds = tf.data.Dataset.zip((audio_ds, label_ds))
     return audio_ds

@@ -121,9 +121,7 @@ class Bidirectional(Wrapper):
             config["config"]["name"] = "backward_" + utils.removeprefix(
                 layer.name, "backward_"
             )
-            self.backward_layer = serialization_lib.deserialize_keras_object(
-                config
-            )
+            self.backward_layer = serialization_lib.deserialize_keras_object(config)
         else:
             self.backward_layer = backward_layer
         self._verify_layer_config()
@@ -216,9 +214,7 @@ class Bidirectional(Wrapper):
             forward_inputs, backward_inputs = sequences, sequences
             forward_state, backward_state = None, None
 
-        y = self.forward_layer(
-            forward_inputs, initial_state=forward_state, **kwargs
-        )
+        y = self.forward_layer(forward_inputs, initial_state=forward_state, **kwargs)
         y_rev = self.backward_layer(
             backward_inputs, initial_state=backward_state, **kwargs
         )
@@ -296,9 +292,7 @@ class Bidirectional(Wrapper):
 
     def get_config(self):
         config = {"merge_mode": self.merge_mode}
-        config["layer"] = serialization_lib.serialize_keras_object(
-            self.forward_layer
-        )
+        config["layer"] = serialization_lib.serialize_keras_object(self.forward_layer)
         config["backward_layer"] = serialization_lib.serialize_keras_object(
             self.backward_layer
         )

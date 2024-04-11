@@ -111,14 +111,10 @@ def ask_to_proceed_with_overwrite(filepath):
         True if we can proceed with overwrite, False otherwise.
     """
     overwrite = (
-        input(f"[WARNING] {filepath} already exists - overwrite? [y/n]")
-        .strip()
-        .lower()
+        input(f"[WARNING] {filepath} already exists - overwrite? [y/n]").strip().lower()
     )
     while overwrite not in ("y", "n"):
-        overwrite = (
-            input('Enter "y" (overwrite) or "n" (cancel).').strip().lower()
-        )
+        overwrite = input('Enter "y" (overwrite) or "n" (cancel).').strip().lower()
     if overwrite == "n":
         return False
     print_msg("[TIP] Next time specify overwrite=True!")

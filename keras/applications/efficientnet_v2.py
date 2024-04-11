@@ -638,9 +638,7 @@ def MBConvBlock(
                 momentum=bn_momentum,
                 name=name + "expand_bn",
             )(x)
-            x = layers.Activation(activation, name=name + "expand_activation")(
-                x
-            )
+            x = layers.Activation(activation, name=name + "expand_activation")(x)
         else:
             x = inputs
 

@@ -64,9 +64,7 @@ class TestEpochIterator(testing.TestCase):
             sample_weights = np.random.random((100,))
             _ = epoch_iterator.EpochIterator(x=x, sample_weight=sample_weights)
 
-    @pytest.mark.skipif(
-        backend.backend() != "torch", reason="Need to import torch"
-    )
+    @pytest.mark.skipif(backend.backend() != "torch", reason="Need to import torch")
     def test_torch_dataloader(self):
         import torch
 
@@ -93,9 +91,7 @@ class TestEpochIterator(testing.TestCase):
             self.assertEqual(batch[0].shape, (8, 2))
             self.assertEqual(batch[1].shape, (8, 1))
 
-    @pytest.mark.skipif(
-        backend.backend() != "torch", reason="Need to import torch"
-    )
+    @pytest.mark.skipif(backend.backend() != "torch", reason="Need to import torch")
     def test_unsupported_y_arg_torch_dataloader(self):
         import torch
 
@@ -113,9 +109,7 @@ class TestEpochIterator(testing.TestCase):
         torch_dataset = ExampleTorchDataset(
             np.random.random((100, 16)), np.random.random((100, 4))
         )
-        x = torch.utils.data.DataLoader(
-            torch_dataset, batch_size=8, shuffle=True
-        )
+        x = torch.utils.data.DataLoader(torch_dataset, batch_size=8, shuffle=True)
         y = np.random.random((100, 4))
 
         with self.assertRaisesRegex(
@@ -124,9 +118,7 @@ class TestEpochIterator(testing.TestCase):
         ):
             _ = epoch_iterator.EpochIterator(x=x, y=y)
 
-    @pytest.mark.skipif(
-        backend.backend() != "torch", reason="Need to import torch"
-    )
+    @pytest.mark.skipif(backend.backend() != "torch", reason="Need to import torch")
     def test_unsupported_sample_weights_arg_torch_dataloader(self):
         import torch
 
@@ -144,9 +136,7 @@ class TestEpochIterator(testing.TestCase):
         torch_dataset = ExampleTorchDataset(
             np.random.random((100, 16)), np.random.random((100, 4))
         )
-        x = torch.utils.data.DataLoader(
-            torch_dataset, batch_size=8, shuffle=True
-        )
+        x = torch.utils.data.DataLoader(torch_dataset, batch_size=8, shuffle=True)
         sample_weights = np.random.random((100,))
 
         with self.assertRaisesRegex(

@@ -47,9 +47,7 @@ class Variable(KerasVariable):
 def convert_to_tensor(x, dtype=None, sparse=True):
     if dtype is not None:
         dtype = standardize_dtype(dtype)
-    if isinstance(x, (jnp.ndarray, jax.Array)) and (
-        dtype is None or x.dtype == dtype
-    ):
+    if isinstance(x, (jnp.ndarray, jax.Array)) and (dtype is None or x.dtype == dtype):
         # Skip the conversion early if the instance is already a JAX array.
         # This is important in the multi-process context since jax.array(x) for
         # an existing distributed jax array will raise error.
@@ -145,8 +143,7 @@ def compute_output_spec(fn, *args, **kwargs):
                 }
             if isinstance(x, list):
                 return [
-                    convert_keras_tensor_to_jax(xi, fill_value=fill_value)
-                    for xi in x
+                    convert_keras_tensor_to_jax(xi, fill_value=fill_value) for xi in x
                 ]
             return x
 
@@ -204,10 +201,7 @@ def compute_output_spec(fn, *args, **kwargs):
 
                 def merge_shapes(shape1, shape2):
                     return tuple(
-                        [
-                            d1 if d1 == d2 else None
-                            for d1, d2 in zip(shape1, shape2)
-                        ]
+                        [d1 if d1 == d2 else None for d1, d2 in zip(shape1, shape2)]
                     )
 
                 def convert_jax_specs_to_keras_tensor(x1, x2):
@@ -261,9 +255,7 @@ def compute_output_spec(fn, *args, **kwargs):
                     return KerasTensor(x.shape, x.dtype, sparse=True)
                 return x
 
-            output_spec = tree.map_structure(
-                convert_jax_spec_to_keras_tensor, jax_out
-            )
+            output_spec = tree.map_structure(convert_jax_spec_to_keras_tensor, jax_out)
 
     return output_spec
 
@@ -344,8 +336,7 @@ def stop_gradient(variable):
 
 def unstack(x, num=None, axis=0):
     return [
-        jax.lax.index_in_dim(x, i, axis, keepdims=False)
-        for i in range(x.shape[axis])
+        jax.lax.index_in_dim(x, i, axis, keepdims=False) for i in range(x.shape[axis])
     ]
 
 

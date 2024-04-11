@@ -16,9 +16,7 @@ class SeedGeneratorTest(testing.TestCase):
         gen = seed_generator.SeedGenerator(seed=seed)
         self.assertEqual(ops.convert_to_numpy(gen.state)[0], seed)
 
-        with self.assertRaisesRegex(
-            ValueError, "Argument `seed` must be an integer"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `seed` must be an integer"):
             seed_generator.SeedGenerator(seed="invalid_seed")
 
     def test_seed_generator_next(self):
@@ -57,9 +55,7 @@ class SeedGeneratorTest(testing.TestCase):
             seed_generator.draw_seed("invalid_seed")
 
     def test_seed_generator_unexpected_kwargs(self):
-        with self.assertRaisesRegex(
-            ValueError, "Unrecognized keyword arguments"
-        ):
+        with self.assertRaisesRegex(ValueError, "Unrecognized keyword arguments"):
             seed_generator.SeedGenerator(invalid_arg="unexpected_value")
 
     @pytest.mark.skipif(

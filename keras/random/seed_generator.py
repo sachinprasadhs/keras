@@ -79,9 +79,7 @@ class SeedGenerator:
         # Use * 1 to create a copy
         new_seed_value = seed_state.value * 1
         if ordered:
-            increment = self.backend.convert_to_tensor(
-                np.array([0, 1]), dtype="uint32"
-            )
+            increment = self.backend.convert_to_tensor(np.array([0, 1]), dtype="uint32")
             self.state.assign(seed_state + increment)
         else:
             # This produces a sequence of near-unique numbers

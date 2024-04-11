@@ -31,15 +31,11 @@ class SwapEMAWeightsTest(testing.TestCase):
         self.x_train = x_train
         self.y_train = y_train
 
-    def _get_compiled_model(
-        self, use_ema=True, jit_compile=True, loss_scale=False
-    ):
+    def _get_compiled_model(self, use_ema=True, jit_compile=True, loss_scale=False):
         optimizer = optimizers.SGD(use_ema=use_ema, ema_momentum=0.9)
         if loss_scale:
             optimizer = optimizers.LossScaleOptimizer(optimizer)
-        model = Sequential(
-            [layers.Dense(2, kernel_initializer="ones", use_bias=False)]
-        )
+        model = Sequential([layers.Dense(2, kernel_initializer="ones", use_bias=False)])
         model.compile(
             optimizer=optimizer,
             loss=losses.MeanSquaredError(),

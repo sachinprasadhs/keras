@@ -269,17 +269,13 @@ class Sequential(Model):
     def inputs(self):
         if self._functional:
             return self._functional.inputs
-        raise ValueError(
-            f"Sequential model '{self.name}' has no defined inputs yet."
-        )
+        raise ValueError(f"Sequential model '{self.name}' has no defined inputs yet.")
 
     @property
     def outputs(self):
         if self._functional:
             return self._functional.outputs
-        raise ValueError(
-            f"Sequential model '{self.name}' has no defined outputs yet."
-        )
+        raise ValueError(f"Sequential model '{self.name}' has no defined outputs yet.")
 
     @property
     def input_dtype(self):

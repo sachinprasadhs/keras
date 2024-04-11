@@ -222,9 +222,7 @@ class JaxLayer(Layer):
             )
 
         if init_fn is None and params is None and state is None:
-            raise ValueError(
-                "`init_fn`, `params` and `state` cannot all be `None`."
-            )
+            raise ValueError("`init_fn`, `params` and `state` cannot all be `None`.")
 
         super().__init__(**kwargs)
         self.call_fn = call_fn
@@ -253,8 +251,7 @@ class JaxLayer(Layer):
         for parameter_name in required:
             if parameter_name not in fn_parameters:
                 raise ValueError(
-                    f"Missing required argument in `{fn_name}`: "
-                    f"`{parameter_name}`"
+                    f"Missing required argument in `{fn_name}`: " f"`{parameter_name}`"
                 )
 
         parameter_names = []
@@ -298,9 +295,7 @@ class JaxLayer(Layer):
                 variable.assign(value)
                 return variable
             elif isinstance(value, (np.generic, int, float)):
-                variable = self.add_weight(
-                    (), initializer="zeros", trainable=trainable
-                )
+                variable = self.add_weight((), initializer="zeros", trainable=trainable)
                 variable.assign(value)
                 return variable
             else:
@@ -379,9 +374,7 @@ class JaxLayer(Layer):
         else:
             init_params, init_state = init_result, None
 
-        self.tracked_params = self._create_variables(
-            init_params, trainable=True
-        )
+        self.tracked_params = self._create_variables(init_params, trainable=True)
         self.tracked_state = self._create_variables(init_state, trainable=False)
         self.built = True
 
@@ -392,13 +385,9 @@ class JaxLayer(Layer):
         call_args = []
         for argument_name in self.call_fn_arguments:
             if argument_name == "params":
-                call_args.append(
-                    jax.tree_util.tree_map(unwrap_variable, self.params)
-                )
+                call_args.append(jax.tree_util.tree_map(unwrap_variable, self.params))
             elif argument_name == "state":
-                call_args.append(
-                    jax.tree_util.tree_map(unwrap_variable, self.state)
-                )
+                call_args.append(jax.tree_util.tree_map(unwrap_variable, self.state))
             elif argument_name == "rng":
                 call_args.append(self._get_call_rng(training))
             elif argument_name == "inputs":
@@ -418,9 +407,7 @@ class JaxLayer(Layer):
 
         if self.has_state:
             predictions, new_state = self.call_fn(*call_args)
-            jax.tree_util.tree_map(
-                assign_state_to_variable, new_state, self.state
-            )
+            jax.tree_util.tree_map(assign_state_to_variable, new_state, self.state)
             return predictions
         else:
             return self.call_fn(*call_args)
@@ -592,10 +579,7 @@ class FlaxLayer(JaxLayer):
                 )
             )
 
-        if (
-            "training"
-            in inspect.signature(method or module.__call__).parameters
-        ):
+        if "training" in inspect.signature(method or module.__call__).parameters:
             call_fn, init_fn = apply_with_training, init_with_training
         else:
             call_fn, init_fn = apply_without_training, init_without_training
@@ -649,10 +633,7 @@ class FlaxLayer(JaxLayer):
 
     def get_config(self):
         config_method = self.method
-        if (
-            hasattr(self.method, "__self__")
-            and self.method.__self__ == self.module
-        ):
+        if hasattr(self.method, "__self__") and self.method.__self__ == self.module:
             # A method bound to the module is serialized by name.
             config_method = self.method.__name__
         config = {

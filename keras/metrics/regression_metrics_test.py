@@ -55,16 +55,12 @@ class CosineSimilarityTest(testing.TestCase):
         self.y_pred = self.np_y_pred
 
     def test_config(self):
-        cosine_obj = metrics.CosineSimilarity(
-            axis=2, name="my_cos", dtype="int32"
-        )
+        cosine_obj = metrics.CosineSimilarity(axis=2, name="my_cos", dtype="int32")
         self.assertEqual(cosine_obj.name, "my_cos")
         self.assertEqual(cosine_obj.dtype, "int32")
 
         # Check save and restore config
-        cosine_obj2 = metrics.CosineSimilarity.from_config(
-            cosine_obj.get_config()
-        )
+        cosine_obj2 = metrics.CosineSimilarity.from_config(cosine_obj.get_config())
         self.assertEqual(cosine_obj2.name, "my_cos")
         self.assertEqual(cosine_obj2._dtype, "int32")
 
@@ -132,9 +128,7 @@ class MeanAbsoluteErrorTest(testing.TestCase):
 
 class MeanAbsolutePercentageErrorTest(testing.TestCase):
     def test_config(self):
-        mape_obj = metrics.MeanAbsolutePercentageError(
-            name="my_mape", dtype="int32"
-        )
+        mape_obj = metrics.MeanAbsolutePercentageError(name="my_mape", dtype="int32")
         self.assertEqual(mape_obj.name, "my_mape")
         self.assertEqual(mape_obj._dtype, "int32")
 
@@ -185,9 +179,7 @@ class MeanAbsolutePercentageErrorTest(testing.TestCase):
 
 class MeanSquaredLogarithmicErrorTest(testing.TestCase):
     def test_config(self):
-        msle_obj = metrics.MeanSquaredLogarithmicError(
-            name="my_msle", dtype="int32"
-        )
+        msle_obj = metrics.MeanSquaredLogarithmicError(name="my_msle", dtype="int32")
         self.assertEqual(msle_obj.name, "my_msle")
         self.assertEqual(msle_obj._dtype, "int32")
 
@@ -230,9 +222,7 @@ class RootMeanSquaredErrorTest(testing.TestCase):
         self.assertEqual(rmse_obj.name, "rmse")
         self.assertEqual(rmse_obj._dtype, "int32")
 
-        rmse_obj2 = metrics.RootMeanSquaredError.from_config(
-            rmse_obj.get_config()
-        )
+        rmse_obj2 = metrics.RootMeanSquaredError.from_config(rmse_obj.get_config())
         self.assertEqual(rmse_obj2.name, "rmse")
         self.assertEqual(rmse_obj2._dtype, "int32")
 
@@ -287,13 +277,9 @@ class LogCoshErrorTest(testing.TestCase):
         self.setup()
         logcosh_obj = metrics.LogCoshError(dtype="float32")
         sample_weight = np.array([[1.2], [3.4]])
-        result = logcosh_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        result = logcosh_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
 
-        sample_weight = np.asarray([1.2, 1.2, 1.2, 3.4, 3.4, 3.4]).reshape(
-            (2, 3)
-        )
+        sample_weight = np.asarray([1.2, 1.2, 1.2, 3.4, 3.4, 3.4]).reshape((2, 3))
         expected_result = np.multiply(self.expected_results, sample_weight)
         expected_result = np.sum(expected_result) / np.sum(sample_weight)
         self.assertAllClose(result, expected_result, atol=1e-3)
@@ -334,9 +320,7 @@ class R2ScoreTest(parameterized.TestCase, testing.TestCase):
         ("uniform_average", 0, -0.12),
         ("variance_weighted_average", 0, -0.12),
     )
-    def test_r2_sklearn_comparison(
-        self, class_aggregation, num_regressors, result
-    ):
+    def test_r2_sklearn_comparison(self, class_aggregation, num_regressors, result):
         y_true = [[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]]
         y_pred = [[0.4, 0.5, 0.6], [0.1, 0.2, 0.3], [0.5, 0.8, 0.2]]
         self._run_test(

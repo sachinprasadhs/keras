@@ -95,9 +95,7 @@ class Iterator(PyDataset):
             else:
                 self.batch_index = 0
             self.total_batches_seen += 1
-            yield self.index_array[
-                current_index : current_index + self.batch_size
-            ]
+            yield self.index_array[current_index : current_index + self.batch_size]
 
     def __iter__(self):
         # Needed if we want to do something like:
@@ -136,9 +134,7 @@ def _iter_valid_files(directory, white_list_formats, follow_links):
     """
 
     def _recursive_list(subpath):
-        return sorted(
-            os.walk(subpath, followlinks=follow_links), key=lambda x: x[0]
-        )
+        return sorted(os.walk(subpath, followlinks=follow_links), key=lambda x: x[0])
 
     for root, _, files in _recursive_list(directory):
         for fname in sorted(files):
@@ -178,24 +174,18 @@ def _list_valid_filenames_in_directory(
     """
     dirname = os.path.basename(directory)
     if split:
-        all_files = list(
-            _iter_valid_files(directory, white_list_formats, follow_links)
-        )
+        all_files = list(_iter_valid_files(directory, white_list_formats, follow_links))
         num_files = len(all_files)
         start, stop = int(split[0] * num_files), int(split[1] * num_files)
         valid_files = all_files[start:stop]
     else:
-        valid_files = _iter_valid_files(
-            directory, white_list_formats, follow_links
-        )
+        valid_files = _iter_valid_files(directory, white_list_formats, follow_links)
     classes = []
     filenames = []
     for root, fname in valid_files:
         classes.append(class_indices[dirname])
         absolute_path = os.path.join(root, fname)
-        relative_path = os.path.join(
-            dirname, os.path.relpath(absolute_path, directory)
-        )
+        relative_path = os.path.join(dirname, os.path.relpath(absolute_path, directory))
         filenames.append(relative_path)
 
     return classes, filenames
@@ -303,9 +293,7 @@ class BatchFromFilesMixin:
         Returns:
             A batch of transformed samples.
         """
-        batch_x = np.zeros(
-            (len(index_array),) + self.image_shape, dtype=self.dtype
-        )
+        batch_x = np.zeros((len(index_array),) + self.image_shape, dtype=self.dtype)
         # build batch of image data
         # self.filepaths is dynamic, is better to call it once outside the loop
         filepaths = self.filepaths
@@ -330,9 +318,7 @@ class BatchFromFilesMixin:
         # optionally save augmented images to disk for debugging purposes
         if self.save_to_dir:
             for i, j in enumerate(index_array):
-                img = image_utils.array_to_img(
-                    batch_x[i], self.data_format, scale=True
-                )
+                img = image_utils.array_to_img(batch_x[i], self.data_format, scale=True)
                 fname = "{prefix}_{index}_{hash}.{format}".format(
                     prefix=self.save_prefix,
                     index=j,
@@ -488,8 +474,7 @@ class DirectoryIterator(BatchFromFilesMixin, Iterator):
             i += len(classes)
 
         io_utils.print_msg(
-            f"Found {self.samples} images belonging to "
-            f"{self.num_classes} classes."
+            f"Found {self.samples} images belonging to " f"{self.num_classes} classes."
         )
         pool.close()
         pool.join()
@@ -651,17 +636,13 @@ class NumpyArrayIterator(Iterator):
         for i, j in enumerate(index_array):
             x = self.x[j]
             params = self.image_data_generator.get_random_transform(x.shape)
-            x = self.image_data_generator.apply_transform(
-                x.astype(self.dtype), params
-            )
+            x = self.image_data_generator.apply_transform(x.astype(self.dtype), params)
             x = self.image_data_generator.standardize(x)
             batch_x[i] = x
 
         if self.save_to_dir:
             for i, j in enumerate(index_array):
-                img = image_utils.array_to_img(
-                    batch_x[i], self.data_format, scale=True
-                )
+                img = image_utils.array_to_img(batch_x[i], self.data_format, scale=True)
                 fname = "{prefix}_{index}_{hash}.{format}".format(
                     prefix=self.save_prefix,
                     index=j,
@@ -688,9 +669,7 @@ def validate_filename(filename, white_list_formats):
     Returns:
         A boolean value indicating if the filename is valid or not
     """
-    return filename.lower().endswith(white_list_formats) and os.path.isfile(
-        filename
-    )
+    return filename.lower().endswith(white_list_formats) and os.path.isfile(filename)
 
 
 class DataFrameIterator(BatchFromFilesMixin, Iterator):
@@ -749,9 +728,7 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
         self.dtype = dtype
         # check that inputs match the required class_mode
         self._check_params(df, x_col, y_col, weight_col, classes)
-        if (
-            validate_filenames
-        ):  # check which image files are valid and keep them
+        if validate_filenames:  # check which image files are valid and keep them
             df = self._filter_valid_filepaths(df, x_col)
         if class_mode not in ["input", "multi_output", "raw", None]:
             df, classes = self._filter_classes(df, y_col, classes)
@@ -775,9 +752,7 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
         if class_mode == "raw":
             self._targets = df[y_col].values
         self.samples = len(self.filenames)
-        validated_string = (
-            "validated" if validate_filenames else "non-validated"
-        )
+        validated_string = "validated" if validate_filenames else "non-validated"
         if class_mode in ["input", "multi_output", "raw", None]:
             io_utils.print_msg(
                 f"Found {self.samples} {validated_string} image filenames."
@@ -810,9 +785,7 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
             )
         # check that filenames/filepaths column values are all strings
         if not all(df[x_col].apply(lambda x: isinstance(x, str))):
-            raise TypeError(
-                f"All values in column x_col={x_col} must be strings."
-            )
+            raise TypeError(f"All values in column x_col={x_col} must be strings.")
         # check labels are string if class_mode is binary or sparse
         if self.class_mode in {"binary", "sparse"}:
             if not all(df[y_col].apply(lambda x: isinstance(x, str))):
@@ -909,12 +882,8 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
         Returns:
             absolute paths to image files
         """
-        filepaths = df[x_col].map(
-            lambda fname: os.path.join(self.directory, fname)
-        )
-        mask = filepaths.apply(
-            validate_filename, args=(self.white_list_formats,)
-        )
+        filepaths = df[x_col].map(lambda fname: os.path.join(self.directory, fname))
+        mask = filepaths.apply(validate_filename, args=(self.white_list_formats,))
         n_invalid = (~mask).sum()
         if n_invalid:
             warnings.warn(
@@ -1193,8 +1162,7 @@ class ImageDataGenerator:
             )
         if class_mode == "other":
             warnings.warn(
-                '`class_mode="other"` is deprecated, please use '
-                '`class_mode="raw"`.',
+                '`class_mode="other"` is deprecated, please use ' '`class_mode="raw"`.',
                 DeprecationWarning,
             )
             class_mode = "raw"
@@ -1332,9 +1300,7 @@ class ImageDataGenerator:
                 ty = np.random.choice(self.width_shift_range)
                 ty *= np.random.choice([-1, 1])
             except ValueError:  # floating point
-                ty = np.random.uniform(
-                    -self.width_shift_range, self.width_shift_range
-                )
+                ty = np.random.uniform(-self.width_shift_range, self.width_shift_range)
             if np.max(self.width_shift_range) < 1:
                 ty *= img_shape[img_col_axis]
         else:
@@ -1348,9 +1314,7 @@ class ImageDataGenerator:
         if self.zoom_range[0] == 1 and self.zoom_range[1] == 1:
             zx, zy = 1, 1
         else:
-            zx, zy = np.random.uniform(
-                self.zoom_range[0], self.zoom_range[1], 2
-            )
+            zx, zy = np.random.uniform(self.zoom_range[0], self.zoom_range[1], 2)
 
         flip_horizontal = (np.random.random() < 0.5) * self.horizontal_flip
         flip_vertical = (np.random.random() < 0.5) * self.vertical_flip
@@ -1440,9 +1404,7 @@ class ImageDataGenerator:
             x = flip_axis(x, img_row_axis)
 
         if transform_parameters.get("brightness") is not None:
-            x = apply_brightness_shift(
-                x, transform_parameters["brightness"], False
-            )
+            x = apply_brightness_shift(x, transform_parameters["brightness"], False)
 
         return x
 
@@ -1681,9 +1643,7 @@ def apply_channel_shift(x, intensity, channel_axis=0):
     """
     x = np.rollaxis(x, channel_axis, 0)
     min_x, max_x = np.min(x), np.max(x)
-    channel_images = [
-        np.clip(x_channel + intensity, min_x, max_x) for x_channel in x
-    ]
+    channel_images = [np.clip(x_channel + intensity, min_x, max_x) for x_channel in x]
     x = np.stack(channel_images, axis=0)
     x = np.rollaxis(x, 0, channel_axis + 1)
     return x
@@ -1799,24 +1759,18 @@ def apply_affine_transform(
     # 1. x must 2D image with one or more channels (i.e., a 3D tensor)
     # 2. channels must be either first or last dimension
     if np.unique([row_axis, col_axis, channel_axis]).size != 3:
-        raise ValueError(
-            "'row_axis', 'col_axis', and 'channel_axis' must be distinct"
-        )
+        raise ValueError("'row_axis', 'col_axis', and 'channel_axis' must be distinct")
 
     # shall we support negative indices?
     valid_indices = set([0, 1, 2])
     actual_indices = set([row_axis, col_axis, channel_axis])
     if actual_indices != valid_indices:
-        raise ValueError(
-            f"Invalid axis' indices: {actual_indices - valid_indices}"
-        )
+        raise ValueError(f"Invalid axis' indices: {actual_indices - valid_indices}")
 
     if x.ndim != 3:
         raise ValueError("Input arrays must be multi-channel 2D images.")
     if channel_axis not in [0, 2]:
-        raise ValueError(
-            "Channels are allowed and the first and last dimensions."
-        )
+        raise ValueError("Channels are allowed and the first and last dimensions.")
 
     transform_matrix = None
     if theta != 0:
@@ -1856,9 +1810,7 @@ def apply_affine_transform(
 
     if transform_matrix is not None:
         h, w = x.shape[row_axis], x.shape[col_axis]
-        transform_matrix = transform_matrix_offset_center(
-            transform_matrix, h, w
-        )
+        transform_matrix = transform_matrix_offset_center(transform_matrix, h, w)
         x = np.rollaxis(x, channel_axis, 0)
 
         # Matrix construction assumes that coordinates are x, y (in that order).

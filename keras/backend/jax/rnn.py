@@ -45,13 +45,9 @@ def rnn(
 
     def _expand_mask(mask_t, input_t, fixed_dim=1):
         if tree.is_nested(mask_t):
-            raise ValueError(
-                f"mask_t is expected to be tensor, but got {mask_t}"
-            )
+            raise ValueError(f"mask_t is expected to be tensor, but got {mask_t}")
         if tree.is_nested(input_t):
-            raise ValueError(
-                f"input_t is expected to be tensor, but got {input_t}"
-            )
+            raise ValueError(f"input_t is expected to be tensor, but got {input_t}")
         rank_diff = len(input_t.shape) - len(mask_t.shape)
         for _ in range(rank_diff):
             mask_t = jnp.expand_dims(mask_t, -1)
@@ -77,9 +73,7 @@ def rnn(
             return input_t
 
         if tree.is_nested(inputs):
-            processed_input = tree.map_structure(
-                _process_single_input_t, inputs
-            )
+            processed_input = tree.map_structure(_process_single_input_t, inputs)
         else:
             processed_input = (_process_single_input_t(inputs),)
 
@@ -109,14 +103,10 @@ def rnn(
 
                 flat_states = tree.flatten(states)
                 flat_new_states = tree.flatten(new_states)
-                tiled_mask_t = tuple(
-                    _expand_mask(mask_t, s) for s in flat_states
-                )
+                tiled_mask_t = tuple(_expand_mask(mask_t, s) for s in flat_states)
                 flat_final_states = tuple(
                     jnp.where(m, s, ps)
-                    for m, s, ps in zip(
-                        tiled_mask_t, flat_new_states, flat_states
-                    )
+                    for m, s, ps in zip(tiled_mask_t, flat_new_states, flat_states)
                 )
                 states = tree.pack_sequence_as(states, flat_final_states)
 
@@ -133,9 +123,7 @@ def rnn(
         else:  # mask is None
             for i in range(time_steps):
                 inp = _get_input_tensor(i)
-                output, states = step_function(
-                    inp, tuple(states) + tuple(constants)
-                )
+                output, states = step_function(inp, tuple(states) + tuple(constants))
                 if return_all_outputs:
                     successive_outputs.append(output)
                     successive_states.append(states)
@@ -167,8 +155,7 @@ def rnn(
                     masked_outs = jnp.where(is_masked, output_tm1, output_t)
 
                 new_states = [
-                    jnp.where(is_masked, s, ns)
-                    for s, ns in zip(states, new_states)
+                    jnp.where(is_masked, s, ns) for s, ns in zip(states, new_states)
                 ]
                 return (new_states, masked_outs)
 
@@ -220,7 +207,4 @@ def gru(*args, **kwargs):
 
 
 def unstack(x, axis=0):
-    return [
-        lax.index_in_dim(x, i, axis, keepdims=False)
-        for i in range(x.shape[axis])
-    ]
+    return [lax.index_in_dim(x, i, axis, keepdims=False) for i in range(x.shape[axis])]

@@ -74,13 +74,9 @@ def _convert_conv_tranpose_padding_args_from_keras_to_torch(
         # When output_padding is None, we want the shape of the output to be
         # `input * s`, otherwise we use the value provided.
         output_padding = (
-            stride - kernel_size % 2
-            if output_padding is None
-            else output_padding
+            stride - kernel_size % 2 if output_padding is None else output_padding
         )
-        torch_padding = max(
-            -((kernel_size % 2 - kernel_size + output_padding) // 2), 0
-        )
+        torch_padding = max(-((kernel_size % 2 - kernel_size + output_padding) // 2), 0)
         torch_output_padding = (
             2 * torch_padding + kernel_size % 2 - kernel_size + output_padding
         )
@@ -125,9 +121,7 @@ def compute_conv_transpose_padding_args_for_jax(
         )
         strides_i = strides if isinstance(strides, int) else strides[i]
         dilation_rate_i = (
-            dilation_rate
-            if isinstance(dilation_rate, int)
-            else dilation_rate[i]
+            dilation_rate if isinstance(dilation_rate, int) else dilation_rate[i]
         )
         (
             pad_left,
@@ -165,9 +159,7 @@ def compute_conv_transpose_padding_args_for_torch(
         )
         strides_i = strides if isinstance(strides, int) else strides[i]
         dilation_rate_i = (
-            dilation_rate
-            if isinstance(dilation_rate, int)
-            else dilation_rate[i]
+            dilation_rate if isinstance(dilation_rate, int) else dilation_rate[i]
         )
         (
             torch_padding,
@@ -237,9 +229,7 @@ def compute_conv_transpose_output_shape(
 
     output_shape = []
     for i in range(num_spatial_dims):
-        current_output_padding = (
-            None if output_padding is None else output_padding[i]
-        )
+        current_output_padding = None if output_padding is None else output_padding[i]
 
         shape_i = _get_output_shape_given_tf_padding(
             input_size=input_spatial_shape[i],
@@ -263,8 +253,7 @@ def canonicalize_axis(axis, num_dims):
     axis = operator.index(axis)
     if not -num_dims <= axis < num_dims:
         raise ValueError(
-            f"axis {axis} is out of bounds for an array with dimension "
-            f"{num_dims}."
+            f"axis {axis} is out of bounds for an array with dimension " f"{num_dims}."
         )
     if axis < 0:
         axis = axis + num_dims
@@ -282,8 +271,7 @@ def to_tuple_or_list(value):
         return value
     if not isinstance(value, (int, tuple, list)):
         raise ValueError(
-            "`value` must be an integer, tuple or list. "
-            f"Received: value={value}"
+            "`value` must be an integer, tuple or list. " f"Received: value={value}"
         )
     if isinstance(value, int):
         return (value,)

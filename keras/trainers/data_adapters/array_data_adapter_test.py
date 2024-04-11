@@ -105,9 +105,7 @@ class TestArrayDataAdapter(testing.TestCase, parameterized.TestCase):
             bx, by = batch
             self.assertIsInstance(bx, expected_class)
             self.assertIsInstance(by, expected_class)
-            self.assertEqual(
-                backend.standardize_dtype(bx.dtype), backend.floatx()
-            )
+            self.assertEqual(backend.standardize_dtype(bx.dtype), backend.floatx())
             self.assertEqual(backend.standardize_dtype(by.dtype), "int32")
             if i < 2:
                 self.assertEqual(bx.shape, (16, xdim1))

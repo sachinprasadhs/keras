@@ -150,9 +150,7 @@ class Hashing(Layer):
 
         # By default, output int32 when output_mode='int' and floats otherwise.
         if "dtype" not in kwargs or kwargs["dtype"] is None:
-            kwargs["dtype"] = (
-                "int64" if output_mode == "int" else backend.floatx()
-            )
+            kwargs["dtype"] = "int64" if output_mode == "int" else backend.floatx()
 
         super().__init__(**kwargs)
 
@@ -207,9 +205,7 @@ class Hashing(Layer):
         self.supports_jit = False
 
     def call(self, inputs):
-        if not isinstance(
-            inputs, (tf.Tensor, tf.SparseTensor, tf.RaggedTensor)
-        ):
+        if not isinstance(inputs, (tf.Tensor, tf.SparseTensor, tf.RaggedTensor)):
             inputs = tf.convert_to_tensor(backend.convert_to_numpy(inputs))
         if isinstance(inputs, tf.SparseTensor):
             indices = tf.SparseTensor(
@@ -248,9 +244,7 @@ class Hashing(Layer):
                 values, hash_bins, name="hash", key=self.salt
             )
         else:
-            values = tf.strings.to_hash_bucket_fast(
-                values, hash_bins, name="hash"
-            )
+            values = tf.strings.to_hash_bucket_fast(values, hash_bins, name="hash")
         if mask is not None:
             values = tf.add(values, tf.ones_like(values))
             values = tf.where(mask, tf.zeros_like(values), values)

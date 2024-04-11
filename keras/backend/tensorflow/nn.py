@@ -221,8 +221,7 @@ def _convert_data_format(data_format, ndim):
             return "NDHWC"
         else:
             raise ValueError(
-                f"Input rank not supported: {ndim}. "
-                "Expected values are [3, 4, 5]"
+                f"Input rank not supported: {ndim}. " "Expected values are [3, 4, 5]"
             )
     elif data_format == "channels_first":
         if ndim == 3:
@@ -233,8 +232,7 @@ def _convert_data_format(data_format, ndim):
             return "NCDHW"
         else:
             raise ValueError(
-                f"Input rank not supported: {ndim}. "
-                "Expected values are [3, 4, 5]"
+                f"Input rank not supported: {ndim}. " "Expected values are [3, 4, 5]"
             )
     else:
         raise ValueError(
@@ -619,9 +617,7 @@ def sparse_categorical_crossentropy(target, output, from_logits=False, axis=-1):
         Output tensor.
     """
     if axis != -1 and axis != len(output.shape) - 1:
-        raise ValueError(
-            f"Only axis=-1 is currently supported. Received: axis={axis}"
-        )
+        raise ValueError(f"Only axis=-1 is currently supported. Received: axis={axis}")
     output, from_logits = _get_logits(
         output, from_logits, "Softmax", "sparse_categorical_crossentropy"
     )
@@ -697,9 +693,7 @@ def binary_crossentropy(target, output, from_logits=False):
     )
 
     if from_logits:
-        return tf.nn.sigmoid_cross_entropy_with_logits(
-            labels=target, logits=output
-        )
+        return tf.nn.sigmoid_cross_entropy_with_logits(labels=target, logits=output)
 
     # Compute cross entropy from probabilities.
     output = tf.clip_by_value(output, epsilon(), 1.0 - epsilon())
@@ -767,9 +761,7 @@ def _compute_moments(x, axes, keepdims):
     return tf.nn.moments(x, axes, keepdims=keepdims)
 
 
-def batch_normalization(
-    x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3
-):
+def batch_normalization(x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3):
     if axis != -1:
         shape = [1] * len(x.shape)
         shape[axis] = mean.shape[0]

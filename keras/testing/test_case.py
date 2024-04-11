@@ -51,9 +51,7 @@ class TestCase(unittest.TestCase):
             return
         msg = msg or ""
         raise AssertionError(
-            f"The two values are close at all elements. \n"
-            f"{msg}.\n"
-            f"Values: {x1}"
+            f"The two values are close at all elements. \n" f"{msg}.\n" f"Values: {x1}"
         )
 
     def assertAlmostEqual(self, x1, x2, decimal=3, msg=None):
@@ -112,9 +110,7 @@ class TestCase(unittest.TestCase):
         with custom_object_scope(custom_objects):
             revived_instance = cls.from_config(config)
         revived_config = revived_instance.get_config()
-        revived_config_json = json.dumps(
-            revived_config, sort_keys=True, indent=4
-        )
+        revived_config_json = json.dumps(revived_config, sort_keys=True, indent=4)
         self.assertEqual(config_json, revived_config_json)
         self.assertEqual(set(ref_dir), set(dir(revived_instance)))
 
@@ -122,13 +118,9 @@ class TestCase(unittest.TestCase):
         serialized = serialize_keras_object(instance)
         serialized_json = json.dumps(serialized, sort_keys=True, indent=4)
         with custom_object_scope(custom_objects):
-            revived_instance = deserialize_keras_object(
-                json.loads(serialized_json)
-            )
+            revived_instance = deserialize_keras_object(json.loads(serialized_json))
         revived_config = revived_instance.get_config()
-        revived_config_json = json.dumps(
-            revived_config, sort_keys=True, indent=4
-        )
+        revived_config_json = json.dumps(revived_config, sort_keys=True, indent=4)
         self.assertEqual(config_json, revived_config_json)
         new_dir = dir(revived_instance)[:]
         for lst in [ref_dir, new_dir]:
@@ -205,8 +197,7 @@ class TestCase(unittest.TestCase):
         """
         if input_shape is not None and input_data is not None:
             raise ValueError(
-                "input_shape and input_data cannot be passed "
-                "at the same time."
+                "input_shape and input_data cannot be passed " "at the same time."
             )
         if expected_output_shape is not None and expected_output is not None:
             raise ValueError(
@@ -219,17 +210,14 @@ class TestCase(unittest.TestCase):
             )
         if expected_mask_shape is not None and supports_masking is not True:
             raise ValueError(
-                "In order to use expected_mask_shape, supports_masking "
-                "must be True."
+                "In order to use expected_mask_shape, supports_masking " "must be True."
             )
 
         init_kwargs = init_kwargs or {}
         call_kwargs = call_kwargs or {}
 
         if input_shape is not None and input_dtype is not None:
-            if isinstance(input_shape, tuple) and is_shape_tuple(
-                input_shape[0]
-            ):
+            if isinstance(input_shape, tuple) and is_shape_tuple(input_shape[0]):
                 self.assertIsInstance(input_dtype, tuple)
                 self.assertEqual(
                     len(input_shape),
@@ -253,9 +241,7 @@ class TestCase(unittest.TestCase):
             elif not isinstance(input_shape, tuple):
                 raise ValueError("The type of input_shape is not supported")
         if input_shape is not None and input_dtype is None:
-            input_dtype = tree.map_shape_structure(
-                lambda _: "float32", input_shape
-            )
+            input_dtype = tree.map_shape_structure(lambda _: "float32", input_shape)
 
         # Serialization test.
         layer = layer_cls(**init_kwargs)
@@ -373,8 +359,7 @@ class TestCase(unittest.TestCase):
                         msg="Unexpected output dict keys",
                     )
                     output_dtype = {
-                        k: backend.standardize_dtype(v.dtype)
-                        for k, v in output.items()
+                        k: backend.standardize_dtype(v.dtype) for k, v in output.items()
                     }
                     self.assertEqual(
                         expected_output_dtype,
@@ -388,9 +373,7 @@ class TestCase(unittest.TestCase):
                         len(expected_output_dtype),
                         msg="Unexpected number of outputs",
                     )
-                    output_dtype = [
-                        backend.standardize_dtype(v.dtype) for v in output
-                    ]
+                    output_dtype = [backend.standardize_dtype(v.dtype) for v in output]
                     self.assertEqual(
                         expected_output_dtype,
                         output_dtype,
@@ -412,9 +395,7 @@ class TestCase(unittest.TestCase):
                     for ref_v, v in zip(
                         tree.flatten(expected_output), tree.flatten(output)
                     ):
-                        self.assertAllClose(
-                            ref_v, v, msg="Unexpected output value"
-                        )
+                        self.assertAllClose(ref_v, v, msg="Unexpected output value")
                 if expected_num_losses is not None:
                     self.assertLen(layer.losses, expected_num_losses)
 
@@ -459,9 +440,7 @@ class TestCase(unittest.TestCase):
         # Build test.
         if input_data is not None or input_shape is not None:
             if input_shape is None:
-                build_shape = tree.map_structure(
-                    lambda x: ops.shape(x), input_data
-                )
+                build_shape = tree.map_structure(lambda x: ops.shape(x), input_data)
             else:
                 build_shape = input_shape
             layer = layer_cls(**init_kwargs)
@@ -474,9 +453,7 @@ class TestCase(unittest.TestCase):
             # Symbolic call test.
             if input_shape is None:
                 keras_tensor_inputs = tree.map_structure(
-                    lambda x: create_keras_tensors(
-                        ops.shape(x), x.dtype, input_sparse
-                    ),
+                    lambda x: create_keras_tensors(ops.shape(x), x.dtype, input_sparse),
                     input_data,
                 )
             else:
@@ -485,9 +462,7 @@ class TestCase(unittest.TestCase):
                 )
             layer = layer_cls(**init_kwargs)
             if isinstance(keras_tensor_inputs, dict):
-                keras_tensor_outputs = layer(
-                    **keras_tensor_inputs, **call_kwargs
-                )
+                keras_tensor_outputs = layer(**keras_tensor_inputs, **call_kwargs)
             else:
                 keras_tensor_outputs = layer(keras_tensor_inputs, **call_kwargs)
             run_build_asserts(layer)
@@ -526,8 +501,7 @@ class TestCase(unittest.TestCase):
                         spec.shape,
                         dtype=(
                             layer.compute_dtype
-                            if layer.autocast
-                            and backend.is_float_dtype(spec.dtype)
+                            if layer.autocast and backend.is_float_dtype(spec.dtype)
                             else spec.dtype
                         ),
                     ),
@@ -592,8 +566,7 @@ def create_eager_tensors(input_shape, dtype, sparse):
         ["float16", "float32", "float64", "int16", "int32", "int64"]
     ):
         raise ValueError(
-            "dtype must be a standard float or int dtype. "
-            f"Received: dtype={dtype}"
+            "dtype must be a standard float or int dtype. " f"Received: dtype={dtype}"
         )
 
     if sparse:
@@ -616,16 +589,12 @@ def create_eager_tensors(input_shape, dtype, sparse):
                 return jax_sparse.BCOO.fromdense(x, n_batch=1)
 
         else:
-            raise ValueError(
-                f"Sparse is unsupported with backend {backend.backend()}"
-            )
+            raise ValueError(f"Sparse is unsupported with backend {backend.backend()}")
 
     else:
 
         def create_fn(shape, dt):
-            return ops.cast(
-                random.uniform(shape, dtype="float32") * 3, dtype=dt
-            )
+            return ops.cast(random.uniform(shape, dtype="float32") * 3, dtype=dt)
 
     if isinstance(input_shape, dict):
         return {
@@ -646,19 +615,10 @@ def map_shape_dtype_structure(fn, shape, dtype):
     if is_shape_tuple(shape):
         return fn(tuple(shape), dtype)
     if isinstance(shape, list):
-        return [
-            map_shape_dtype_structure(fn, s, d) for s, d in zip(shape, dtype)
-        ]
+        return [map_shape_dtype_structure(fn, s, d) for s, d in zip(shape, dtype)]
     if isinstance(shape, tuple):
-        return tuple(
-            map_shape_dtype_structure(fn, s, d) for s, d in zip(shape, dtype)
-        )
+        return tuple(map_shape_dtype_structure(fn, s, d) for s, d in zip(shape, dtype))
     if isinstance(shape, dict):
-        return {
-            k: map_shape_dtype_structure(fn, v, dtype[k])
-            for k, v in shape.items()
-        }
+        return {k: map_shape_dtype_structure(fn, v, dtype[k]) for k, v in shape.items()}
     else:
-        raise ValueError(
-            f"Cannot map function to unknown objects {shape} and {dtype}"
-        )
+        raise ValueError(f"Cannot map function to unknown objects {shape} and {dtype}")

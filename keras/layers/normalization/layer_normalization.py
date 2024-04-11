@@ -191,11 +191,7 @@ class LayerNormalization(Layer):
             broadcast_shape[dim] = input_shape[dim]
 
         def _broadcast(v):
-            if (
-                v is not None
-                and len(v.shape) != ndims
-                and self.axis != [ndims - 1]
-            ):
+            if v is not None and len(v.shape) != ndims and self.axis != [ndims - 1]:
                 return ops.reshape(v, broadcast_shape)
             return v
 

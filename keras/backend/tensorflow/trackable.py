@@ -22,9 +22,7 @@ class KerasAutoTrackable(tf.__internal__.tracking.AutoTrackable):
             pass
 
         if getattr(self, "_self_setattr_tracking", True):
-            value = sticky_attribute_assignment(
-                trackable=self, value=value, name=name
-            )
+            value = sticky_attribute_assignment(trackable=self, value=value, name=name)
         super().__setattr__(name, value)
 
 

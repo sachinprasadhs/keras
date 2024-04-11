@@ -28,9 +28,7 @@ class AlphaDropoutTest(testing.TestCase):
         inputs = np.ones((20, 500)).astype("float32")
         layer = layers.AlphaDropout(0.3, seed=1337)
         outputs = layer(inputs, training=True)
-        self.assertAllClose(
-            np.std(backend.convert_to_numpy(outputs)), 1.0, atol=1e-1
-        )
+        self.assertAllClose(np.std(backend.convert_to_numpy(outputs)), 1.0, atol=1e-1)
 
     def test_alpha_dropout_partial_noise_shape_dynamic(self):
         inputs = np.ones((20, 5, 10))

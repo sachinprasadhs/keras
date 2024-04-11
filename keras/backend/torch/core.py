@@ -110,9 +110,7 @@ class Variable(KerasVariable):
     # Overload native accessor.
     @classmethod
     def __torch_function__(cls, func, types, args=(), kwargs=None):
-        args = [
-            arg.value if isinstance(arg, KerasVariable) else arg for arg in args
-        ]
+        args = [arg.value if isinstance(arg, KerasVariable) else arg for arg in args]
         if kwargs is None:
             kwargs = {}
         kwargs = {

@@ -223,20 +223,12 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
         for padding in ["valid", "VALID"]:
             self.assertEqual(
                 knn.conv(inputs_1d, kernel, 1, padding=padding).shape,
-                (
-                    (None, 17, 2)
-                    if data_format == "channels_last"
-                    else (None, 2, 17)
-                ),
+                ((None, 17, 2) if data_format == "channels_last" else (None, 2, 17)),
             )
         for padding in ["same", "SAME"]:
             self.assertEqual(
                 knn.conv(inputs_1d, kernel, 1, padding=padding).shape,
-                (
-                    (None, 20, 2)
-                    if data_format == "channels_last"
-                    else (None, 2, 20)
-                ),
+                ((None, 20, 2) if data_format == "channels_last" else (None, 2, 20)),
             )
         self.assertEqual(
             knn.conv(inputs_1d, kernel, (2,), dilation_rate=2).shape,
@@ -304,11 +296,7 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
             )
         self.assertEqual(
             knn.conv(inputs_2d, kernel, (2, 1), dilation_rate=(2, 1)).shape,
-            (
-                (None, 4, 9, 2)
-                if data_format == "channels_last"
-                else (None, 2, 4, 9)
-            ),
+            ((None, 4, 9, 2) if data_format == "channels_last" else (None, 2, 4, 9)),
         )
 
         # Test 3D conv.
@@ -359,22 +347,12 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
         for padding in ["valid", "VALID"]:
             self.assertEqual(
                 knn.depthwise_conv(inputs_1d, kernel, 1, padding=padding).shape,
-                (
-                    (None, 17, 3)
-                    if data_format == "channels_last"
-                    else (None, 3, 17)
-                ),
+                ((None, 17, 3) if data_format == "channels_last" else (None, 3, 17)),
             )
         for padding in ["same", "SAME"]:
             self.assertEqual(
-                knn.depthwise_conv(
-                    inputs_1d, kernel, (1,), padding=padding
-                ).shape,
-                (
-                    (None, 20, 3)
-                    if data_format == "channels_last"
-                    else (None, 3, 20)
-                ),
+                knn.depthwise_conv(inputs_1d, kernel, (1,), padding=padding).shape,
+                ((None, 20, 3) if data_format == "channels_last" else (None, 3, 20)),
             )
         self.assertEqual(
             knn.depthwise_conv(inputs_1d, kernel, 2, dilation_rate=2).shape,
@@ -399,9 +377,7 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
             )
         for padding in ["same", "SAME"]:
             self.assertEqual(
-                knn.depthwise_conv(
-                    inputs_2d, kernel, (1, 2), padding=padding
-                ).shape,
+                knn.depthwise_conv(inputs_2d, kernel, (1, 2), padding=padding).shape,
                 (
                     (None, 10, 5, 3)
                     if data_format == "channels_last"
@@ -410,21 +386,11 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
             )
         self.assertEqual(
             knn.depthwise_conv(inputs_2d, kernel, 2, dilation_rate=2).shape,
-            (
-                (None, 4, 4, 3)
-                if data_format == "channels_last"
-                else (None, 3, 4, 4)
-            ),
+            ((None, 4, 4, 3) if data_format == "channels_last" else (None, 3, 4, 4)),
         )
         self.assertEqual(
-            knn.depthwise_conv(
-                inputs_2d, kernel, 2, dilation_rate=(2, 1)
-            ).shape,
-            (
-                (None, 4, 5, 3)
-                if data_format == "channels_last"
-                else (None, 3, 4, 5)
-            ),
+            knn.depthwise_conv(inputs_2d, kernel, 2, dilation_rate=(2, 1)).shape,
+            ((None, 4, 5, 3) if data_format == "channels_last" else (None, 3, 4, 5)),
         )
 
     def test_separable_conv(self):
@@ -468,31 +434,19 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
             knn.separable_conv(
                 inputs_2d, kernel, pointwise_kernel, 1, padding="valid"
             ).shape,
-            (
-                (None, 9, 9, 5)
-                if data_format == "channels_last"
-                else (None, 5, 9, 9)
-            ),
+            ((None, 9, 9, 5) if data_format == "channels_last" else (None, 5, 9, 9)),
         )
         self.assertEqual(
             knn.separable_conv(
                 inputs_2d, kernel, pointwise_kernel, (1, 2), padding="same"
             ).shape,
-            (
-                (None, 10, 5, 5)
-                if data_format == "channels_last"
-                else (None, 5, 10, 5)
-            ),
+            ((None, 10, 5, 5) if data_format == "channels_last" else (None, 5, 10, 5)),
         )
         self.assertEqual(
             knn.separable_conv(
                 inputs_2d, kernel, pointwise_kernel, 2, dilation_rate=(2, 1)
             ).shape,
-            (
-                (None, 4, 5, 5)
-                if data_format == "channels_last"
-                else (None, 5, 4, 5)
-            ),
+            ((None, 4, 5, 5) if data_format == "channels_last" else (None, 5, 4, 5)),
         )
 
     def test_conv_transpose(self):
@@ -526,19 +480,11 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
         kernel = KerasTensor([2, 2, 5, 3])
         self.assertEqual(
             knn.conv_transpose(inputs_2d, kernel, 2).shape,
-            (
-                (None, 8, 8, 5)
-                if data_format == "channels_last"
-                else (None, 5, 8, 8)
-            ),
+            ((None, 8, 8, 5) if data_format == "channels_last" else (None, 5, 8, 8)),
         )
         self.assertEqual(
             knn.conv_transpose(inputs_2d, kernel, (2, 2), padding="same").shape,
-            (
-                (None, 8, 8, 5)
-                if data_format == "channels_last"
-                else (None, 5, 8, 8)
-            ),
+            ((None, 8, 8, 5) if data_format == "channels_last" else (None, 5, 8, 8)),
         )
         self.assertEqual(
             knn.conv_transpose(
@@ -569,9 +515,7 @@ class NNOpsDynamicShapeTest(testing.TestCase, parameterized.TestCase):
         x = KerasTensor([None, 3, 4])
         self.assertEqual(knn.moments(x, axes=[0])[0].shape, (3, 4))
         self.assertEqual(knn.moments(x, axes=[0, 1])[0].shape, (4,))
-        self.assertEqual(
-            knn.moments(x, axes=[0, 1], keepdims=True)[0].shape, (1, 1, 4)
-        )
+        self.assertEqual(knn.moments(x, axes=[0, 1], keepdims=True)[0].shape, (1, 1, 4))
 
         self.assertEqual(knn.moments(x, axes=[1])[0].shape, (None, 4))
         self.assertEqual(knn.moments(x, axes=[1, 2])[0].shape, (None,))
@@ -800,11 +744,7 @@ class NNOpsStaticShapeTest(testing.TestCase):
         )
         self.assertEqual(
             knn.conv(inputs_2d, kernel, 1, padding="same").shape,
-            (
-                (2, 10, 10, 2)
-                if data_format == "channels_last"
-                else (2, 2, 10, 10)
-            ),
+            ((2, 10, 10, 2) if data_format == "channels_last" else (2, 2, 10, 10)),
         )
         self.assertEqual(
             knn.conv(inputs_2d, kernel, (2, 1), dilation_rate=(2, 1)).shape,
@@ -820,29 +760,17 @@ class NNOpsStaticShapeTest(testing.TestCase):
         kernel = KerasTensor([3, 3, 3, 3, 2])
         self.assertEqual(
             knn.conv(inputs_3d, kernel, 1, padding="valid").shape,
-            (
-                (2, 6, 6, 6, 2)
-                if data_format == "channels_last"
-                else (2, 2, 6, 6, 6)
-            ),
+            ((2, 6, 6, 6, 2) if data_format == "channels_last" else (2, 2, 6, 6, 6)),
         )
         self.assertEqual(
             knn.conv(inputs_3d, kernel, (2, 1, 2), padding="same").shape,
-            (
-                (2, 4, 8, 4, 2)
-                if data_format == "channels_last"
-                else (2, 2, 4, 8, 4)
-            ),
+            ((2, 4, 8, 4, 2) if data_format == "channels_last" else (2, 2, 4, 8, 4)),
         )
         self.assertEqual(
             knn.conv(
                 inputs_3d, kernel, 1, padding="valid", dilation_rate=(1, 2, 2)
             ).shape,
-            (
-                (2, 6, 4, 4, 2)
-                if data_format == "channels_last"
-                else (2, 2, 6, 4, 4)
-            ),
+            ((2, 6, 4, 4, 2) if data_format == "channels_last" else (2, 2, 6, 4, 4)),
         )
 
     def test_depthwise_conv(self):
@@ -887,9 +815,7 @@ class NNOpsStaticShapeTest(testing.TestCase):
             (2, 4, 4, 3) if data_format == "channels_last" else (2, 3, 4, 4),
         )
         self.assertEqual(
-            knn.depthwise_conv(
-                inputs_2d, kernel, 2, dilation_rate=(2, 1)
-            ).shape,
+            knn.depthwise_conv(inputs_2d, kernel, 2, dilation_rate=(2, 1)).shape,
             (2, 4, 5, 3) if data_format == "channels_last" else (2, 3, 4, 5),
         )
 
@@ -990,11 +916,7 @@ class NNOpsStaticShapeTest(testing.TestCase):
             knn.conv_transpose(
                 inputs_2d, kernel, (5, 5), padding="valid", output_padding=4
             ).shape,
-            (
-                (2, 21, 21, 5)
-                if data_format == "channels_last"
-                else (2, 5, 21, 21)
-            ),
+            ((2, 21, 21, 5) if data_format == "channels_last" else (2, 5, 21, 21)),
         )
 
     def test_batched_and_unbatched_inputs_multi_hot(self):
@@ -1029,17 +951,13 @@ class NNOpsStaticShapeTest(testing.TestCase):
     def test_sparse_categorical_crossentropy(self):
         x1 = KerasTensor([2, 3], dtype="int32")
         x2 = KerasTensor([2, 3, 4])
-        self.assertEqual(
-            knn.sparse_categorical_crossentropy(x1, x2).shape, (2, 3)
-        )
+        self.assertEqual(knn.sparse_categorical_crossentropy(x1, x2).shape, (2, 3))
 
     def test_moments(self):
         x = KerasTensor([2, 3, 4])
         self.assertEqual(knn.moments(x, axes=[0])[0].shape, (3, 4))
         self.assertEqual(knn.moments(x, axes=[0, 1])[0].shape, (4,))
-        self.assertEqual(
-            knn.moments(x, axes=[0, 1], keepdims=True)[0].shape, (1, 1, 4)
-        )
+        self.assertEqual(knn.moments(x, axes=[0, 1], keepdims=True)[0].shape, (1, 1, 4))
 
     def test_batch_normalization(self):
         x = KerasTensor([10, 3, 4])
@@ -1540,9 +1458,7 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
         inputs_2d = np.arange(96, dtype=float).reshape(input_shape)
         kernel = np.arange(60, dtype=float).reshape([2, 2, 5, 3])
 
-        outputs = knn.conv_transpose(
-            inputs_2d, kernel, strides, padding=padding
-        )
+        outputs = knn.conv_transpose(inputs_2d, kernel, strides, padding=padding)
         expected = np_conv2d_transpose(
             inputs_2d,
             kernel,
@@ -1591,9 +1507,7 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(output_2d, np.eye(4)[indices_2d])
         self.assertSparse(output_2d, sparse)
         output_2d = knn.one_hot(indices_2d, 4, axis=1, sparse=sparse)
-        self.assertAllClose(
-            output_2d, np.transpose(np.eye(4)[indices_2d], (0, 2, 1))
-        )
+        self.assertAllClose(output_2d, np.transpose(np.eye(4)[indices_2d], (0, 2, 1)))
         self.assertSparse(output_2d, sparse)
 
         # Test 1D one-hot with negative inputs
@@ -1662,17 +1576,11 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(result, np.array([2.54095299, 3.96374412]))
 
         # Test axis
-        result = knn.categorical_crossentropy(
-            target, output, from_logits=False, axis=0
-        )
-        self.assertAllClose(
-            result, np.array([0.71683073, 1.87988172, 2.46810762])
-        )
+        result = knn.categorical_crossentropy(target, output, from_logits=False, axis=0)
+        self.assertAllClose(result, np.array([0.71683073, 1.87988172, 2.46810762]))
 
         # Test from_logits=True
-        result = knn.categorical_crossentropy(
-            target, output, from_logits=True, axis=-1
-        )
+        result = knn.categorical_crossentropy(target, output, from_logits=True, axis=-1)
         self.assertAllClose(result, np.array([1.59419954, 2.49880593]))
 
         # Test with output clipping
@@ -1682,23 +1590,17 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
                 [0.3413979, -0.05420256, 0.81619654],
             ]
         )
-        result = knn.categorical_crossentropy(
-            target, output, from_logits=True, axis=-1
-        )
+        result = knn.categorical_crossentropy(target, output, from_logits=True, axis=-1)
         self.assertAllClose(result, np.array([1.16825923, 2.55436813]))
 
     def test_sparse_categorical_crossentropy(self):
         target = np.array([0, 1, 2])
-        output = np.array(
-            [[0.9, 0.05, 0.05], [0.05, 0.89, 0.06], [0.05, 0.01, 0.94]]
-        )
+        output = np.array([[0.9, 0.05, 0.05], [0.05, 0.89, 0.06], [0.05, 0.01, 0.94]])
         result = knn.sparse_categorical_crossentropy(target, output)
         self.assertAllClose(result, [0.105361, 0.116534, 0.061875])
 
         output = np.array([[8.0, 1.0, 1.0], [0.0, 9.0, 1.0], [2.0, 3.0, 5.0]])
-        result = knn.sparse_categorical_crossentropy(
-            target, output, from_logits=True
-        )
+        result = knn.sparse_categorical_crossentropy(target, output, from_logits=True)
         self.assertAllClose(result, [0.001822, 0.000459, 0.169846])
 
     @parameterized.named_parameters(
@@ -1827,9 +1729,7 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
 
         @tf.function()
         def test_on_moments(inputs):
-            return knn.moments(
-                inputs, axes=-1, keepdims=True, synchronized=True
-            )
+            return knn.moments(inputs, axes=-1, keepdims=True, synchronized=True)
 
         # Test output of moments.
         inputs = tf.constant([5.0, 9.0, 1.0, 3.0], dtype=dtype)
@@ -1863,9 +1763,7 @@ class NNOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             axis=1,
             epsilon=1e-7,
         )
-        expected_output = np.array(
-            [[-0.05, -0.025, -0.0125], [0.1, 0.05, 0.025]]
-        )
+        expected_output = np.array([[-0.05, -0.025, -0.0125], [0.1, 0.05, 0.025]])
         self.assertAllClose(output, expected_output)
 
         output = knn.batch_normalization(
@@ -2264,36 +2162,24 @@ class NNOpsDtypeTest(testing.TestCase, parameterized.TestCase):
 
     def test_normalize_order_validation(self):
         # Test with a non-integer order
-        with self.assertRaisesRegex(
-            ValueError, "Argument `order` must be an int >= 1"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `order` must be an int >= 1"):
             knn.normalize(np.array([1, 2, 3]), order="a")
 
         # Test with a negative integer
-        with self.assertRaisesRegex(
-            ValueError, "Argument `order` must be an int >= 1"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `order` must be an int >= 1"):
             knn.normalize(np.array([1, 2, 3]), order=-1)
 
         # Test with zero
-        with self.assertRaisesRegex(
-            ValueError, "Argument `order` must be an int >= 1"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `order` must be an int >= 1"):
             knn.normalize(np.array([1, 2, 3]), order=0)
 
         # Test with a floating-point number
-        with self.assertRaisesRegex(
-            ValueError, "Argument `order` must be an int >= 1"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `order` must be an int >= 1"):
             knn.normalize(np.array([1, 2, 3]), order=2.5)
 
     def test_check_shape_first_dim_mismatch(self):
         name1, shape1 = "labels", (2, 3)
         name2, shape2 = "logits", (3, 4, 5)
         ctc_loss_instance = knn.CtcLoss(mask_index=-1)
-        with self.assertRaisesRegex(
-            ValueError, "must have the same first dimension"
-        ):
-            ctc_loss_instance._check_shape_first_dim(
-                name1, shape1, name2, shape2
-            )
+        with self.assertRaisesRegex(ValueError, "must have the same first dimension"):
+            ctc_loss_instance._check_shape_first_dim(name1, shape1, name2, shape2)

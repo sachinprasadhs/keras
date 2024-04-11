@@ -348,9 +348,7 @@ class Trainer:
         sample_weight=None,
     ):
         var_mapping = list(zip(self.trainable_variables, trainable_variables))
-        var_mapping.extend(
-            zip(self.non_trainable_variables, non_trainable_variables)
-        )
+        var_mapping.extend(zip(self.non_trainable_variables, non_trainable_variables))
         var_mapping.extend(zip(self.metrics_variables, metrics_variables))
         with backend.StatelessScope(state_mapping=var_mapping) as scope:
             # Note that this is needed for the regularization loss, which need
@@ -708,9 +706,7 @@ class Trainer:
         """
         raise NotImplementedError
 
-    def predict(
-        self, x, batch_size=None, verbose="auto", steps=None, callbacks=None
-    ):
+    def predict(self, x, batch_size=None, verbose="auto", steps=None, callbacks=None):
         """Generates output predictions for the input samples.
 
         Computation is done in batches. This method is designed for batch
@@ -911,9 +907,7 @@ class Trainer:
         metric_names = []
         for metric in self.metrics:
             if isinstance(metric, CompileMetrics):
-                metric_names += [
-                    sub_metric.name for sub_metric in metric.metrics
-                ]
+                metric_names += [sub_metric.name for sub_metric in metric.metrics]
             else:
                 metric_names.append(metric.name)
         results = []
@@ -939,12 +933,9 @@ class Trainer:
     def _symbolic_build(self, iterator=None, data_batch=None):
         model_unbuilt = not all(layer.built for layer in self._flatten_layers())
         compile_metrics_unbuilt = (
-            self._compile_metrics is not None
-            and not self._compile_metrics.built
+            self._compile_metrics is not None and not self._compile_metrics.built
         )
-        optimizer_unbuilt = (
-            self.optimizer is not None and not self.optimizer.built
-        )
+        optimizer_unbuilt = self.optimizer is not None and not self.optimizer.built
         if model_unbuilt or compile_metrics_unbuilt or optimizer_unbuilt:
             if data_batch is None:
                 for _, data in iterator.enumerate_epoch():
@@ -957,9 +948,7 @@ class Trainer:
             def to_symbolic_input(v):
                 if v is None:
                     return None
-                return backend.KerasTensor(
-                    v.shape, backend.standardize_dtype(v.dtype)
-                )
+                return backend.KerasTensor(v.shape, backend.standardize_dtype(v.dtype))
 
             data_batch = tree.map_structure(to_symbolic_input, data_batch)
             (

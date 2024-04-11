@@ -139,17 +139,13 @@ def indexed_slices_union_indices_and_values(x1, x2_indices, x2_values=None):
     x1_values_for_union_indices = tf.cond(
         tf.equal(x1_indices_count, union_indices_count),
         lambda: x1.values,
-        lambda: values_for_union(
-            x1_indices_expanded, x1_indices_count, x1.values
-        ),
+        lambda: values_for_union(x1_indices_expanded, x1_indices_count, x1.values),
     )
     if x2_values is not None:
         x2_values_for_union_indices = tf.cond(
             tf.equal(x2_indices_count, union_indices_count),
             lambda: x2_values,
-            lambda: values_for_union(
-                x2_indices_expanded, x2_indices_count, x2_values
-            ),
+            lambda: values_for_union(x2_indices_expanded, x2_indices_count, x2_values),
         )
     else:
         x2_values_for_union_indices = None
@@ -263,9 +259,7 @@ def indexed_slices_intersection_indices_and_values(x1, x2):
                 tf.range(indices_count),
                 (dim_0,),
             )
-            to_intersection_indices = tf.gather(
-                indices_indices, intersection_indices
-            )
+            to_intersection_indices = tf.gather(indices_indices, intersection_indices)
             return tf.gather(values, to_intersection_indices)
 
         # Only recompute values if some indices were removed.
@@ -322,9 +316,7 @@ def densifying_unary(default_value):
         @functools.wraps(func)
         def sparse_wrapper(x, *args, **kwargs):
             if isinstance(x, tf.SparseTensor):
-                sparse_output = sparse_with_values(
-                    x, func(x.values, *args, **kwargs)
-                )
+                sparse_output = sparse_with_values(x, func(x.values, *args, **kwargs))
                 return sparse_to_dense(
                     sparse_output,
                     tf.cast(default_value, sparse_output.values.dtype),
@@ -432,9 +424,7 @@ def elementwise_binary_union(sparse_op, densify_mixed=False):
                 if isinstance(x2, tf.SparseTensor):
                     # x1 is a SparseTensor and x2 is a SparseTensor.
                     if x1.indices is x2.indices:
-                        return sparse_with_values(
-                            x1, func(x1.values, x2.values)
-                        )
+                        return sparse_with_values(x1, func(x1.values, x2.values))
                     else:
                         output = sparse_op(x1, x2)
                         output.set_shape(x1.shape)
@@ -613,9 +603,7 @@ def elementwise_binary_intersection(func):
             # x2 is an IndexedSlices.
             if not hasattr(x1, "shape") or len(x1.shape) == 0:
                 # x1 is a scalar, apply func element-wise.
-                return tf.IndexedSlices(
-                    func(x1, x2.values), x2.indices, x2.dense_shape
-                )
+                return tf.IndexedSlices(func(x1, x2.values), x2.indices, x2.dense_shape)
             else:
                 # x1 is dense, gather values from x2 indices.
                 return tf.IndexedSlices(

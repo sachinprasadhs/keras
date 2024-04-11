@@ -58,9 +58,7 @@ class BackupAndRestoreCallbackTest(testing.TestCase):
     # Check invalid save_freq, both string and non integer
     def test_save_freq_unknown_error(self):
         with self.assertRaisesRegex(ValueError, expected_regex="Invalid value"):
-            callbacks.BackupAndRestore(
-                backup_dir="backup_dir", save_freq="batch"
-            )
+            callbacks.BackupAndRestore(backup_dir="backup_dir", save_freq="batch")
 
         with self.assertRaisesRegex(ValueError, expected_regex="Invalid value"):
             callbacks.BackupAndRestore(backup_dir="backup_dir", save_freq=0.15)
@@ -97,9 +95,7 @@ class BackupAndRestoreCallbackTest(testing.TestCase):
             self.assertEqual(cbk._last_batch_seen, 1)
             self.assertEqual(int(model.layers[0].counter.value), 2)
 
-            hist = model.fit(
-                x_train, y_train, batch_size=4, callbacks=[cbk], epochs=5
-            )
+            hist = model.fit(x_train, y_train, batch_size=4, callbacks=[cbk], epochs=5)
 
             self.assertEqual(cbk._current_epoch, 5)
             self.assertEqual(hist.epoch[-1], 4)
@@ -115,9 +111,7 @@ class BackupAndRestoreCallbackTest(testing.TestCase):
 
         model = self.make_model()
         self.assertEqual(int(model.layers[0].counter.value), 0)
-        cbk = callbacks.BackupAndRestore(
-            backup_dir=backup_dir, save_freq="epoch"
-        )
+        cbk = callbacks.BackupAndRestore(backup_dir=backup_dir, save_freq="epoch")
 
         x_train = np.random.random((10, 3))
         y_train = np.random.random((10, 1))
@@ -139,9 +133,7 @@ class BackupAndRestoreCallbackTest(testing.TestCase):
             self.assertTrue(file_utils.exists(backup_dir))
             self.assertEqual(int(model.layers[0].counter.value), 6)
 
-            hist = model.fit(
-                x_train, y_train, batch_size=4, callbacks=[cbk], epochs=5
-            )
+            hist = model.fit(x_train, y_train, batch_size=4, callbacks=[cbk], epochs=5)
             self.assertEqual(cbk._current_epoch, 5)
             self.assertEqual(hist.epoch[-1], 4)
             self.assertEqual(int(model.layers[0].counter.value), 5 * 3)

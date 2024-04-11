@@ -229,17 +229,13 @@ class TensorBoard(Callback):
     @property
     def _train_writer(self):
         if "train" not in self._writers:
-            self._writers["train"] = self.summary.create_file_writer(
-                self._train_dir
-            )
+            self._writers["train"] = self.summary.create_file_writer(self._train_dir)
         return self._writers["train"]
 
     @property
     def _val_writer(self):
         if "val" not in self._writers:
-            self._writers["val"] = self.summary.create_file_writer(
-                self._val_dir
-            )
+            self._writers["val"] = self.summary.create_file_writer(self._val_dir)
         return self._writers["val"]
 
     def _write_keras_model_train_graph(self):
@@ -253,9 +249,7 @@ class TensorBoard(Callback):
                 if hasattr(train_fn, "_concrete_stateful_fn"):
                     self.summary.graph(train_fn._concrete_stateful_fn.graph)
                 else:
-                    self.summary.graph(
-                        train_fn._concrete_variable_creation_fn.graph
-                    )
+                    self.summary.graph(train_fn._concrete_variable_creation_fn.graph)
 
     def _write_keras_model_summary(self):
         """Writes Keras graph network summary to TensorBoard."""
@@ -277,9 +271,7 @@ class TensorBoard(Callback):
                 embedding = config.embeddings.add()
                 # Embeddings are always the first layer, so this naming should
                 # be consistent in any keras models checkpoints.
-                name = (
-                    "layer_with_weights-0/embeddings/.ATTRIBUTES/VARIABLE_VALUE"
-                )
+                name = "layer_with_weights-0/embeddings/.ATTRIBUTES/VARIABLE_VALUE"
                 embedding.tensor_name = name
 
                 if self.embeddings_metadata is not None:
@@ -287,13 +279,11 @@ class TensorBoard(Callback):
                         embedding.metadata_path = self.embeddings_metadata
                     else:
                         if layer.name in self.embeddings_metadata.keys():
-                            embedding.metadata_path = (
-                                self.embeddings_metadata.pop(layer.name)
+                            embedding.metadata_path = self.embeddings_metadata.pop(
+                                layer.name
                             )
 
-        if self.embeddings_metadata and not isinstance(
-            self.embeddings_metadata, str
-        ):
+        if self.embeddings_metadata and not isinstance(self.embeddings_metadata, str):
             raise ValueError(
                 "Unrecognized `Embedding` layer names passed to "
                 "`keras.callbacks.TensorBoard` `embeddings_metadata` "
@@ -370,9 +360,7 @@ class TensorBoard(Callback):
         if isinstance(profile_batch, int):
             self._start_batch = profile_batch
             self._stop_batch = profile_batch
-        elif (
-            isinstance(profile_batch, (tuple, list)) and len(profile_batch) == 2
-        ):
+        elif isinstance(profile_batch, (tuple, list)) and len(profile_batch) == 2:
             self._start_batch, self._stop_batch = profile_batch
         else:
             raise ValueError(profile_batch_error_message)
@@ -392,9 +380,7 @@ class TensorBoard(Callback):
         self._is_tracing = False
 
         # Setting `profile_batch=0` disables profiling.
-        self._should_trace = not (
-            self._start_batch == 0 and self._stop_batch == 0
-        )
+        self._should_trace = not (self._start_batch == 0 and self._stop_batch == 0)
 
     def on_train_begin(self, logs=None):
         self._global_train_batch = 0
@@ -453,9 +439,7 @@ class TensorBoard(Callback):
         # `logs` isn't necessarily always a dict
         if isinstance(logs, dict):
             for name, value in logs.items():
-                self.summary.scalar(
-                    "batch_" + name, value, step=self._train_step
-                )
+                self.summary.scalar("batch_" + name, value, step=self._train_step)
 
         if not self._should_trace:
             return
@@ -551,16 +535,12 @@ class TensorBoard(Callback):
                     weight_name = weight.name.replace(":", "_")
                     # Add a suffix to prevent summary tag name collision.
                     histogram_weight_name = weight_name + "/histogram"
-                    self.summary.histogram(
-                        histogram_weight_name, weight, step=epoch
-                    )
+                    self.summary.histogram(histogram_weight_name, weight, step=epoch)
                     if self.write_images:
                         # Add a suffix to prevent summary tag name
                         # collision.
                         image_weight_name = weight_name + "/image"
-                        self._log_weight_as_image(
-                            weight, image_weight_name, epoch
-                        )
+                        self._log_weight_as_image(weight, image_weight_name, epoch)
             self._train_writer.flush()
 
     def _log_weight_as_image(self, weight, weight_name, epoch):

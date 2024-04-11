@@ -39,9 +39,7 @@ class PythonUtilsTest(testing.TestCase):
     def test_remove_long_seq_standard_case(self):
         sequences = [[1], [2, 2], [3, 3, 3], [4, 4, 4, 4]]
         labels = [1, 2, 3, 4]
-        new_sequences, new_labels = python_utils.remove_long_seq(
-            3, sequences, labels
-        )
+        new_sequences, new_labels = python_utils.remove_long_seq(3, sequences, labels)
         self.assertEqual(new_sequences, [[1], [2, 2]])
         self.assertEqual(new_labels, [1, 2])
 

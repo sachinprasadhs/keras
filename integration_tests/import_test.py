@@ -35,9 +35,7 @@ def create_virtualenv():
         # Create virtual environment
         "python3 -m venv test_env",
     ]
-    os.environ["PATH"] = (
-        "/test_env/bin/" + os.pathsep + os.environ.get("PATH", "")
-    )
+    os.environ["PATH"] = "/test_env/bin/" + os.pathsep + os.environ.get("PATH", "")
     run_commands_local(env_setup)
 
 

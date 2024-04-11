@@ -129,9 +129,7 @@ class Resize(Operation):
 
     def compute_output_spec(self, image):
         if len(image.shape) == 3:
-            return KerasTensor(
-                self.size + (image.shape[-1],), dtype=image.dtype
-            )
+            return KerasTensor(self.size + (image.shape[-1],), dtype=image.dtype)
         elif len(image.shape) == 4:
             if self.data_format == "channels_last":
                 return KerasTensor(
@@ -494,9 +492,7 @@ def _extract_patches(
         strides = size
     out_dim = patch_h * patch_w * channels_in
     kernel = backend.numpy.eye(out_dim)
-    kernel = backend.numpy.reshape(
-        kernel, (patch_h, patch_w, channels_in, out_dim)
-    )
+    kernel = backend.numpy.reshape(kernel, (patch_h, patch_w, channels_in, out_dim))
     _unbatched = False
     if len(image.shape) == 3:
         _unbatched = True
@@ -547,9 +543,7 @@ class MapCoordinates(Operation):
 
 
 @keras_export("keras.ops.image.map_coordinates")
-def map_coordinates(
-    input, coordinates, order, fill_mode="constant", fill_value=0
-):
+def map_coordinates(input, coordinates, order, fill_mode="constant", fill_value=0):
     """Map the input array to new coordinates by interpolation..
 
     Note that interpolation near boundaries differs from the scipy function,
@@ -635,16 +629,12 @@ class PadImages(Operation):
         if self.target_height is None:
             height_axis = 0 if len(images_shape) == 3 else 1
             self.target_height = (
-                self.top_padding
-                + images_shape[height_axis]
-                + self.bottom_padding
+                self.top_padding + images_shape[height_axis] + self.bottom_padding
             )
         if self.target_width is None:
             width_axis = 0 if len(images_shape) == 3 else 2
             self.target_width = (
-                self.left_padding
-                + images_shape[width_axis]
-                + self.right_padding
+                self.left_padding + images_shape[width_axis] + self.right_padding
             )
         out_shape = (
             images_shape[0],
@@ -781,18 +771,15 @@ def _pad_images(
         )
     if left_padding < 0:
         raise ValueError(
-            "left_padding must be >= 0. "
-            f"Received: left_padding={left_padding}"
+            "left_padding must be >= 0. " f"Received: left_padding={left_padding}"
         )
     if right_padding < 0:
         raise ValueError(
-            "right_padding must be >= 0. "
-            f"Received: right_padding={right_padding}"
+            "right_padding must be >= 0. " f"Received: right_padding={right_padding}"
         )
     if bottom_padding < 0:
         raise ValueError(
-            "bottom_padding must be >= 0. "
-            f"Received: bottom_padding={bottom_padding}"
+            "bottom_padding must be >= 0. " f"Received: bottom_padding={bottom_padding}"
         )
 
     paddings = backend.numpy.reshape(
@@ -864,16 +851,12 @@ class CropImages(Operation):
         if self.target_height is None:
             height_axis = 0 if len(images_shape) == 3 else 1
             self.target_height = (
-                self.top_cropping
-                - images_shape[height_axis]
-                - self.bottom_cropping
+                self.top_cropping - images_shape[height_axis] - self.bottom_cropping
             )
         if self.target_width is None:
             width_axis = 0 if len(images_shape) == 3 else 2
             self.target_width = (
-                self.left_cropping
-                - images_shape[width_axis]
-                - self.right_cropping
+                self.left_cropping - images_shape[width_axis] - self.right_cropping
             )
         out_shape = (
             images_shape[0],
@@ -1002,23 +985,19 @@ def _crop_images(
 
     if top_cropping < 0:
         raise ValueError(
-            "top_cropping must be >= 0. "
-            f"Received: top_cropping={top_cropping}"
+            "top_cropping must be >= 0. " f"Received: top_cropping={top_cropping}"
         )
     if target_height < 0:
         raise ValueError(
-            "target_height must be >= 0. "
-            f"Received: target_height={target_height}"
+            "target_height must be >= 0. " f"Received: target_height={target_height}"
         )
     if left_cropping < 0:
         raise ValueError(
-            "left_cropping must be >= 0. "
-            f"Received: left_cropping={left_cropping}"
+            "left_cropping must be >= 0. " f"Received: left_cropping={left_cropping}"
         )
     if target_width < 0:
         raise ValueError(
-            "target_width must be >= 0. "
-            f"Received: target_width={target_width}"
+            "target_width must be >= 0. " f"Received: target_width={target_width}"
         )
 
     cropped = ops.slice(

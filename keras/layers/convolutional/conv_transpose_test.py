@@ -238,9 +238,7 @@ def np_conv3d_transpose(
             (*new_kenel_size_tuple, ch_out, ch_in),
             dtype=kernel_weights.dtype,
         )
-        new_kernel_weights[::h_dilation, ::w_dilation, ::d_dilation] = (
-            kernel_weights
-        )
+        new_kernel_weights[::h_dilation, ::w_dilation, ::d_dilation] = kernel_weights
         kernel_weights = new_kernel_weights
         h_kernel, w_kernel, d_kernel = kernel_weights.shape[:3]
 
@@ -413,10 +411,7 @@ class ConvTransposeBasicTest(testing.TestCase, parameterized.TestCase):
         input_shape,
         output_shape,
     ):
-        if (
-            data_format == "channels_first"
-            and backend.backend() == "tensorflow"
-        ):
+        if data_format == "channels_first" and backend.backend() == "tensorflow":
             pytest.skip("channels_first unsupported on CPU with TF")
 
         self.run_layer_test(
@@ -530,9 +525,7 @@ class ConvTransposeBasicTest(testing.TestCase, parameterized.TestCase):
             r"integers. Received strides=\(1, 0\), including values \{0\} "
             r"that do not satisfy `value > 0`",
         ):
-            layers.Conv2DTranspose(
-                filters=2, kernel_size=(2, 2), strides=(1, 0)
-            )
+            layers.Conv2DTranspose(filters=2, kernel_size=(2, 2), strides=(1, 0))
 
         # `dilation_rate > 1` while `strides > 1`.
         with self.assertRaisesRegex(
@@ -785,9 +778,7 @@ class ConvTransposeCorrectnessTest(testing.TestCase, parameterized.TestCase):
 
         # output_padding cannot be greater than strides
         if isinstance(output_padding, int) and output_padding >= strides:
-            pytest.skip(
-                "`output_padding` greater than `strides` is not supported"
-            )
+            pytest.skip("`output_padding` greater than `strides` is not supported")
 
         if backend.config.image_data_format() == "channels_last":
             input_shape = (1, 3, 1)
@@ -795,9 +786,7 @@ class ConvTransposeCorrectnessTest(testing.TestCase, parameterized.TestCase):
             input_shape = (1, 1, 3)
 
         input = np.ones(shape=input_shape)
-        kernel_weights = np.arange(1, kernel_size + 1).reshape(
-            (kernel_size, 1, 1)
-        )
+        kernel_weights = np.arange(1, kernel_size + 1).reshape((kernel_size, 1, 1))
 
         # Expected result
         expected_res = np_conv1d_transpose(

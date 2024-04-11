@@ -83,8 +83,7 @@ def _get_complex_tensor_from_tuple(x):
     # Ensure dtype is float.
     if not real.dtype.is_floating or not imag.dtype.is_floating:
         raise ValueError(
-            "At least one tensor in input `x` is not of type float."
-            f"Received: x={x}."
+            "At least one tensor in input `x` is not of type float." f"Received: x={x}."
         )
     complex_input = tf.dtypes.complex(real, imag)
     return complex_input
@@ -116,9 +115,7 @@ def irfft(x, fft_length=None):
     return tf.signal.irfft(complex_input, fft_length)
 
 
-def stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     if standardize_dtype(x.dtype) not in {"float32", "float64"}:
         raise TypeError(
             "Invalid input type. Expected `float32` or `float64`. "
@@ -292,9 +289,7 @@ def norm(x, ord=None, axis=None, keepdims=False):
     # Ref: jax.numpy.linalg.norm
     if num_axes == 1 and ord not in ("fro", "nuc"):
         if ord == float("-inf"):
-            return tf.math.reduce_min(
-                tf.math.abs(x), axis=axis, keepdims=keepdims
-            )
+            return tf.math.reduce_min(tf.math.abs(x), axis=axis, keepdims=keepdims)
         elif ord == 0:
             return tf.math.reduce_sum(
                 tf.cast(tf.not_equal(x, 0), dtype=x.dtype),
@@ -330,25 +325,17 @@ def norm(x, ord=None, axis=None, keepdims=False):
         else:
             x = tfnp.moveaxis(x, axis, (-2, -1))
             if ord == -2:
-                x = tf.math.reduce_min(
-                    tf.linalg.svd(x, compute_uv=False), axis=-1
-                )
+                x = tf.math.reduce_min(tf.linalg.svd(x, compute_uv=False), axis=-1)
             else:
-                x = tf.math.reduce_sum(
-                    tf.linalg.svd(x, compute_uv=False), axis=-1
-                )
+                x = tf.math.reduce_sum(tf.linalg.svd(x, compute_uv=False), axis=-1)
             if keepdims:
                 x = tf.expand_dims(x, axis[0])
                 x = tf.expand_dims(x, axis[1])
         return x
 
     if num_axes == 1:
-        raise ValueError(
-            f"Invalid `ord` argument for vector norm. Received: ord={ord}"
-        )
+        raise ValueError(f"Invalid `ord` argument for vector norm. Received: ord={ord}")
     elif num_axes == 2:
-        raise ValueError(
-            f"Invalid `ord` argument for matrix norm. Received: ord={ord}"
-        )
+        raise ValueError(f"Invalid `ord` argument for matrix norm. Received: ord={ord}")
     else:
         raise ValueError(f"Invalid axis values. Received: axis={axis}")

@@ -165,18 +165,14 @@ class FBetaScore(Metric):
             threshold = ops.max(y_pred, axis=-1, keepdims=True)
             # make sure [0, 0, 0] doesn't become [1, 1, 1]
             # Use abs(x) > eps, instead of x != 0 to check for zero
-            y_pred = ops.logical_and(
-                y_pred >= threshold, ops.abs(y_pred) > 1e-9
-            )
+            y_pred = ops.logical_and(y_pred >= threshold, ops.abs(y_pred) > 1e-9)
         else:
             y_pred = y_pred > self.threshold
 
         y_pred = ops.cast(y_pred, dtype=self.dtype)
         y_true = ops.cast(y_true, dtype=self.dtype)
         if sample_weight is not None:
-            sample_weight = ops.convert_to_tensor(
-                sample_weight, dtype=self.dtype
-            )
+            sample_weight = ops.convert_to_tensor(sample_weight, dtype=self.dtype)
 
         def _weighted_sum(val, sample_weight):
             if sample_weight is not None:
@@ -187,12 +183,10 @@ class FBetaScore(Metric):
             self.true_positives + _weighted_sum(y_pred * y_true, sample_weight)
         )
         self.false_positives.assign(
-            self.false_positives
-            + _weighted_sum(y_pred * (1 - y_true), sample_weight)
+            self.false_positives + _weighted_sum(y_pred * (1 - y_true), sample_weight)
         )
         self.false_negatives.assign(
-            self.false_negatives
-            + _weighted_sum((1 - y_pred) * y_true, sample_weight)
+            self.false_negatives + _weighted_sum((1 - y_pred) * y_true, sample_weight)
         )
         self.intermediate_weights.assign(
             self.intermediate_weights + _weighted_sum(y_true, sample_weight)

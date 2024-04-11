@@ -261,9 +261,7 @@ class FunctionalTest(testing.TestCase):
         xb = layers.Dense(5, name="middle_b")(input_b)
         output_a = layers.Dense(4, name="output_a")(xa)
         output_b = layers.Dense(4, name="output_b")(xb)
-        model = Functional(
-            [input_a, input_b], [output_a, output_b], name="func"
-        )
+        model = Functional([input_a, input_b], [output_a, output_b], name="func")
         self.run_class_serialization_test(model)
 
         # Test model that includes floating ops
@@ -273,9 +271,7 @@ class FunctionalTest(testing.TestCase):
         x = layers.Dense(5, name="middle")(x)
         output_a = layers.Dense(4, name="output_a")(x)
         output_b = layers.Dense(4, name="output_b")(x)
-        model = Functional(
-            [input_a, input_b], [output_a, output_b], name="func"
-        )
+        model = Functional([input_a, input_b], [output_a, output_b], name="func")
         self.run_class_serialization_test(model)
 
         # Test model with dict i/o

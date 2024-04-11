@@ -214,10 +214,8 @@ class LegacyH5WholeModelTest(testing.TestCase):
 
             @classmethod
             def from_config(cls, config):
-                config["sublayers"] = (
-                    serialization_lib.deserialize_keras_object(
-                        config["sublayers"]
-                    )
+                config["sublayers"] = serialization_lib.deserialize_keras_object(
+                    config["sublayers"]
                 )
                 return cls(**config)
 
@@ -295,9 +293,7 @@ class LegacyH5BackwardsCompatTest(testing.TestCase):
         tf_keras_model = tf_keras.Sequential()
         tf_keras_model.add(tf_keras.layers.Dense(2, input_shape=(3,)))
         tf_keras_model.add(tf_keras.layers.RepeatVector(3))
-        tf_keras_model.add(
-            tf_keras.layers.TimeDistributed(tf_keras.layers.Dense(3))
-        )
+        tf_keras_model.add(tf_keras.layers.TimeDistributed(tf_keras.layers.Dense(3)))
         tf_keras_model.compile(optimizer="rmsprop", loss="mse")
 
         ref_input = np.random.random((1, 3))
@@ -455,10 +451,8 @@ class LegacyH5BackwardsCompatTest(testing.TestCase):
 
             @classmethod
             def from_config(cls, config):
-                config["sublayers"] = (
-                    serialization_lib.deserialize_keras_object(
-                        config["sublayers"]
-                    )
+                config["sublayers"] = serialization_lib.deserialize_keras_object(
+                    config["sublayers"]
                 )
                 return cls(**config)
 
@@ -490,9 +484,7 @@ class DirectoryCreationTest(testing.TestCase):
     def DISABLED_test_directory_creation_on_save(self):
         """Test if directory is created on model save."""
         model = get_sequential_model(keras)
-        nested_dirpath = os.path.join(
-            self.get_temp_dir(), "dir1", "dir2", "dir3"
-        )
+        nested_dirpath = os.path.join(self.get_temp_dir(), "dir1", "dir2", "dir3")
         filepath = os.path.join(nested_dirpath, "model.h5")
         self.assertFalse(os.path.exists(nested_dirpath))
         legacy_h5_format.save_model_to_hdf5(model, filepath)

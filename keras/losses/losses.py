@@ -10,9 +10,7 @@ from keras.utils.numerical_utils import normalize
 
 
 class LossFunctionWrapper(Loss):
-    def __init__(
-        self, fn, reduction="sum_over_batch_size", name=None, **kwargs
-    ):
+    def __init__(self, fn, reduction="sum_over_batch_size", name=None, **kwargs):
         super().__init__(reduction=reduction, name=name)
         self.fn = fn
         self._fn_kwargs = kwargs
@@ -51,9 +49,7 @@ class MeanSquaredError(LossFunctionWrapper):
         name: Optional name for the loss instance.
     """
 
-    def __init__(
-        self, reduction="sum_over_batch_size", name="mean_squared_error"
-    ):
+    def __init__(self, reduction="sum_over_batch_size", name="mean_squared_error"):
         super().__init__(mean_squared_error, reduction=reduction, name=name)
 
     def get_config(self):
@@ -77,9 +73,7 @@ class MeanAbsoluteError(LossFunctionWrapper):
         name: Optional name for the loss instance.
     """
 
-    def __init__(
-        self, reduction="sum_over_batch_size", name="mean_absolute_error"
-    ):
+    def __init__(self, reduction="sum_over_batch_size", name="mean_absolute_error"):
         super().__init__(mean_absolute_error, reduction=reduction, name=name)
 
     def get_config(self):
@@ -108,9 +102,7 @@ class MeanAbsolutePercentageError(LossFunctionWrapper):
         reduction="sum_over_batch_size",
         name="mean_absolute_percentage_error",
     ):
-        super().__init__(
-            mean_absolute_percentage_error, reduction=reduction, name=name
-        )
+        super().__init__(mean_absolute_percentage_error, reduction=reduction, name=name)
 
     def get_config(self):
         return Loss.get_config(self)
@@ -138,9 +130,7 @@ class MeanSquaredLogarithmicError(LossFunctionWrapper):
         reduction="sum_over_batch_size",
         name="mean_squared_logarithmic_error",
     ):
-        super().__init__(
-            mean_squared_logarithmic_error, reduction=reduction, name=name
-        )
+        super().__init__(mean_squared_logarithmic_error, reduction=reduction, name=name)
 
     def get_config(self):
         return Loss.get_config(self)
@@ -178,9 +168,7 @@ class CosineSimilarity(LossFunctionWrapper):
         reduction="sum_over_batch_size",
         name="cosine_similarity",
     ):
-        super().__init__(
-            cosine_similarity, reduction=reduction, name=name, axis=axis
-        )
+        super().__init__(cosine_similarity, reduction=reduction, name=name, axis=axis)
 
     def get_config(self):
         return Loss.get_config(self)
@@ -323,9 +311,7 @@ class CategoricalHinge(LossFunctionWrapper):
         name: Optional name for the loss instance.
     """
 
-    def __init__(
-        self, reduction="sum_over_batch_size", name="categorical_hinge"
-    ):
+    def __init__(self, reduction="sum_over_batch_size", name="categorical_hinge"):
         super().__init__(categorical_hinge, reduction=reduction, name=name)
 
     def get_config(self):
@@ -1069,9 +1055,7 @@ def squared_hinge(y_true, y_pred):
     y_pred = ops.convert_to_tensor(y_pred)
     y_true = ops.cast(y_true, y_pred.dtype)
     y_true = convert_binary_labels_to_hinge(y_true)
-    return ops.mean(
-        ops.square(ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1
-    )
+    return ops.mean(ops.square(ops.maximum(1.0 - y_true * y_pred, 0.0)), axis=-1)
 
 
 @keras_export(
@@ -1561,9 +1545,7 @@ def categorical_crossentropy(
 
     if label_smoothing:
         num_classes = ops.cast(ops.shape(y_true)[-1], y_pred.dtype)
-        y_true = y_true * (1.0 - label_smoothing) + (
-            label_smoothing / num_classes
-        )
+        y_true = y_true * (1.0 - label_smoothing) + (label_smoothing / num_classes)
 
     return ops.categorical_crossentropy(
         y_true, y_pred, from_logits=from_logits, axis=axis
@@ -1639,9 +1621,7 @@ def categorical_focal_crossentropy(
 
     if label_smoothing:
         num_classes = ops.cast(ops.shape(y_true)[-1], y_pred.dtype)
-        y_true = y_true * (1.0 - label_smoothing) + (
-            label_smoothing / num_classes
-        )
+        y_true = y_true * (1.0 - label_smoothing) + (label_smoothing / num_classes)
 
     if from_logits:
         y_pred = ops.softmax(y_pred, axis=axis)
@@ -1707,9 +1687,7 @@ def sparse_categorical_crossentropy(
         res_shape = ops.shape(y_pred)[:-1]
         valid_mask = ops.not_equal(y_true, ops.cast(ignore_class, y_pred.dtype))
         y_true = y_true * ops.cast(valid_mask, y_true.dtype)
-        y_pred = y_pred * ops.cast(
-            ops.expand_dims(valid_mask, -1), y_pred.dtype
-        )
+        y_pred = y_pred * ops.cast(ops.expand_dims(valid_mask, -1), y_pred.dtype)
 
     res = ops.sparse_categorical_crossentropy(
         y_true,
@@ -1931,9 +1909,7 @@ def ctc(y_true, y_pred):
     input_length = input_length * ops.ones((batch_length,), dtype="int32")
     label_length = label_length * ops.ones((batch_length,), dtype="int32")
 
-    return ops.ctc_loss(
-        y_true, y_pred, label_length, input_length, mask_index=0
-    )
+    return ops.ctc_loss(y_true, y_pred, label_length, input_length, mask_index=0)
 
 
 @keras_export("keras.losses.Dice")

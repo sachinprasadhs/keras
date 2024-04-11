@@ -80,11 +80,7 @@ class TestTorchDataLoaderAdapter(testing.TestCase, parameterized.TestCase):
             def __len__(self):
                 return 10
 
-        ds = (
-            TestIterableDatasetWithLen()
-            if implements_len
-            else TestIterableDataset()
-        )
+        ds = TestIterableDatasetWithLen() if implements_len else TestIterableDataset()
         dataloader = torch.utils.data.DataLoader(ds, batch_size=batch_size)
         adapter = TorchDataLoaderAdapter(dataloader)
 

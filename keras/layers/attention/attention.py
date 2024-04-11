@@ -221,9 +221,7 @@ class Attention(Layer):
         q_mask = mask[0] if mask else None
         v_mask = mask[1] if mask else None
         scores = self._calculate_scores(query=q, key=k)
-        scores_mask = self._calculate_score_mask(
-            scores, v_mask, use_causal_mask
-        )
+        scores_mask = self._calculate_score_mask(scores, v_mask, use_causal_mask)
         result, attention_scores = self._apply_scores(
             scores=scores, value=v, scores_mask=scores_mask, training=training
         )

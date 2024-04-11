@@ -35,9 +35,7 @@ class TFGraphScope:
         global_state.set_global_attribute("in_tf_graph_scope", True)
 
     def __exit__(self, *args, **kwargs):
-        global_state.set_global_attribute(
-            "in_tf_graph_scope", self._original_value
-        )
+        global_state.set_global_attribute("in_tf_graph_scope", self._original_value)
 
 
 class DynamicBackend:
@@ -112,9 +110,7 @@ def set_backend(backend):
     """
     os.environ["KERAS_BACKEND"] = backend
     # Clear module cache.
-    loaded_modules = [
-        key for key in sys.modules.keys() if key.startswith("keras")
-    ]
+    loaded_modules = [key for key in sys.modules.keys() if key.startswith("keras")]
     for key in loaded_modules:
         del sys.modules[key]
     # Reimport Keras with the new backend (set via KERAS_BACKEND).

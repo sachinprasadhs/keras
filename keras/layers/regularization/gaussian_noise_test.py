@@ -28,6 +28,4 @@ class GaussianNoiseTest(testing.TestCase):
         inputs = np.ones((20, 500))
         layer = layers.GaussianNoise(0.3, seed=1337)
         outputs = layer(inputs, training=True)
-        self.assertAllClose(
-            np.std(backend.convert_to_numpy(outputs)), 0.3, atol=0.02
-        )
+        self.assertAllClose(np.std(backend.convert_to_numpy(outputs)), 0.3, atol=0.02)

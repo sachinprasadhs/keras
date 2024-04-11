@@ -64,9 +64,7 @@ class MultiHeadAttentionTest(testing.TestCase, parameterized.TestCase):
             (2, 3),
         ),
     )
-    def test_high_dim_attention(
-        self, q_dims, v_dims, mask_dims, attention_axes
-    ):
+    def test_high_dim_attention(self, q_dims, v_dims, mask_dims, attention_axes):
         batch_size, hidden_size = 3, 8
         query_shape = (batch_size,) + q_dims + (hidden_size,)
         value_shape = (batch_size,) + v_dims + (hidden_size,)
@@ -104,9 +102,7 @@ class MultiHeadAttentionTest(testing.TestCase, parameterized.TestCase):
             (3, 2),
         ),
     )
-    def test_compute_output_shape(
-        self, query_dims, value_dims, key_dims, output_shape
-    ):
+    def test_compute_output_shape(self, query_dims, value_dims, key_dims, output_shape):
         """Test computed shape is equal to the layer output's shape."""
         layer = layers.MultiHeadAttention(
             num_heads=2,
@@ -208,9 +204,9 @@ class MultiHeadAttentionTest(testing.TestCase, parameterized.TestCase):
             + [[[1, 1, 1]] + [[0, 0, 0]] * 4]
         ).astype(bool)
         if use_causal_mask:
-            mask = mask & np.array(
-                [[[1, 0, 0], [1, 1, 0]] + [[1, 1, 1]] * 3]
-            ).astype(bool)
+            mask = mask & np.array([[[1, 0, 0], [1, 1, 0]] + [[1, 1, 1]] * 3]).astype(
+                bool
+            )
         del masked_query._keras_mask
         del masked_value._keras_mask
         output_with_manual_mask = layer(
@@ -267,30 +263,18 @@ class MultiHeadAttentionTest(testing.TestCase, parameterized.TestCase):
             kernel_constraint="non_neg",
         )
         layer.build(query.shape, key.shape, value.shape)
-        self.assertIsInstance(
-            layer._query_dense.kernel.constraint, constraints.NonNeg
-        )
-        self.assertIsInstance(
-            layer._value_dense.kernel.constraint, constraints.NonNeg
-        )
-        self.assertIsInstance(
-            layer._key_dense.kernel.constraint, constraints.NonNeg
-        )
+        self.assertIsInstance(layer._query_dense.kernel.constraint, constraints.NonNeg)
+        self.assertIsInstance(layer._value_dense.kernel.constraint, constraints.NonNeg)
+        self.assertIsInstance(layer._key_dense.kernel.constraint, constraints.NonNeg)
         layer = layers.MultiHeadAttention(
             num_heads=num_heads,
             key_dim=key_dim,
             bias_constraint="non_neg",
         )
         layer.build(query.shape, key.shape, value.shape)
-        self.assertIsInstance(
-            layer._query_dense.bias.constraint, constraints.NonNeg
-        )
-        self.assertIsInstance(
-            layer._value_dense.bias.constraint, constraints.NonNeg
-        )
-        self.assertIsInstance(
-            layer._key_dense.bias.constraint, constraints.NonNeg
-        )
+        self.assertIsInstance(layer._query_dense.bias.constraint, constraints.NonNeg)
+        self.assertIsInstance(layer._value_dense.bias.constraint, constraints.NonNeg)
+        self.assertIsInstance(layer._key_dense.bias.constraint, constraints.NonNeg)
 
     @pytest.mark.requires_trainable_backend
     def test_lora(self):
@@ -338,9 +322,7 @@ class MultiHeadAttentionTest(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(model.predict(x), new_model.predict(x))
 
         # Try saving and reloading the model's weights only
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "lora_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "lora_model.weights.h5")
         model.save_weights(temp_filepath)
 
         # Load the file into a fresh, non-lora model

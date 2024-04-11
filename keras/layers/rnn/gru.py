@@ -177,9 +177,7 @@ class GRUCell(Layer, DropoutRNNCell):
         self.built = True
 
     def call(self, inputs, states, training=False):
-        h_tm1 = (
-            states[0] if tree.is_nested(states) else states
-        )  # previous state
+        h_tm1 = states[0] if tree.is_nested(states) else states  # previous state
 
         dp_mask = self.get_dropout_mask(inputs)
         rec_dp_mask = self.get_recurrent_dropout_mask(h_tm1)
@@ -204,9 +202,7 @@ class GRUCell(Layer, DropoutRNNCell):
             inputs_h = inputs
 
             x_z = ops.matmul(inputs_z, self.kernel[:, : self.units])
-            x_r = ops.matmul(
-                inputs_r, self.kernel[:, self.units : self.units * 2]
-            )
+            x_r = ops.matmul(inputs_r, self.kernel[:, self.units : self.units * 2])
             x_h = ops.matmul(inputs_h, self.kernel[:, self.units * 2 :])
 
             if self.use_bias:
@@ -218,9 +214,7 @@ class GRUCell(Layer, DropoutRNNCell):
             h_tm1_r = h_tm1
             h_tm1_h = h_tm1
 
-            recurrent_z = ops.matmul(
-                h_tm1_z, self.recurrent_kernel[:, : self.units]
-            )
+            recurrent_z = ops.matmul(h_tm1_z, self.recurrent_kernel[:, : self.units])
             recurrent_r = ops.matmul(
                 h_tm1_r, self.recurrent_kernel[:, self.units : self.units * 2]
             )
@@ -290,28 +284,16 @@ class GRUCell(Layer, DropoutRNNCell):
         config = {
             "units": self.units,
             "activation": activations.serialize(self.activation),
-            "recurrent_activation": activations.serialize(
-                self.recurrent_activation
-            ),
+            "recurrent_activation": activations.serialize(self.recurrent_activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,
@@ -322,9 +304,7 @@ class GRUCell(Layer, DropoutRNNCell):
         return {**base_config, **config}
 
     def get_initial_state(self, batch_size=None):
-        return [
-            ops.zeros((batch_size, self.state_size), dtype=self.compute_dtype)
-        ]
+        return [ops.zeros((batch_size, self.state_size), dtype=self.compute_dtype)]
 
 
 @keras_export("keras.layers.GRU")
@@ -649,31 +629,17 @@ class GRU(RNN):
         config = {
             "units": self.units,
             "activation": activations.serialize(self.activation),
-            "recurrent_activation": activations.serialize(
-                self.recurrent_activation
-            ),
+            "recurrent_activation": activations.serialize(self.recurrent_activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,

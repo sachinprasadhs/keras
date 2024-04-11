@@ -62,10 +62,7 @@ class Cropping1D(Layer):
         return (input_shape[0], length, input_shape[2])
 
     def call(self, inputs):
-        if (
-            inputs.shape[1] is not None
-            and sum(self.cropping) >= inputs.shape[1]
-        ):
+        if inputs.shape[1] is not None and sum(self.cropping) >= inputs.shape[1]:
             raise ValueError(
                 "`cropping` parameter of `Cropping1D` layer must be "
                 "smaller than the input length. Received: inputs.shape="

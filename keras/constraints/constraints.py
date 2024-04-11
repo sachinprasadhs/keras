@@ -157,9 +157,7 @@ class UnitNorm(Constraint):
         return {"axis": self.axis}
 
 
-@keras_export(
-    ["keras.constraints.MinMaxNorm", "keras.constraints.min_max_norm"]
-)
+@keras_export(["keras.constraints.MinMaxNorm", "keras.constraints.min_max_norm"])
 class MinMaxNorm(Constraint):
     """MinMaxNorm weight constraint.
 

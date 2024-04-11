@@ -92,9 +92,7 @@ class RMSprop(optimizer.Optimizer):
 
         self._velocities = []
         for var in var_list:
-            self._velocities.append(
-                self.add_variable_from_reference(var, "velocity")
-            )
+            self._velocities.append(self.add_variable_from_reference(var, "velocity"))
 
         self._momentums = []
         if self.momentum > 0:
@@ -121,9 +119,7 @@ class RMSprop(optimizer.Optimizer):
             momentum = self._momentums[self._get_variable_index(variable)]
         average_grad = None
         if self.centered:
-            average_grad = self._average_gradients[
-                self._get_variable_index(variable)
-            ]
+            average_grad = self._average_gradients[self._get_variable_index(variable)]
 
         rho = self.rho
 
@@ -145,9 +141,7 @@ class RMSprop(optimizer.Optimizer):
             denominator = velocity - ops.square(average_grad) + self.epsilon
         else:
             denominator = ops.add(velocity, self.epsilon)
-        increment = ops.divide(
-            ops.multiply(lr, gradient), ops.sqrt(denominator)
-        )
+        increment = ops.divide(ops.multiply(lr, gradient), ops.sqrt(denominator))
         if self.momentum > 0:
             self.assign(
                 momentum,

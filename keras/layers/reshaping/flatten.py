@@ -70,9 +70,7 @@ class Flatten(Layer):
 
     def compute_output_spec(self, inputs):
         output_shape = self.compute_output_shape(inputs.shape)
-        return KerasTensor(
-            shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse
-        )
+        return KerasTensor(shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse)
 
     def get_config(self):
         config = {"data_format": self.data_format}

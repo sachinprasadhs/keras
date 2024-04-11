@@ -58,9 +58,7 @@ class GetTestDataTest(test_case.TestCase):
             self.input_shape,
             self.num_classes,
         )
-        self.assertEqual(
-            x_train.shape, (self.train_samples,) + self.input_shape
-        )
+        self.assertEqual(x_train.shape, (self.train_samples,) + self.input_shape)
         self.assertEqual(y_train.shape, (self.train_samples,))
         self.assertEqual(x_test.shape, (self.test_samples,) + self.input_shape)
         self.assertEqual(y_test.shape, (self.test_samples,))
@@ -116,9 +114,7 @@ class GetTestDataTest(test_case.TestCase):
             input_shape_3d,
             self.num_classes,
         )
-        self.assertEqual(
-            x_train_3d.shape, (self.train_samples,) + input_shape_3d
-        )
+        self.assertEqual(x_train_3d.shape, (self.train_samples,) + input_shape_3d)
 
     def test_all_classes_represented(self):
         """Ensure all classes are represented in the data."""
@@ -172,12 +168,8 @@ class ClassDistributionTests(test_case.TestCase):
         _, counts_train = np.unique(y_train, return_counts=True)
         _, counts_test = np.unique(y_test, return_counts=True)
 
-        self.assertTrue(
-            np.all(counts_train == self.train_samples // self.num_classes)
-        )
-        self.assertTrue(
-            np.all(counts_test == self.test_samples // self.num_classes)
-        )
+        self.assertTrue(np.all(counts_train == self.train_samples // self.num_classes))
+        self.assertTrue(np.all(counts_test == self.test_samples // self.num_classes))
 
     def test_uneven_samples_class_distribution(self):
         """Check class distribution with uneven samples."""
@@ -215,9 +207,7 @@ class ClassDistributionTests(test_case.TestCase):
     def test_large_number_of_classes(self):
         """Validate function with a large number of classes."""
         num_classes = 150
-        train_samples = (
-            num_classes * 10
-        )  # 10 samples for each class in training
+        train_samples = num_classes * 10  # 10 samples for each class in training
         test_samples = num_classes * 5  # 5 samples for each class in testing
         (_, y_train), (_, y_test) = test_utils.get_test_data(
             train_samples,
@@ -283,8 +273,6 @@ class NamedProductTest(parameterized.TestCase):
         self.assertIn(x, (-1, 1, 0))
         self.assertIn(numeral_type, (float, int))
 
-    @parameterized.named_parameters(
-        test_utils.named_product(numeral_type=[float, int])
-    )
+    @parameterized.named_parameters(test_utils.named_product(numeral_type=[float, int]))
     def test_via_decorator_no_product(self, numeral_type):
         self.assertIn(numeral_type, (float, int))

@@ -15,9 +15,7 @@ class name_scope:
             which would override any previously opened name scopes.
     """
 
-    def __init__(
-        self, name, caller=None, deduplicate=True, override_parent=None
-    ):
+    def __init__(self, name, caller=None, deduplicate=True, override_parent=None):
         if not isinstance(name, str) or "/" in name:
             raise ValueError(
                 "Argument `name` must be a string and "
@@ -55,9 +53,7 @@ class name_scope:
 
     def __exit__(self, *args, **kwargs):
         if self._pop_on_exit:
-            name_scope_stack = global_state.get_global_attribute(
-                "name_scope_stack"
-            )
+            name_scope_stack = global_state.get_global_attribute("name_scope_stack")
             name_scope_stack.pop()
 
 

@@ -14,7 +14,5 @@ class TerminateOnNaN(Callback):
         loss = logs.get("loss")
         if loss is not None:
             if np.isnan(loss) or np.isinf(loss):
-                io_utils.print_msg(
-                    f"Batch {batch}: Invalid loss, terminating training"
-                )
+                io_utils.print_msg(f"Batch {batch}: Invalid loss, terminating training")
                 self.model.stop_training = True

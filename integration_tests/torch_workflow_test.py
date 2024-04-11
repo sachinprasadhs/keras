@@ -29,6 +29,4 @@ class TorchWorkflowTest(testing.TestCase):
         kernel = net.fc1.kernel
         transposed_kernel = torch.transpose(kernel, 0, 1)
         self.assertIsInstance(kernel, KerasVariable)
-        self.assertIsInstance(
-            torch.mul(kernel, transposed_kernel), torch.Tensor
-        )
+        self.assertIsInstance(torch.mul(kernel, transposed_kernel), torch.Tensor)

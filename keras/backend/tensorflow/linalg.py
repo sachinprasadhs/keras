@@ -61,13 +61,9 @@ def norm(x, ord=None, axis=None, keepdims=False):
                 tf.reduce_sum(x * tf.math.conj(x), axis=axis, keepdims=keepdims)
             )
         elif ord == float("inf"):
-            return tf.math.reduce_max(
-                tf.math.abs(x), axis=axis, keepdims=keepdims
-            )
+            return tf.math.reduce_max(tf.math.abs(x), axis=axis, keepdims=keepdims)
         elif ord == float("-inf"):
-            return tf.math.reduce_min(
-                tf.math.abs(x), axis=axis, keepdims=keepdims
-            )
+            return tf.math.reduce_min(tf.math.abs(x), axis=axis, keepdims=keepdims)
         elif ord == 0:
             return tf.math.reduce_sum(
                 tf.cast(tf.not_equal(x, 0), dtype=x.dtype),
@@ -127,17 +123,11 @@ def norm(x, ord=None, axis=None, keepdims=False):
         elif ord in ("nuc", 2, -2):
             x = tfnp.moveaxis(x, axis, (-2, -1))
             if ord == -2:
-                x = tf.math.reduce_min(
-                    tf.linalg.svd(x, compute_uv=False), axis=-1
-                )
+                x = tf.math.reduce_min(tf.linalg.svd(x, compute_uv=False), axis=-1)
             elif ord == 2:
-                x = tf.math.reduce_max(
-                    tf.linalg.svd(x, compute_uv=False), axis=-1
-                )
+                x = tf.math.reduce_max(tf.linalg.svd(x, compute_uv=False), axis=-1)
             else:
-                x = tf.math.reduce_sum(
-                    tf.linalg.svd(x, compute_uv=False), axis=-1
-                )
+                x = tf.math.reduce_sum(tf.linalg.svd(x, compute_uv=False), axis=-1)
             if keepdims:
                 x = tf.expand_dims(x, axis[0])
                 x = tf.expand_dims(x, axis[1])
@@ -173,14 +163,10 @@ def solve(a, b):
 def solve_triangular(a, b, lower=False):
     if b.shape.ndims == a.shape.ndims - 1:
         b = tf.expand_dims(b, axis=-1)
-        return tf.squeeze(
-            tf.linalg.triangular_solve(a, b, lower=lower), axis=-1
-        )
+        return tf.squeeze(tf.linalg.triangular_solve(a, b, lower=lower), axis=-1)
     return tf.linalg.triangular_solve(a, b, lower=lower)
 
 
 def svd(x, full_matrices=True, compute_uv=True):
-    s, u, v = tf.linalg.svd(
-        x, full_matrices=full_matrices, compute_uv=compute_uv
-    )
+    s, u, v = tf.linalg.svd(x, full_matrices=full_matrices, compute_uv=compute_uv)
     return u, s, tf.linalg.adjoint(v)

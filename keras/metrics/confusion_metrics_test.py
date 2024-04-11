@@ -62,9 +62,7 @@ class FalsePositivesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
 
         fp_obj.update_state(y_true, y_pred)
         self.assertAllClose([7.0, 4.0, 2.0], fp_obj.result())
@@ -80,9 +78,7 @@ class FalsePositivesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
         sample_weight = (
             (1.0, 2.0, 3.0, 5.0),
             (7.0, 11.0, 13.0, 17.0),
@@ -156,9 +152,7 @@ class FalseNegativesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
 
         fn_obj.update_state(y_true, y_pred)
         self.assertAllClose([1.0, 4.0, 6.0], fn_obj.result())
@@ -174,9 +168,7 @@ class FalseNegativesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
         sample_weight = ((3.0,), (5.0,), (7.0,), (4.0,))
 
         result = fn_obj(y_true, y_pred, sample_weight=sample_weight)
@@ -245,9 +237,7 @@ class TrueNegativesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
 
         tn_obj.update_state(y_true, y_pred)
         self.assertAllClose([2.0, 5.0, 7.0], tn_obj.result())
@@ -263,9 +253,7 @@ class TrueNegativesTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
         sample_weight = ((0.0, 2.0, 3.0, 5.0),)
 
         result = tn_obj(y_true, y_pred, sample_weight=sample_weight)
@@ -334,9 +322,7 @@ class TruePositiveTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
 
         tp_obj.update_state(y_true, y_pred)
         self.assertAllClose([6.0, 3.0, 1.0], tp_obj.result())
@@ -352,9 +338,7 @@ class TruePositiveTest(testing.TestCase):
                 (0, 1, 0.7, 0.3),
             )
         )
-        y_true = np.array(
-            ((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1))
-        )
+        y_true = np.array(((0, 1, 1, 0), (1, 0, 0, 0), (0, 0, 0, 0), (1, 1, 1, 1)))
         sample_weight = 37.0
 
         result = tp_obj(y_true, y_pred, sample_weight=sample_weight)
@@ -460,9 +444,7 @@ class PrecisionTest(testing.TestCase):
             p_obj.update_state(y_true, y_pred, sample_weight=weights)
 
         weighted_tp = (0 + 3.0) + (0 + 3.0)
-        weighted_positives = ((0 + 3.0) + (4.0 + 0.0)) + (
-            (0 + 3.0) + (4.0 + 0.0)
-        )
+        weighted_positives = ((0 + 3.0) + (4.0 + 0.0)) + ((0 + 3.0) + (4.0 + 0.0))
         expected_precision = weighted_tp / weighted_positives
         self.assertAlmostEqual([expected_precision, 0], p_obj.result(), 1e-3)
 
@@ -622,9 +604,7 @@ class RecallTest(testing.TestCase):
             r_obj.update_state(y_true, y_pred, sample_weight=weights)
 
         weighted_tp = (0 + 3.0) + (0 + 3.0)
-        weighted_positives = ((0 + 3.0) + (4.0 + 0.0)) + (
-            (0 + 3.0) + (4.0 + 0.0)
-        )
+        weighted_positives = ((0 + 3.0) + (4.0 + 0.0)) + ((0 + 3.0) + (4.0 + 0.0))
         expected_recall = weighted_tp / weighted_positives
         self.assertAllClose([expected_recall, 0], r_obj.result(), 1e-3)
 
@@ -715,9 +695,7 @@ class SensitivityAtSpecificityTest(testing.TestCase, parameterized.TestCase):
         self.assertEqual(s_obj.class_id, 12)
 
         # Check save and restore config
-        s_obj2 = metrics.SensitivityAtSpecificity.from_config(
-            s_obj.get_config()
-        )
+        s_obj2 = metrics.SensitivityAtSpecificity.from_config(s_obj.get_config())
         self.assertEqual(s_obj2.name, "sensitivity_at_specificity_1")
         self.assertLen(s_obj2.variables, 4)
         self.assertEqual(s_obj2.specificity, 0.4)
@@ -803,9 +781,7 @@ class SpecificityAtSensitivityTest(testing.TestCase, parameterized.TestCase):
         self.assertEqual(s_obj.class_id, 12)
 
         # Check save and restore config
-        s_obj2 = metrics.SpecificityAtSensitivity.from_config(
-            s_obj.get_config()
-        )
+        s_obj2 = metrics.SpecificityAtSensitivity.from_config(s_obj.get_config())
         self.assertEqual(s_obj2.name, "specificity_at_sensitivity_1")
         self.assertLen(s_obj2.variables, 4)
         self.assertEqual(s_obj2.sensitivity, 0.4)
@@ -1118,9 +1094,7 @@ class RecallAtPrecisionTest(testing.TestCase, parameterized.TestCase):
                 layers.Dense(1),
             ]
         )
-        model.compile(
-            optimizer="rmsprop", loss="mse", metrics=[metrics.Precision()]
-        )
+        model.compile(optimizer="rmsprop", loss="mse", metrics=[metrics.Precision()])
         model.fit(np.ones((5, 1)), np.ones((5, 1)))
 
 
@@ -1254,9 +1228,7 @@ class AUCTest(testing.TestCase):
         self.assertAllClose(result, expected_result, 1e-3)
 
     def test_unweighted_from_logits(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, from_logits=True
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, from_logits=True)
         result = auc_obj(self.y_true, self.y_pred_logits)
 
         # tp = [2, 1, 0], fp = [2, 0, 0], fn = [0, 1, 2], tn = [0, 2, 2]
@@ -1285,9 +1257,7 @@ class AUCTest(testing.TestCase):
 
     def test_weighted_roc_interpolation(self):
         auc_obj = metrics.AUC(num_thresholds=self.num_thresholds)
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # tp = [7, 4, 0], fp = [3, 0, 0], fn = [0, 3, 7], tn = [0, 3, 3]
         # recall = [7/7, 4/(4+3), 0] = [1, 0.571, 0]
@@ -1301,9 +1271,7 @@ class AUCTest(testing.TestCase):
         auc_obj = metrics.AUC(
             num_thresholds=self.num_thresholds, summation_method="majoring"
         )
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # tp = [7, 4, 0], fp = [3, 0, 0], fn = [0, 3, 7], tn = [0, 3, 3]
         # recall = [7/7, 4/(4+3), 0] = [1, 0.571, 0]
@@ -1317,9 +1285,7 @@ class AUCTest(testing.TestCase):
         auc_obj = metrics.AUC(
             num_thresholds=self.num_thresholds, summation_method="minoring"
         )
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # tp = [7, 4, 0], fp = [3, 0, 0], fn = [0, 3, 7], tn = [0, 3, 3]
         # recall = [7/7, 4/(4+3), 0] = [1, 0.571, 0]
@@ -1335,9 +1301,7 @@ class AUCTest(testing.TestCase):
             curve="PR",
             summation_method="majoring",
         )
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # tp = [7, 4, 0], fp = [3, 0, 0], fn = [0, 3, 7], tn = [0, 3, 3]
         # precision = [7/(7+3), 4/4, 0] = [0.7, 1, 0]
@@ -1353,9 +1317,7 @@ class AUCTest(testing.TestCase):
             curve="PR",
             summation_method="minoring",
         )
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # tp = [7, 4, 0], fp = [3, 0, 0], fn = [0, 3, 7], tn = [0, 3, 3]
         # precision = [7/(7+3), 4/4, 0] = [0.7, 1, 0]
@@ -1367,9 +1329,7 @@ class AUCTest(testing.TestCase):
 
     def test_weighted_pr_interpolation(self):
         auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, curve="PR")
-        result = auc_obj(
-            self.y_true, self.y_pred, sample_weight=self.sample_weight
-        )
+        result = auc_obj(self.y_true, self.y_pred, sample_weight=self.sample_weight)
 
         # auc = (slope / Total Pos) * [dTP - intercept * log(Pb/Pa)]
 
@@ -1408,9 +1368,7 @@ class AUCTest(testing.TestCase):
             metrics.AUC(num_thresholds=1)
 
     def test_invalid_curve(self):
-        with self.assertRaisesRegex(
-            ValueError, 'Invalid AUC curve value: "Invalid".'
-        ):
+        with self.assertRaisesRegex(ValueError, 'Invalid AUC curve value: "Invalid".'):
             metrics.AUC(curve="Invalid")
 
     def test_invalid_summation_method(self):
@@ -1502,9 +1460,7 @@ class MultiAUCTest(testing.TestCase):
         self.assertEqual(result, 1)
 
     def test_unweighted(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=True
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=True)
         result = auc_obj(self.y_true_good, self.y_pred)
 
         # tpr = [[1, 1, 0.5, 0.5, 0], [1, 1, 0, 0, 0]]
@@ -1526,12 +1482,8 @@ class MultiAUCTest(testing.TestCase):
         self.assertAllClose(result, expected_result, 1e-3)
 
     def test_sample_weight_flat(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=False
-        )
-        result = auc_obj(
-            self.y_true_good, self.y_pred, sample_weight=[1, 2, 3, 4]
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=False)
+        result = auc_obj(self.y_true_good, self.y_pred, sample_weight=[1, 2, 3, 4])
 
         # tpr = [1, 1, 0.2857, 0.2857, 0]
         # fpr = [1, 0.3333, 0, 0, 0]
@@ -1539,9 +1491,7 @@ class MultiAUCTest(testing.TestCase):
         self.assertAllClose(result, expected_result, 1e-3)
 
     def test_full_sample_weight_flat(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=False
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=False)
         sw = np.arange(4 * 2)
         sw = sw.reshape(4, 2)
         result = auc_obj(self.y_true_good, self.y_pred, sample_weight=sw)
@@ -1578,9 +1528,7 @@ class MultiAUCTest(testing.TestCase):
         self.assertAllClose(result, expected_result, 1e-2)
 
     def test_unweighted_flat(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=False
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=False)
         result = auc_obj(self.y_true_good, self.y_pred)
 
         # tp = [4, 4, 1, 1, 0]
@@ -1614,9 +1562,7 @@ class MultiAUCTest(testing.TestCase):
     def test_manual_thresholds(self):
         # Verify that when specified, thresholds are used instead of
         # num_thresholds.
-        auc_obj = metrics.AUC(
-            num_thresholds=2, thresholds=[0.5], multi_label=True
-        )
+        auc_obj = metrics.AUC(num_thresholds=2, thresholds=[0.5], multi_label=True)
         self.assertEqual(auc_obj.num_thresholds, 3)
         self.assertAllClose(auc_obj.thresholds, [0.0, 0.5, 1.0])
         result = auc_obj(self.y_true_good, self.y_pred)
@@ -1635,9 +1581,7 @@ class MultiAUCTest(testing.TestCase):
         self.assertAllClose(result, expected_result, 1e-3)
 
     def test_weighted_roc_interpolation(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=True
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=True)
         result = auc_obj(
             self.y_true_good, self.y_pred, sample_weight=self.sample_weight
         )
@@ -1682,9 +1626,7 @@ class MultiAUCTest(testing.TestCase):
         )
 
     def test_reset_state(self):
-        auc_obj = metrics.AUC(
-            num_thresholds=self.num_thresholds, multi_label=True
-        )
+        auc_obj = metrics.AUC(num_thresholds=self.num_thresholds, multi_label=True)
         auc_obj(self.y_true_good, self.y_pred)
         auc_obj.reset_state()
         self.assertAllClose(auc_obj.true_positives, np.zeros((5, 2)))

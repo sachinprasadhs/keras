@@ -20,9 +20,7 @@ class JaxOptimizer(base_optimizer.BaseOptimizer):
             ) % self.gradient_accumulation_steps == 0
             steps = self.gradient_accumulation_steps
 
-            current_trainable_vars_value = [
-                v.value for v in trainable_variables
-            ]
+            current_trainable_vars_value = [v.value for v in trainable_variables]
             current_optimizer_vars_value = [v.value for v in self.variables]
 
             new_g_accs = jax.lax.cond(
@@ -32,8 +30,7 @@ class JaxOptimizer(base_optimizer.BaseOptimizer):
                     for x in self._accumulated_gradients
                 ],
                 lambda: [
-                    grads[i] + self._accumulated_gradients[i]
-                    for i in range(len(grads))
+                    grads[i] + self._accumulated_gradients[i] for i in range(len(grads))
                 ],
             )
 
@@ -46,9 +43,7 @@ class JaxOptimizer(base_optimizer.BaseOptimizer):
                 lambda: list(grads),
             )
 
-            self._backend_update_step(
-                grads, trainable_variables, self.learning_rate
-            )
+            self._backend_update_step(grads, trainable_variables, self.learning_rate)
             new_trainable_vars = jax.lax.cond(
                 is_update_step,
                 lambda: [v.value for v in trainable_variables],
@@ -70,20 +65,16 @@ class JaxOptimizer(base_optimizer.BaseOptimizer):
                 g_acc.assign(n_g_acc)
 
         else:
-            self._backend_update_step(
-                grads, trainable_variables, self.learning_rate
-            )
+            self._backend_update_step(grads, trainable_variables, self.learning_rate)
 
         if self.use_ema:
-            self._update_model_variables_moving_average(
-                self._trainable_variables
-            )
+            self._update_model_variables_moving_average(self._trainable_variables)
             if self.ema_overwrite_frequency is not None:
                 should_overwrite_model_vars = (
                     self.iterations + 1
                 ) % self.ema_overwrite_frequency == 0
-                should_overwrite_model_vars_int = (
-                    should_overwrite_model_vars.astype("int32")
+                should_overwrite_model_vars_int = should_overwrite_model_vars.astype(
+                    "int32"
                 )
                 should_not_overwrite_model_vars_int = jnp.logical_not(
                     should_overwrite_model_vars

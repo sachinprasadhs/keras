@@ -49,12 +49,8 @@ class TorchTrainer(base_trainer.Trainer):
         # for the weights from the previous train step.
         self.zero_grad()
 
-        loss = self.compute_loss(
-            x=x, y=y, y_pred=y_pred, sample_weight=sample_weight
-        )
-        self._loss_tracker.update_state(
-            loss, sample_weight=tree.flatten(x)[0].shape[0]
-        )
+        loss = self.compute_loss(x=x, y=y, y_pred=y_pred, sample_weight=sample_weight)
+        self._loss_tracker.update_state(loss, sample_weight=tree.flatten(x)[0].shape[0])
         if self.optimizer is not None:
             loss = self.optimizer.scale_loss(loss)
 
@@ -85,12 +81,8 @@ class TorchTrainer(base_trainer.Trainer):
             y_pred = self(x, training=False)
         else:
             y_pred = self(x)
-        loss = self.compute_loss(
-            x=x, y=y, y_pred=y_pred, sample_weight=sample_weight
-        )
-        self._loss_tracker.update_state(
-            loss, sample_weight=tree.flatten(x)[0].shape[0]
-        )
+        loss = self.compute_loss(x=x, y=y, y_pred=y_pred, sample_weight=sample_weight)
+        self._loss_tracker.update_state(loss, sample_weight=tree.flatten(x)[0].shape[0])
         return self.compute_metrics(x, y, y_pred, sample_weight=sample_weight)
 
     def predict_step(self, data):
@@ -184,9 +176,7 @@ class TorchTrainer(base_trainer.Trainer):
         validation_freq=1,
     ):
         if not self.compiled:
-            raise ValueError(
-                "You must call `compile()` before calling `fit()`."
-            )
+            raise ValueError("You must call `compile()` before calling `fit()`.")
 
         # TODO: respect compiled trainable state
         self._eval_epoch_iterator = None
@@ -289,9 +279,7 @@ class TorchTrainer(base_trainer.Trainer):
                     return_dict=True,
                     _use_cached_eval_dataset=True,
                 )
-                val_logs = {
-                    "val_" + name: val for name, val in val_logs.items()
-                }
+                val_logs = {"val_" + name: val for name, val in val_logs.items()}
                 epoch_logs.update(val_logs)
 
             callbacks.on_epoch_end(epoch, epoch_logs)
@@ -299,10 +287,7 @@ class TorchTrainer(base_trainer.Trainer):
             if self.stop_training:
                 break
 
-        if (
-            isinstance(self.optimizer, optimizers_module.Optimizer)
-            and epochs > 0
-        ):
+        if isinstance(self.optimizer, optimizers_module.Optimizer) and epochs > 0:
             self.optimizer.finalize_variable_values(self.trainable_weights)
 
         # If _eval_epoch_iterator exists, delete it after all epochs are done.
@@ -379,9 +364,7 @@ class TorchTrainer(base_trainer.Trainer):
         return self._flatten_metrics_in_order(logs)
 
     @traceback_utils.filter_traceback
-    def predict(
-        self, x, batch_size=None, verbose="auto", steps=None, callbacks=None
-    ):
+    def predict(self, x, batch_size=None, verbose="auto", steps=None, callbacks=None):
         # Create an iterator that yields batches of input data.
         epoch_iterator = TorchEpochIterator(
             x=x,
@@ -493,9 +476,7 @@ class TorchTrainer(base_trainer.Trainer):
     def predict_on_batch(self, x):
         self.make_predict_function()
         batch_outputs = self.predict_function([(x,)])
-        batch_outputs = tree.map_structure(
-            backend.convert_to_numpy, batch_outputs
-        )
+        batch_outputs = tree.map_structure(backend.convert_to_numpy, batch_outputs)
         return batch_outputs
 
 

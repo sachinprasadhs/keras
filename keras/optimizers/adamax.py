@@ -103,9 +103,7 @@ class Adamax(optimizer.Optimizer):
                 )
             )
             self._u.append(
-                self.add_variable_from_reference(
-                    reference_variable=var, name="norm"
-                )
+                self.add_variable_from_reference(reference_variable=var, name="norm")
             )
 
     def update_step(self, gradient, variable, learning_rate):
@@ -113,19 +111,13 @@ class Adamax(optimizer.Optimizer):
         lr = ops.cast(learning_rate, variable.dtype)
         gradient = ops.cast(gradient, variable.dtype)
         local_step = ops.cast(self.iterations + 1, variable.dtype)
-        beta_1_power = ops.power(
-            ops.cast(self.beta_1, variable.dtype), local_step
-        )
+        beta_1_power = ops.power(ops.cast(self.beta_1, variable.dtype), local_step)
 
         m = self._m[self._get_variable_index(variable)]
         u = self._u[self._get_variable_index(variable)]
 
-        self.assign_add(
-            m, ops.multiply(ops.subtract(gradient, m), (1 - self.beta_1))
-        )
-        self.assign(
-            u, ops.maximum(ops.multiply(self.beta_2, u), ops.abs(gradient))
-        )
+        self.assign_add(m, ops.multiply(ops.subtract(gradient, m), (1 - self.beta_1)))
+        self.assign(u, ops.maximum(ops.multiply(self.beta_2, u), ops.abs(gradient)))
         self.assign_sub(
             variable,
             ops.divide(

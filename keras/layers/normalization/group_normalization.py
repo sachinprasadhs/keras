@@ -117,9 +117,7 @@ class GroupNormalization(Layer):
                 f"of the number of channels ({dim})."
             )
 
-        self.input_spec = InputSpec(
-            ndim=len(input_shape), axes={self.axis: dim}
-        )
+        self.input_spec = InputSpec(ndim=len(input_shape), axes={self.axis: dim})
 
         if self.scale:
             self.gamma = self.add_weight(
@@ -147,9 +145,7 @@ class GroupNormalization(Layer):
 
     def call(self, inputs):
         reshaped_inputs = self._reshape_into_groups(inputs)
-        normalized_inputs = self._apply_normalization(
-            reshaped_inputs, inputs.shape
-        )
+        normalized_inputs = self._apply_normalization(reshaped_inputs, inputs.shape)
         return ops.reshape(normalized_inputs, ops.shape(inputs))
 
     def _reshape_into_groups(self, inputs):

@@ -136,9 +136,7 @@ def _pool(
         The output of the reduction for each window slice.
     """
     if padding not in ("same", "valid"):
-        raise ValueError(
-            f"Invalid padding '{padding}', must be 'same' or 'valid'."
-        )
+        raise ValueError(f"Invalid padding '{padding}', must be 'same' or 'valid'.")
     padding = padding.upper()
     return lax.reduce_window(
         inputs,
@@ -159,13 +157,9 @@ def max_pool(
 ):
     data_format = standardize_data_format(data_format)
     num_spatial_dims = inputs.ndim - 2
-    pool_size = _convert_to_spatial_operand(
-        pool_size, num_spatial_dims, data_format
-    )
+    pool_size = _convert_to_spatial_operand(pool_size, num_spatial_dims, data_format)
     strides = pool_size if strides is None else strides
-    strides = _convert_to_spatial_operand(
-        strides, num_spatial_dims, data_format
-    )
+    strides = _convert_to_spatial_operand(strides, num_spatial_dims, data_format)
     return _pool(inputs, -jnp.inf, lax.max, pool_size, strides, padding)
 
 
@@ -178,13 +172,9 @@ def average_pool(
 ):
     data_format = standardize_data_format(data_format)
     num_spatial_dims = inputs.ndim - 2
-    pool_size = _convert_to_spatial_operand(
-        pool_size, num_spatial_dims, data_format
-    )
+    pool_size = _convert_to_spatial_operand(pool_size, num_spatial_dims, data_format)
     strides = pool_size if strides is None else strides
-    strides = _convert_to_spatial_operand(
-        strides, num_spatial_dims, data_format
-    )
+    strides = _convert_to_spatial_operand(strides, num_spatial_dims, data_format)
 
     pooled = _pool(inputs, 0.0, lax.add, pool_size, strides, padding)
     if padding == "valid":
@@ -195,9 +185,7 @@ def average_pool(
         # for computing average. Assumes that any two arrays of same shape will
         # be padded the same. Avoid broadcasting on axis where pooling is
         # skipped.
-        shape = [
-            (a if b != 1 else 1) for (a, b) in zip(inputs.shape, pool_size)
-        ]
+        shape = [(a if b != 1 else 1) for (a, b) in zip(inputs.shape, pool_size)]
         window_counts = _pool(
             jnp.ones(shape, inputs.dtype),
             0.0,
@@ -437,9 +425,7 @@ def multi_hot(x, num_classes, axis=-1, dtype="float32", sparse=False):
     x = convert_to_tensor(x)
     reduction_axis = 1 if len(x.shape) > 1 else 0
     if sparse:
-        result = one_hot(
-            x, num_classes, axis=axis, dtype="int32", sparse=sparse
-        )
+        result = one_hot(x, num_classes, axis=axis, dtype="int32", sparse=sparse)
         # JAX's BCOO does not support max reduction, use sum and compare with 0.
         result = jax_sparse.bcoo_reduce_sum(result, axes=(reduction_axis,))
         result = jax_sparse.bcoo_sum_duplicates(result)
@@ -554,9 +540,7 @@ def moments(x, axes, keepdims=False, synchronized=False):
         variance = jnp.squeeze(variance, axes)
     if need_cast:
         # avoid overflow and underflow when casting from float16 to float32
-        mean = jnp.clip(
-            mean, jnp.finfo(jnp.float16).min, jnp.finfo(jnp.float16).max
-        )
+        mean = jnp.clip(mean, jnp.finfo(jnp.float16).min, jnp.finfo(jnp.float16).max)
         variance = jnp.clip(
             variance, jnp.finfo(jnp.float16).min, jnp.finfo(jnp.float16).max
         )
@@ -565,9 +549,7 @@ def moments(x, axes, keepdims=False, synchronized=False):
     return mean, variance
 
 
-def batch_normalization(
-    x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3
-):
+def batch_normalization(x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3):
     shape = [1] * len(x.shape)
     shape[axis] = mean.shape[0]
     mean = jnp.reshape(mean, shape)
@@ -624,9 +606,7 @@ def ctc_loss(
         prev_mask = prev_mask.at[:, 1:].set(
             jnp.logaddexp(prev_mask[:, 1:], prev_emit + _logepsilon * repeat),
         )
-        emit = jnp.logaddexp(
-            prev_mask[:, :-1] + logprob_emit, prev_emit + logprob_emit
-        )
+        emit = jnp.logaddexp(prev_mask[:, :-1] + logprob_emit, prev_emit + logprob_emit)
 
         mask = prev_mask + logprob_mask[:, None]
         mask = mask.at[:, 1:].set(

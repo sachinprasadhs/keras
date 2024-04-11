@@ -79,9 +79,7 @@ class RandomTest(testing.TestCase, parameterized.TestCase):
     def test_randint(self, seed, shape, min, max, dtype):
         np.random.seed(seed)
         np_res = np.random.randint(low=min, high=max, size=shape)
-        res = random.randint(
-            shape, minval=min, maxval=max, seed=seed, dtype=dtype
-        )
+        res = random.randint(shape, minval=min, maxval=max, seed=seed, dtype=dtype)
         self.assertEqual(res.shape, shape)
         self.assertEqual(res.shape, np_res.shape)
         self.assertLessEqual(ops.max(res), max)
@@ -102,9 +100,7 @@ class RandomTest(testing.TestCase, parameterized.TestCase):
     def test_truncated_normal(self, seed, shape, mean, stddev):
         np.random.seed(seed)
         np_res = np.random.normal(loc=mean, scale=stddev, size=shape)
-        res = random.truncated_normal(
-            shape, mean=mean, stddev=stddev, seed=seed
-        )
+        res = random.truncated_normal(shape, mean=mean, stddev=stddev, seed=seed)
         self.assertEqual(res.shape, tuple(shape))
         self.assertEqual(res.shape, np_res.shape)
         self.assertLessEqual(ops.max(res), mean + 2 * stddev)
@@ -138,9 +134,7 @@ class RandomTest(testing.TestCase, parameterized.TestCase):
 
     def test_dropout_noise_shape(self):
         inputs = ops.ones((2, 3, 5, 7))
-        x = random.dropout(
-            inputs, rate=0.3, noise_shape=[None, 3, 5, None], seed=0
-        )
+        x = random.dropout(inputs, rate=0.3, noise_shape=[None, 3, 5, None], seed=0)
         self.assertEqual(x.shape, (2, 3, 5, 7))
 
     @pytest.mark.skipif(
@@ -386,9 +380,7 @@ class RandomTest(testing.TestCase, parameterized.TestCase):
             )
         else:
             actual_variance = np.var(values_np.flatten())
-            self.assertAlmostEqual(
-                expected_variance, actual_variance, decimal=2
-            )
+            self.assertAlmostEqual(expected_variance, actual_variance, decimal=2)
 
 
 class RandomDTypeTest(testing.TestCase, parameterized.TestCase):
@@ -396,9 +388,7 @@ class RandomDTypeTest(testing.TestCase, parameterized.TestCase):
     FLOAT_DTYPES = dtypes.FLOAT_TYPES
     if backend.backend() == "torch":
         # TODO: torch doesn't support uint16, uint32 and uint64
-        INT_DTYPES = [
-            x for x in INT_DTYPES if x not in ["uint16", "uint32", "uint64"]
-        ]
+        INT_DTYPES = [x for x in INT_DTYPES if x not in ["uint16", "uint32", "uint64"]]
 
     def setUp(self):
         if backend.backend() == "jax":

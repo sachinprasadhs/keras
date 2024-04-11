@@ -54,9 +54,7 @@ class SpectralNormalizationTest(testing.TestCase):
         else:
             images = np.ones((1, 1, 2, 2))
         sn_wrapper = layers.SpectralNormalization(
-            layers.Conv2D(
-                1, (2, 2), kernel_initializer=initializers.Constant(value=1)
-            ),
+            layers.Conv2D(1, (2, 2), kernel_initializer=initializers.Constant(value=1)),
             power_iterations=8,
         )
 

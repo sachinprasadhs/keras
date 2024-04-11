@@ -127,9 +127,7 @@ class LayerTest(testing.TestCase):
                 return x + 1
 
         x = backend.KerasTensor(shape=(2, 3), name="x")
-        with self.assertRaisesRegex(
-            ValueError, "Only input tensors may be passed as"
-        ):
+        with self.assertRaisesRegex(ValueError, "Only input tensors may be passed as"):
             SomeLayer()(x, True)
 
         # This works
@@ -499,9 +497,7 @@ class LayerTest(testing.TestCase):
             def call(self, x):
                 # Should autocast.
                 assertEqual(backend.standardize_dtype(self.v.dtype), "float16")
-                return self.inner_three(
-                    self.inner_two(self.inner_one(x + self.v))
-                )
+                return self.inner_three(self.inner_two(self.inner_one(x + self.v)))
 
         layer = MixedPrecisionLayer()
         y = layer(np.array(0.0))
@@ -610,9 +606,7 @@ class LayerTest(testing.TestCase):
                 x = backend.convert_to_tensor(x, dtype="float32")
                 self.add_loss(ops.sum(x))
                 self.ntw.assign(ops.sum(x))
-                x = x + backend.random.normal(
-                    shape=(), seed=self._seed_generator
-                )
+                x = x + backend.random.normal(shape=(), seed=self._seed_generator)
                 return x + self.tw + self.ntw
 
         data = np.random.random((3, 4))
@@ -634,9 +628,7 @@ class LayerTest(testing.TestCase):
         self.assertEqual(
             len(layer1.non_trainable_variables), len(non_trainable_variables)
         )
-        for ref_v, v in zip(
-            layer1.non_trainable_variables, non_trainable_variables
-        ):
+        for ref_v, v in zip(layer1.non_trainable_variables, non_trainable_variables):
             self.assertAllClose(ref_v, v)
 
         # Test with loss collection
@@ -650,9 +642,7 @@ class LayerTest(testing.TestCase):
             return_losses=True,
         )
         self.assertAllClose(out1, out3)
-        for ref_v, v in zip(
-            layer1.non_trainable_variables, non_trainable_variables
-        ):
+        for ref_v, v in zip(layer1.non_trainable_variables, non_trainable_variables):
             self.assertAllClose(ref_v, v)
         self.assertLen(losses, 2)
         for ref_loss, loss in zip(layer1.losses, losses):
@@ -850,9 +840,7 @@ class LayerTest(testing.TestCase):
                 self.w1 = self.add_weight()
                 self.w2 = self.add_weight(dtype="int32", trainable=False)
                 self.w3 = self.add_weight(dtype="bool", trainable=False)
-                self.w4 = self.add_weight(
-                    dtype="int32", shape=(2, 2), trainable=False
-                )
+                self.w4 = self.add_weight(dtype="int32", shape=(2, 2), trainable=False)
                 self.w5 = self.add_weight(initializer="ones", shape=(2, 2))
 
         layer = MyLayer()
@@ -869,9 +857,7 @@ class LayerTest(testing.TestCase):
 
         self.assertEqual(layer.w4.shape, (2, 2))
         self.assertEqual(layer.w4.dtype, "int32")
-        self.assertAllClose(
-            backend.convert_to_numpy(layer.w4), np.zeros((2, 2))
-        )
+        self.assertAllClose(backend.convert_to_numpy(layer.w4), np.zeros((2, 2)))
 
         self.assertEqual(layer.w5.shape, (2, 2))
         self.assertEqual(layer.w5.dtype, "float32")

@@ -59,8 +59,7 @@ class Cropping2D(Layer):
         if isinstance(cropping, int):
             if cropping < 0:
                 raise ValueError(
-                    "`cropping` cannot be negative. "
-                    f"Received: cropping={cropping}."
+                    "`cropping` cannot be negative. " f"Received: cropping={cropping}."
                 )
             self.cropping = ((cropping, cropping), (cropping, cropping))
         elif hasattr(cropping, "__len__"):
@@ -89,11 +88,9 @@ class Cropping2D(Layer):
     def compute_output_shape(self, input_shape):
         if self.data_format == "channels_first":
             if (
-                input_shape[2] is not None
-                and sum(self.cropping[0]) >= input_shape[2]
+                input_shape[2] is not None and sum(self.cropping[0]) >= input_shape[2]
             ) or (
-                input_shape[3] is not None
-                and sum(self.cropping[1]) >= input_shape[3]
+                input_shape[3] is not None and sum(self.cropping[1]) >= input_shape[3]
             ):
                 raise ValueError(
                     "Values in `cropping` argument should be smaller than the "
@@ -116,11 +113,9 @@ class Cropping2D(Layer):
             )
         else:
             if (
-                input_shape[1] is not None
-                and sum(self.cropping[0]) >= input_shape[1]
+                input_shape[1] is not None and sum(self.cropping[0]) >= input_shape[1]
             ) or (
-                input_shape[2] is not None
-                and sum(self.cropping[1]) >= input_shape[2]
+                input_shape[2] is not None and sum(self.cropping[1]) >= input_shape[2]
             ):
                 raise ValueError(
                     "Values in `cropping` argument should be smaller than the "
@@ -145,11 +140,9 @@ class Cropping2D(Layer):
     def call(self, inputs):
         if self.data_format == "channels_first":
             if (
-                inputs.shape[2] is not None
-                and sum(self.cropping[0]) >= inputs.shape[2]
+                inputs.shape[2] is not None and sum(self.cropping[0]) >= inputs.shape[2]
             ) or (
-                inputs.shape[3] is not None
-                and sum(self.cropping[1]) >= inputs.shape[3]
+                inputs.shape[3] is not None and sum(self.cropping[1]) >= inputs.shape[3]
             ):
                 raise ValueError(
                     "Values in `cropping` argument should be smaller than the "
@@ -157,9 +150,7 @@ class Cropping2D(Layer):
                     f"inputs.shape={inputs.shape}, cropping={self.cropping}"
                 )
             if self.cropping[0][1] == self.cropping[1][1] == 0:
-                return inputs[
-                    :, :, self.cropping[0][0] :, self.cropping[1][0] :
-                ]
+                return inputs[:, :, self.cropping[0][0] :, self.cropping[1][0] :]
             elif self.cropping[0][1] == 0:
                 return inputs[
                     :,
@@ -182,11 +173,9 @@ class Cropping2D(Layer):
             ]
         else:
             if (
-                inputs.shape[1] is not None
-                and sum(self.cropping[0]) >= inputs.shape[1]
+                inputs.shape[1] is not None and sum(self.cropping[0]) >= inputs.shape[1]
             ) or (
-                inputs.shape[2] is not None
-                and sum(self.cropping[1]) >= inputs.shape[2]
+                inputs.shape[2] is not None and sum(self.cropping[1]) >= inputs.shape[2]
             ):
                 raise ValueError(
                     "Values in `cropping` argument should be smaller than the "
@@ -194,9 +183,7 @@ class Cropping2D(Layer):
                     f"inputs.shape={inputs.shape}, cropping={self.cropping}"
                 )
             if self.cropping[0][1] == self.cropping[1][1] == 0:
-                return inputs[
-                    :, self.cropping[0][0] :, self.cropping[1][0] :, :
-                ]
+                return inputs[:, self.cropping[0][0] :, self.cropping[1][0] :, :]
             elif self.cropping[0][1] == 0:
                 return inputs[
                     :,

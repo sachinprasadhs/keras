@@ -54,9 +54,7 @@ def load_data(path="mnist.npz"):
     [Creative Commons Attribution-Share Alike 3.0 license.](
         https://creativecommons.org/licenses/by-sa/3.0/)
     """
-    origin_folder = (
-        "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
-    )
+    origin_folder = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
     path = get_file(
         fname=path,
         origin=origin_folder + "mnist.npz",

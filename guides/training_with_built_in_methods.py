@@ -624,9 +624,7 @@ the dataset is already batched!
 """
 
 model = get_compiled_model()
-model.fit(
-    train_py_dataset, batch_size=64, validation_data=val_py_dataset, epochs=1
-)
+model.fit(train_py_dataset, batch_size=64, validation_data=val_py_dataset, epochs=1)
 
 """
 Evaluating the model is just as easy:
@@ -665,9 +663,7 @@ train_py_dataset = ExamplePyDataset(x_train, y_train, batch_size=32, workers=4)
 val_py_dataset = ExamplePyDataset(x_val, y_val, batch_size=32, workers=4)
 
 model = get_compiled_model()
-model.fit(
-    train_py_dataset, batch_size=64, validation_data=val_py_dataset, epochs=1
-)
+model.fit(train_py_dataset, batch_size=64, validation_data=val_py_dataset, epochs=1)
 
 """
 ## Training & evaluation using PyTorch `DataLoader` objects
@@ -714,9 +710,7 @@ Now you can use them in the Keras API just like any other iterator:
 """
 
 model = get_compiled_model()
-model.fit(
-    train_dataloader, batch_size=64, validation_data=val_dataloader, epochs=1
-)
+model.fit(train_dataloader, batch_size=64, validation_data=val_dataloader, epochs=1)
 model.evaluate(val_dataloader)
 
 """
@@ -795,9 +789,7 @@ sample_weight[y_train == 5] = 2.0
 
 print("Fit with sample weight")
 model = get_compiled_model()
-model.fit(
-    x_train, y_train, sample_weight=sample_weight, batch_size=64, epochs=1
-)
+model.fit(x_train, y_train, sample_weight=sample_weight, batch_size=64, epochs=1)
 
 """
 Here's a matching `Dataset` example:
@@ -808,9 +800,7 @@ sample_weight[y_train == 5] = 2.0
 
 # Create a Dataset that includes sample weights
 # (3rd element in the return tuple).
-train_dataset = tf.data.Dataset.from_tensor_slices(
-    (x_train, y_train, sample_weight)
-)
+train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train, sample_weight))
 
 # Shuffle and slice the dataset.
 train_dataset = train_dataset.shuffle(buffer_size=1024).batch(64)
@@ -855,9 +845,7 @@ Let's plot this model, so you can clearly see what we're doing here (note that t
 shapes shown in the plot are batch shapes, rather than per-sample shapes).
 """
 
-keras.utils.plot_model(
-    model, "multi_input_and_output_model.png", show_shapes=True
-)
+keras.utils.plot_model(model, "multi_input_and_output_model.png", show_shapes=True)
 
 """
 At compilation time, we can specify different losses to different outputs, by passing
@@ -977,9 +965,7 @@ score_targets = np.random.random_sample(size=(100, 1))
 class_targets = np.random.random_sample(size=(100, 5))
 
 # Fit on lists
-model.fit(
-    [img_data, ts_data], [score_targets, class_targets], batch_size=32, epochs=1
-)
+model.fit([img_data, ts_data], [score_targets, class_targets], batch_size=32, epochs=1)
 
 # Alternatively, fit on dicts
 model.fit(
@@ -1131,9 +1117,7 @@ if not os.path.exists(checkpoint_dir):
 def make_or_restore_model():
     # Either restore the latest model, or create a fresh one
     # if there is no checkpoint available.
-    checkpoints = [
-        checkpoint_dir + "/" + name for name in os.listdir(checkpoint_dir)
-    ]
+    checkpoints = [checkpoint_dir + "/" + name for name in os.listdir(checkpoint_dir)]
     if checkpoints:
         latest_checkpoint = max(checkpoints, key=os.path.getctime)
         print("Restoring from", latest_checkpoint)

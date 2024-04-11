@@ -124,9 +124,7 @@ def log_softmax(x, axis=-1):
     return cast(output, dtype)
 
 
-def _compute_padding_length(
-    input_length, kernel_length, stride, dilation_rate=1
-):
+def _compute_padding_length(input_length, kernel_length, stride, dilation_rate=1):
     """Compute padding length along one dimension."""
     total_padding_length = (
         dilation_rate * (kernel_length - 1) - (input_length - 1) % stride
@@ -136,9 +134,7 @@ def _compute_padding_length(
     return (left_padding, right_padding)
 
 
-def _apply_same_padding(
-    inputs, kernel_size, strides, operation_type, dilation_rate=1
-):
+def _apply_same_padding(inputs, kernel_size, strides, operation_type, dilation_rate=1):
     """Apply same padding to the input tensor.
 
     This function will evaluate if the padding value is compatible with torch
@@ -257,9 +253,7 @@ def max_pool(
     # Torch max pooling ops do not support symbolic tensors.
     # Create a real tensor to execute the ops.
     if device == "meta":
-        inputs = torch.empty(
-            size=inputs.shape, dtype=inputs.dtype, device="cpu"
-        )
+        inputs = torch.empty(size=inputs.shape, dtype=inputs.dtype, device="cpu")
 
     if num_spatial_dims == 1:
         outputs = tnn.max_pool1d(
@@ -657,9 +651,7 @@ def binary_crossentropy(target, output, from_logits=False):
     # By default, PyTorch, does reduction of `sum` over all rows,
     # change reduction to `none` to keep dim
     if from_logits:
-        return tnn.binary_cross_entropy_with_logits(
-            output, target, reduction="none"
-        )
+        return tnn.binary_cross_entropy_with_logits(output, target, reduction="none")
     else:
         output = torch.clip(output, epsilon(), 1.0 - epsilon())
         return tnn.binary_cross_entropy(output, target, reduction="none")
@@ -686,9 +678,7 @@ def moments(x, axes, keepdims=False, synchronized=False):
     # but less numerically stable.
     # Note: stop_gradient does not change the gradient to the mean, because that
     # gradient is zero.
-    variance = torch.mean(
-        torch.square(x), dim=axes, keepdim=True
-    ) - torch.square(mean)
+    variance = torch.mean(torch.square(x), dim=axes, keepdim=True) - torch.square(mean)
 
     if not keepdims:
         mean = torch.squeeze(mean, axes)
@@ -710,9 +700,7 @@ def moments(x, axes, keepdims=False, synchronized=False):
     return mean, variance
 
 
-def batch_normalization(
-    x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3
-):
+def batch_normalization(x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3):
     x = convert_to_tensor(x)
     mean = convert_to_tensor(mean)
     variance = convert_to_tensor(variance)
@@ -733,11 +721,7 @@ def batch_normalization(
     else:
         scale = torch.ones_like(variance)
 
-    return (
-        x.subtract(mean)
-        .mul_(variance.add(epsilon).rsqrt_().mul(scale))
-        .add_(offset)
-    )
+    return x.subtract(mean).mul_(variance.add(epsilon).rsqrt_().mul(scale)).add_(offset)
 
 
 def ctc_loss(

@@ -22,17 +22,14 @@ class InputLayer(Layer):
         # TODO: support for ragged.
         super().__init__(name=name)
         if "input_shape" in kwargs:
-            warnings.warn(
-                "Argument `input_shape` is deprecated. Use `shape` instead."
-            )
+            warnings.warn("Argument `input_shape` is deprecated. Use `shape` instead.")
             shape = kwargs.pop("input_shape")
         if "batch_input_shape" in kwargs:
             batch_shape = kwargs.pop("batch_input_shape")
 
         if shape is not None and batch_shape is not None:
             raise ValueError(
-                "You cannot pass both `shape` and `batch_shape` at the "
-                "same time."
+                "You cannot pass both `shape` and `batch_shape` at the " "same time."
             )
         if batch_size is not None and batch_shape is not None:
             raise ValueError(
@@ -51,8 +48,7 @@ class InputLayer(Layer):
         self.sparse = bool(sparse)
         if self.sparse and not backend.SUPPORTS_SPARSE_TENSORS:
             raise ValueError(
-                "`sparse=True` is not supported with backend: "
-                f"{backend.backend()}"
+                "`sparse=True` is not supported with backend: " f"{backend.backend()}"
             )
 
         if input_tensor is not None:

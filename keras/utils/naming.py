@@ -58,9 +58,7 @@ def get_uid(prefix=""):
 
 
 def reset_uids():
-    global_state.set_global_attribute(
-        "object_name_uids", collections.defaultdict(int)
-    )
+    global_state.set_global_attribute("object_name_uids", collections.defaultdict(int))
 
 
 def get_object_name(obj):

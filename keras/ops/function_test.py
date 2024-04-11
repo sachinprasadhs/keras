@@ -18,9 +18,7 @@ class FunctionTest(testing.TestCase):
         x = knp.add(x1, x2)
         y1 = x * 3
         y2 = x**2
-        fn = function.Function(
-            inputs=[x1, x2], outputs=[y1, y2], name="test_function"
-        )
+        fn = function.Function(inputs=[x1, x2], outputs=[y1, y2], name="test_function")
         self.assertEqual(fn.name, "test_function")
 
         # Eager call
@@ -91,9 +89,7 @@ class FunctionTest(testing.TestCase):
         x = knp.add(x1, x2)
         y1 = x * 3
         y2 = x**2
-        fn = function.Function(
-            inputs=[x1, x2], outputs=[y1, y2], name="test_function"
-        )
+        fn = function.Function(inputs=[x1, x2], outputs=[y1, y2], name="test_function")
         self.assertEqual(fn.name, "test_function")
 
         # Bad structure
@@ -126,14 +122,10 @@ class FunctionTest(testing.TestCase):
 
     def test_function_with_empty_outputs(self):
         x = keras_tensor.KerasTensor((None, 3))
-        with self.assertRaisesRegex(
-            ValueError, "`outputs` argument cannot be empty"
-        ):
+        with self.assertRaisesRegex(ValueError, "`outputs` argument cannot be empty"):
             _ = function.Function(inputs=x, outputs=[])
 
     def test_function_with_empty_inputs(self):
         x = keras_tensor.KerasTensor((None, 3))
-        with self.assertRaisesRegex(
-            ValueError, "`inputs` argument cannot be empty"
-        ):
+        with self.assertRaisesRegex(ValueError, "`inputs` argument cannot be empty"):
             _ = function.Function(inputs=[], outputs=x)

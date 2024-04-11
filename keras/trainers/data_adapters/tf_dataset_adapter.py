@@ -19,17 +19,15 @@ class TFDatasetAdapter(DataAdapter):
         """
         from keras.utils.module_utils import tensorflow as tf
 
-        if not isinstance(
-            dataset, (tf.data.Dataset, tf.distribute.DistributedDataset)
-        ):
+        if not isinstance(dataset, (tf.data.Dataset, tf.distribute.DistributedDataset)):
             raise ValueError(
                 "Expected argument `dataset` to be a tf.data.Dataset. "
                 f"Received: {dataset}"
             )
         if class_weight is not None:
-            dataset = dataset.map(
-                make_class_weight_map_fn(class_weight)
-            ).prefetch(tf.data.AUTOTUNE)
+            dataset = dataset.map(make_class_weight_map_fn(class_weight)).prefetch(
+                tf.data.AUTOTUNE
+            )
         if distribution is not None:
             dataset = distribution.distribute_dataset(dataset)
         self._dataset = dataset
@@ -110,10 +108,7 @@ def make_class_weight_map_fn(class_weight):
     from keras.utils.module_utils import tensorflow as tf
 
     class_weight_tensor = tf.convert_to_tensor(
-        [
-            class_weight.get(int(c), 1.0)
-            for c in range(max(class_weight.keys()) + 1)
-        ]
+        [class_weight.get(int(c), 1.0) for c in range(max(class_weight.keys()) + 1)]
     )
 
     def class_weights_map_fn(*data):
@@ -121,13 +116,11 @@ def make_class_weight_map_fn(class_weight):
         x, y, sw = data_adapter_utils.unpack_x_y_sample_weight(data)
         if sw is not None:
             raise ValueError(
-                "You cannot `class_weight` and `sample_weight` "
-                "at the same time."
+                "You cannot `class_weight` and `sample_weight` " "at the same time."
             )
         if tree.is_nested(y):
             raise ValueError(
-                "`class_weight` is only supported for Models with a single "
-                "output."
+                "`class_weight` is only supported for Models with a single " "output."
             )
 
         if y.shape.rank >= 2:

@@ -27,7 +27,5 @@ class VariableMappingTest(testing.TestCase):
         variable_map = model._get_variable_map()
         self.assertIn("custom_model_x/my_dense_1/dense/kernel", variable_map)
         self.assertIn("custom_model_x/my_dense_1/my_dict_weight", variable_map)
-        self.assertIn(
-            "custom_model_x/my_dense_1/my_additional_weight", variable_map
-        )
+        self.assertIn("custom_model_x/my_dense_1/my_additional_weight", variable_map)
         self.assertIn("adam/learning_rate", variable_map)

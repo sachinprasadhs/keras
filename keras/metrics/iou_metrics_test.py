@@ -9,9 +9,7 @@ from keras.metrics import iou_metrics as metrics
 
 class IoUTest(testing.TestCase):
     def test_config(self):
-        obj = metrics.IoU(
-            num_classes=2, target_class_ids=[1, 0], name="iou_class_1_0"
-        )
+        obj = metrics.IoU(num_classes=2, target_class_ids=[1, 0], name="iou_class_1_0")
         self.assertEqual(obj.name, "iou_class_1_0")
         self.assertEqual(obj.num_classes, 2)
         self.assertEqual(obj.target_class_ids, [1, 0])
@@ -25,9 +23,7 @@ class IoUTest(testing.TestCase):
         y_pred = [0, 1, 0, 1]
         y_true = [0, 0, 1, 1]
 
-        obj = metrics.IoU(
-            num_classes=2, target_class_ids=[0, 1], dtype="float32"
-        )
+        obj = metrics.IoU(num_classes=2, target_class_ids=[0, 1], dtype="float32")
 
         result = obj(y_true, y_pred)
 
@@ -43,9 +39,7 @@ class IoUTest(testing.TestCase):
         y_true = np.array([0, 0, 1, 1])
         sample_weight = np.array([0.2, 0.3, 0.4, 0.1])
 
-        obj = metrics.IoU(
-            num_classes=2, target_class_ids=[1, 0], dtype="float32"
-        )
+        obj = metrics.IoU(num_classes=2, target_class_ids=[1, 0], dtype="float32")
 
         result = obj(y_true, y_pred, sample_weight=sample_weight)
 
@@ -54,9 +48,7 @@ class IoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.5, 0.5], true_positives = [0.2,
         # 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.1 / (0.4 + 0.5 - 0.1) + 0.2 / (0.6 + 0.5 - 0.2)
-        ) / 2
+        expected_result = (0.1 / (0.4 + 0.5 - 0.1) + 0.2 / (0.6 + 0.5 - 0.2)) / 2
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_multi_dim_input(self):
@@ -73,9 +65,7 @@ class IoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.5, 0.5], true_positives = [0.2,
         # 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)) / 2
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_zero_valid_entries(self):
@@ -133,9 +123,7 @@ class BinaryIoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.5, 0.5], true_positives = [0.2,
         # 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)) / 2
         obj = metrics.BinaryIoU(target_class_ids=[0, 1], threshold=0.3)
         result = obj(y_true, y_pred, sample_weight=sample_weight)
         self.assertAllClose(result, expected_result, atol=1e-3)
@@ -147,9 +135,7 @@ class BinaryIoUTest(testing.TestCase):
         # sum_row = [0.5, 0.5], sum_col = [0.7, 0.3], true_positives = [0.5,
         # 0.3]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.5 / (0.5 + 0.7 - 0.5) + 0.3 / (0.5 + 0.3 - 0.3)
-        ) / 2
+        expected_result = (0.5 / (0.5 + 0.7 - 0.5) + 0.3 / (0.5 + 0.3 - 0.3)) / 2
         obj = metrics.BinaryIoU(target_class_ids=[0, 1], threshold=0.5)
         result = obj(y_true, y_pred, sample_weight=sample_weight)
         self.assertAllClose(result, expected_result, atol=1e-3)
@@ -188,9 +174,7 @@ class BinaryIoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.3, 0.7], true_positives = [0.2,
         # 0.3]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.3 - 0.2) + 0.3 / (0.4 + 0.7 - 0.3)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.3 - 0.2) + 0.3 / (0.4 + 0.7 - 0.3)) / 2
         obj = metrics.BinaryIoU(target_class_ids=[0, 1], threshold=threshold)
         result = obj(y_true, y_pred, sample_weight=sample_weight)
         self.assertAllClose(result, expected_result, atol=1e-3)
@@ -253,9 +237,7 @@ class MeanIoUTest(testing.TestCase):
         #       [0, 1, 0]]
         # sum_row = [1, 1, 1], sum_col = [1, 2, 0], true_positives = [1, 1, 0]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            1 / (1 + 1 - 1) + 1 / (2 + 1 - 1) + 0 / (0 + 1 - 0)
-        ) / 3
+        expected_result = (1 / (1 + 1 - 1) + 1 / (2 + 1 - 1) + 0 / (0 + 1 - 0)) / 3
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_unweighted_ignore_class_1(self):
@@ -271,9 +253,7 @@ class MeanIoUTest(testing.TestCase):
         #       [0, 1, 0]]
         # sum_row = [1, 1, 1], sum_col = [1, 2, 0], true_positives = [1, 1, 0]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            1 / (1 + 1 - 1) + 1 / (2 + 1 - 1) + 0 / (0 + 1 - 0)
-        ) / 3
+        expected_result = (1 / (1 + 1 - 1) + 1 / (2 + 1 - 1) + 0 / (0 + 1 - 0)) / 3
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_weighted(self):
@@ -290,9 +270,7 @@ class MeanIoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.5, 0.5], true_positives = [0.2,
         # 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)) / 2
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_weighted_ignore_class_1(self):
@@ -309,9 +287,7 @@ class MeanIoUTest(testing.TestCase):
         # sum_row = [0.6, 0.3], sum_col = [0.5, 0.4], true_positives = [0.2,
         # 0.0]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.5 - 0.2) + 0.0 / (0.3 + 0.4 - 0.0)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.5 - 0.2) + 0.0 / (0.3 + 0.4 - 0.0)) / 2
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_multi_dim_input(self):
@@ -328,9 +304,7 @@ class MeanIoUTest(testing.TestCase):
         # sum_row = [0.6, 0.4], sum_col = [0.5, 0.5], true_positives = [0.2,
         # 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)
-        ) / 2
+        expected_result = (0.2 / (0.6 + 0.5 - 0.2) + 0.1 / (0.4 + 0.5 - 0.1)) / 2
         self.assertAllClose(result, expected_result, atol=1e-3)
 
     def test_zero_valid_entries(self):
@@ -436,9 +410,7 @@ class OneHotMeanIoUTest(testing.TestCase):
         # sum_row = [0.4, 0, 0.6], sum_col = [0.6, 0.3, 0.1]
         # true_positives = [0.1, 0, 0.1]
         # iou = true_positives / (sum_row + sum_col - true_positives))
-        expected_result = (
-            0.1 / (0.4 + 0.6 - 0.1) + 0 + 0.1 / (0.6 + 0.1 - 0.1)
-        ) / 3
+        expected_result = (0.1 / (0.4 + 0.6 - 0.1) + 0 + 0.1 / (0.6 + 0.1 - 0.1)) / 3
         obj = metrics.OneHotMeanIoU(num_classes=3)
         result = obj(y_true, y_pred, sample_weight=sample_weight)
         self.assertAllClose(result, expected_result, atol=1e-3)

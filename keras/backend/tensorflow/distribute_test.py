@@ -37,9 +37,7 @@ class DistributeTest(testing.TestCase):
             dense.build([4, 2])
 
         self.assertIsInstance(dense.kernel, backend.Variable)
-        self.assertIsInstance(
-            dense.kernel.value, tf.distribute.DistributedValues
-        )
+        self.assertIsInstance(dense.kernel.value, tf.distribute.DistributedValues)
         self.assertIn("MirroredVariable", dense.kernel.value.__class__.__name__)
 
         self.assertIsInstance(dense.kernel, backend.Variable)
@@ -56,9 +54,7 @@ class DistributeTest(testing.TestCase):
             model = models.Functional(inputs, output)
 
         self.assertIsInstance(dense.kernel, backend.Variable)
-        self.assertIsInstance(
-            dense.kernel.value, tf.distribute.DistributedValues
-        )
+        self.assertIsInstance(dense.kernel.value, tf.distribute.DistributedValues)
 
         def input_fn(ctx):
             if ctx.replica_id_in_sync_group == 1:
@@ -66,8 +62,8 @@ class DistributeTest(testing.TestCase):
             else:
                 return tf.zeros([8, 4])
 
-        distributed_inputs = (
-            strategy.experimental_distribute_values_from_function(input_fn)
+        distributed_inputs = strategy.experimental_distribute_values_from_function(
+            input_fn
         )
 
         @tf.function
@@ -76,9 +72,7 @@ class DistributeTest(testing.TestCase):
 
         result = strategy.run(run_fn, args=(distributed_inputs,))
 
-        self.assertIsInstance(
-            result, tf.types.experimental.distributed.PerReplica
-        )
+        self.assertIsInstance(result, tf.types.experimental.distributed.PerReplica)
         self.assertLen(result.values, 2)
         self.assertEqual(result.values[0].shape, [8, 2])
         self.assertEqual(result.values[1].shape, [8, 2])
@@ -108,9 +102,7 @@ class DistributeTest(testing.TestCase):
             batch = next(data_iterator)
             self.assertEqual(len(batch), 3)
             x, y, sample_weight = batch
-            self.assertTrue(
-                isinstance(x, tf.types.experimental.distributed.PerReplica)
-            )
+            self.assertTrue(isinstance(x, tf.types.experimental.distributed.PerReplica))
             # Make sure the local batch size is 8
             if step < 6:
                 self.assertEqual(x.values[0].shape, [8, 16])

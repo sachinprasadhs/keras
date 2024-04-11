@@ -14,9 +14,7 @@ class TestStatelessScope(testing.TestCase):
 
         value1 = ops.ones(shape=(2,))
         value2 = ops.ones(shape=(2,))
-        with StatelessScope(
-            state_mapping=[(var1, value1), (var2, value2)]
-        ) as scope:
+        with StatelessScope(state_mapping=[(var1, value1), (var2, value2)]) as scope:
             out = var1 + var2
             var_out.assign(out)
             var_out_value = var_out + 0.0

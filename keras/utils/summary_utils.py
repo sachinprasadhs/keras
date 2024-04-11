@@ -85,9 +85,7 @@ def format_layer_shape(layer):
 
     for i in range(len(layer._inbound_nodes)):
         outputs = layer._inbound_nodes[i].output_tensors
-        output_shapes = tree.map_structure(
-            lambda x: format_shape(x.shape), outputs
-        )
+        output_shapes = tree.map_structure(lambda x: format_shape(x.shape), outputs)
     if len(output_shapes) == 1:
         return output_shapes[0]
     out = str(output_shapes)
@@ -236,9 +234,7 @@ def print_summary(
                 tensor_index = highlight_number(keras_history.tensor_index)
                 if connections:
                     connections += ", "
-                connections += (
-                    f"{inbound_layer.name}[{node_index}][{tensor_index}]"
-                )
+                connections += f"{inbound_layer.name}[{node_index}][{tensor_index}]"
         if not connections:
             connections = "-"
         return connections
@@ -284,9 +280,7 @@ def print_summary(
             nested_layers = layer.layers
             nested_level += 1
             for i in range(len(nested_layers)):
-                rows.extend(
-                    print_layer(nested_layers[i], nested_level=nested_level)
-                )
+                rows.extend(print_layer(nested_layers[i], nested_level=nested_level))
         return rows
 
     # Render all layers to the rich table.
@@ -298,9 +292,7 @@ def print_summary(
     # After the table, append information about parameter count and size.
     if hasattr(model, "_collected_trainable_weights"):
         trainable_count = count_params(model._collected_trainable_weights)
-        trainable_memory_size = weight_memory_size(
-            model._collected_trainable_weights
-        )
+        trainable_memory_size = weight_memory_size(model._collected_trainable_weights)
     else:
         trainable_count = count_params(model.trainable_weights)
         trainable_memory_size = weight_memory_size(model.trainable_weights)
@@ -319,9 +311,7 @@ def print_summary(
 
     total_count = trainable_count + non_trainable_count + optimizer_weight_count
     total_memory_size = (
-        trainable_memory_size
-        + non_trainable_memory_size
-        + optimizer_memory_size
+        trainable_memory_size + non_trainable_memory_size + optimizer_memory_size
     )
 
     # Create a rich console for printing. Capture for non-interactive logging.
@@ -388,9 +378,7 @@ def get_layer_index_bound_by_layer_name(layers, layer_range=None):
                 "layer_range must be a list or tuple of length 2. Received: "
                 f"layer_range = {layer_range} of length {len(layer_range)}"
             )
-        if not isinstance(layer_range[0], str) or not isinstance(
-            layer_range[1], str
-        ):
+        if not isinstance(layer_range[0], str) or not isinstance(layer_range[1], str):
             raise ValueError(
                 "layer_range should contain string type only. "
                 f"Received: {layer_range}"
@@ -399,14 +387,10 @@ def get_layer_index_bound_by_layer_name(layers, layer_range=None):
         return [0, len(layers)]
 
     lower_index = [
-        idx
-        for idx, layer in enumerate(layers)
-        if re.match(layer_range[0], layer.name)
+        idx for idx, layer in enumerate(layers) if re.match(layer_range[0], layer.name)
     ]
     upper_index = [
-        idx
-        for idx, layer in enumerate(layers)
-        if re.match(layer_range[1], layer.name)
+        idx for idx, layer in enumerate(layers) if re.match(layer_range[1], layer.name)
     ]
 
     if not lower_index or not upper_index:

@@ -37,9 +37,7 @@ def is_nested(structure):
         `True` if a given structure is nested, i.e. is a sequence, a mapping,
         or a namedtuple, and `False` otherwise.
     """
-    return not optree.tree_is_leaf(
-        structure, none_is_leaf=True, namespace="keras"
-    )
+    return not optree.tree_is_leaf(structure, none_is_leaf=True, namespace="keras")
 
 
 @keras_export("keras.tree.traverse")
@@ -151,9 +149,7 @@ def flatten(structure):
     # optree.tree_flatten returns a pair (leaves, treespec) where the first
     # element is a list of leaf values and the second element is a treespec
     # representing the structure of the pytree.
-    leaves, _ = optree.tree_flatten(
-        structure, none_is_leaf=True, namespace="keras"
-    )
+    leaves, _ = optree.tree_flatten(structure, none_is_leaf=True, namespace="keras")
     return leaves
 
 
@@ -236,9 +232,7 @@ def map_structure(func, *structures):
         raise ValueError("Must provide at least one structure")
     for other in structures[1:]:
         assert_same_structure(structures[0], other, check_types=False)
-    return optree.tree_map(
-        func, *structures, none_is_leaf=True, namespace="keras"
-    )
+    return optree.tree_map(func, *structures, none_is_leaf=True, namespace="keras")
 
 
 @keras_export("keras.tree.map_structure_up_to")
@@ -315,12 +309,8 @@ def assert_same_structure(a, b, check_types=True):
             none_is_leaf=True,
             namespace="keras",
         )
-        if not optree.tree_all(
-            type_structure, none_is_leaf=True, namespace="keras"
-        ):
-            raise TypeError(
-                "The type of the leaves of `a` and `b` doesn't match."
-            )
+        if not optree.tree_all(type_structure, none_is_leaf=True, namespace="keras"):
+            raise TypeError("The type of the leaves of `a` and `b` doesn't match.")
 
 
 @keras_export("keras.tree.pack_sequence_as")
@@ -434,9 +424,7 @@ def lists_to_tuples(structure):
             return tuple(args)
         return _sequence_like(instance, args)
 
-    return pack_sequence_as(
-        structure, flatten(structure), sequence_fn=sequence_fn
-    )
+    return pack_sequence_as(structure, flatten(structure), sequence_fn=sequence_fn)
 
 
 def map_shape_structure(func, structure):
@@ -470,9 +458,7 @@ _MAP_TO_NONE = _MapToNone()
 
 def _yield_flat_up_to(shallow_tree, input_tree, path=()):
     if isinstance(shallow_tree, (str, bytes)) or not (
-        isinstance(
-            shallow_tree, (collections.abc.Mapping, collections.abc.Sequence)
-        )
+        isinstance(shallow_tree, (collections.abc.Mapping, collections.abc.Sequence))
         or optree.is_namedtuple(shallow_tree)
     ):
         yield (path, input_tree)
@@ -490,10 +476,7 @@ def _yield_flat_up_to(shallow_tree, input_tree, path=()):
 def _multiyield_flat_up_to(shallow_tree, *input_trees):
     """Same as `_yield_flat_up_to`, but takes multiple input trees."""
     zipped_iterators = zip(
-        *[
-            _yield_flat_up_to(shallow_tree, input_tree)
-            for input_tree in input_trees
-        ]
+        *[_yield_flat_up_to(shallow_tree, input_tree) for input_tree in input_trees]
     )
     try:
         for paths_and_values in zipped_iterators:
@@ -511,9 +494,7 @@ def _multiyield_flat_up_to(shallow_tree, *input_trees):
 
 def _map_structure_with_path_up_to(shallow_structure, func, *structures):
     results = []
-    for path_and_values in _multiyield_flat_up_to(
-        shallow_structure, *structures
-    ):
+    for path_and_values in _multiyield_flat_up_to(shallow_structure, *structures):
         results.append(func(*path_and_values))
     shallow_structure_spec = optree.tree_structure(
         shallow_structure, none_is_leaf=True, namespace="keras"
@@ -583,9 +564,7 @@ def _packed_nest_with_indices(structure, flat, index, sequence_fn=None):
     sequence_fn = sequence_fn or _sequence_like
     for s in _yield_value(structure):
         if is_nested(s):
-            new_index, child = _packed_nest_with_indices(
-                s, flat, index, sequence_fn
-            )
+            new_index, child = _packed_nest_with_indices(s, flat, index, sequence_fn)
             packed.append(sequence_fn(s, child))
             index = new_index
         else:

@@ -253,8 +253,7 @@ class ExtractSequences(Operation):
     def compute_output_spec(self, x):
         if len(x.shape) < 1:
             raise ValueError(
-                f"Input should have rank >= 1. "
-                f"Received: input.shape = {x.shape}"
+                f"Input should have rank >= 1. " f"Received: input.shape = {x.shape}"
             )
         if x.shape[-1] is not None:
             num_sequences = (
@@ -302,9 +301,7 @@ def extract_sequences(x, sequence_length, sequence_stride):
        [3, 4, 5]])
     """
     if any_symbolic_tensors((x,)):
-        return ExtractSequences(sequence_length, sequence_stride).symbolic_call(
-            x
-        )
+        return ExtractSequences(sequence_length, sequence_stride).symbolic_call(x)
     return backend.math.extract_sequences(x, sequence_length, sequence_stride)
 
 
@@ -333,8 +330,7 @@ class FFT(Operation):
         # We are calculating 1D FFT. Hence, rank >= 1.
         if len(real.shape) < 1:
             raise ValueError(
-                f"Input should have rank >= 1. "
-                f"Received: input.shape = {real.shape}"
+                f"Input should have rank >= 1. " f"Received: input.shape = {real.shape}"
             )
 
         # The axis along which we are calculating FFT should be fully-defined.
@@ -404,8 +400,7 @@ class FFT2(Operation):
         # We are calculating 2D FFT. Hence, rank >= 2.
         if len(real.shape) < 2:
             raise ValueError(
-                f"Input should have rank >= 2. "
-                f"Received: input.shape = {real.shape}"
+                f"Input should have rank >= 2. " f"Received: input.shape = {real.shape}"
             )
 
         # The axes along which we are calculating FFT should be fully-defined.
@@ -463,8 +458,7 @@ class RFFT(Operation):
         # We are calculating 1D RFFT. Hence, rank >= 1.
         if len(x.shape) < 1:
             raise ValueError(
-                f"Input should have rank >= 1. "
-                f"Received: input.shape = {x.shape}"
+                f"Input should have rank >= 1. " f"Received: input.shape = {x.shape}"
             )
 
         if self.fft_length is not None:
@@ -548,8 +542,7 @@ class IRFFT(Operation):
         # We are calculating 1D IRFFT. Hence, rank >= 1.
         if len(real.shape) < 1:
             raise ValueError(
-                f"Input should have rank >= 1. "
-                f"Received: input.shape = {real.shape}"
+                f"Input should have rank >= 1. " f"Received: input.shape = {real.shape}"
             )
 
         if self.fft_length is not None:
@@ -630,9 +623,7 @@ class STFT(Operation):
         if x.shape[-1] is not None:
             padded = 0 if self.center is False else (self.fft_length // 2) * 2
             num_sequences = (
-                1
-                + (x.shape[-1] + padded - self.fft_length)
-                // self.sequence_stride
+                1 + (x.shape[-1] + padded - self.fft_length) // self.sequence_stride
             )
         else:
             num_sequences = None
@@ -654,9 +645,7 @@ class STFT(Operation):
 
 
 @keras_export("keras.ops.stft")
-def stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     """Short-Time Fourier Transform along the last axis of the input.
 
     The STFT computes the Fourier transform of short overlapping windows of the
@@ -745,13 +734,10 @@ class ISTFT(Operation):
             )
         if len(real.shape) < 2:
             raise ValueError(
-                f"Input should have rank >= 2. "
-                f"Received: input.shape = {real.shape}"
+                f"Input should have rank >= 2. " f"Received: input.shape = {real.shape}"
             )
         if real.shape[-2] is not None:
-            output_size = (
-                real.shape[-2] - 1
-            ) * self.sequence_stride + self.fft_length
+            output_size = (real.shape[-2] - 1) * self.sequence_stride + self.fft_length
             if self.length is not None:
                 output_size = self.length
             elif self.center:

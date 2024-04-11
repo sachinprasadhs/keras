@@ -13,24 +13,18 @@ class InitializersTest(testing.TestCase):
         mean = 0.0
         stddev = 1.0
         seed = 1234
-        initializer = initializers.RandomNormal(
-            mean=mean, stddev=stddev, seed=seed
-        )
+        initializer = initializers.RandomNormal(mean=mean, stddev=stddev, seed=seed)
         values = initializer(shape=shape)
         self.assertEqual(initializer.mean, mean)
         self.assertEqual(initializer.stddev, stddev)
         self.assertEqual(initializer.seed, seed)
         self.assertEqual(values.shape, shape)
-        self.assertAllClose(
-            np.std(backend.convert_to_numpy(values)), stddev, atol=1e-1
-        )
+        self.assertAllClose(np.std(backend.convert_to_numpy(values)), stddev, atol=1e-1)
 
         self.run_class_serialization_test(initializer)
 
         # Test that a fixed seed yields the same results each call.
-        initializer = initializers.RandomNormal(
-            mean=mean, stddev=stddev, seed=1337
-        )
+        initializer = initializers.RandomNormal(mean=mean, stddev=stddev, seed=1337)
         values = initializer(shape=shape)
         next_values = initializer(shape=shape)
         self.assertAllClose(values, next_values)
@@ -50,9 +44,7 @@ class InitializersTest(testing.TestCase):
         values = initializer(shape=shape)
 
         # Test that unseeded generator gets different results after cloning
-        initializer = initializers.RandomNormal(
-            mean=mean, stddev=stddev, seed=None
-        )
+        initializer = initializers.RandomNormal(mean=mean, stddev=stddev, seed=None)
         values = initializer(shape=shape)
         cloned_initializer = initializers.RandomNormal.from_config(
             initializer.get_config()
@@ -61,9 +53,7 @@ class InitializersTest(testing.TestCase):
         self.assertNotAllClose(values, new_values)
 
         # Test that seeded generator gets same results after cloning
-        initializer = initializers.RandomNormal(
-            mean=mean, stddev=stddev, seed=1337
-        )
+        initializer = initializers.RandomNormal(mean=mean, stddev=stddev, seed=1337)
         values = initializer(shape=shape)
         cloned_initializer = initializers.RandomNormal.from_config(
             initializer.get_config()
@@ -141,9 +131,7 @@ class InitializersTest(testing.TestCase):
         # Making sure that each column is orthonormal to the other column
         for i in range(array.shape[-1]):
             for j in range(i + 1, array.shape[-1]):
-                self.assertAlmostEqual(
-                    np.dot(array[..., i], array[..., j]), 0.0
-                )
+                self.assertAlmostEqual(np.dot(array[..., i], array[..., j]), 0.0)
 
         self.run_class_serialization_test(initializer)
 
@@ -170,17 +158,13 @@ class InitializersTest(testing.TestCase):
         seed = 1234
 
         with self.assertRaisesRegex(ValueError, "Invalid `mode` argument:"):
-            initializers.VarianceScaling(
-                scale=scale, seed=seed, mode="invalid_mode"
-            )
+            initializers.VarianceScaling(scale=scale, seed=seed, mode="invalid_mode")
 
     def test_variance_scaling_invalid_distribution(self):
         scale = 2.0
         seed = 1234
 
-        with self.assertRaisesRegex(
-            ValueError, "Invalid `distribution` argument:"
-        ):
+        with self.assertRaisesRegex(ValueError, "Invalid `distribution` argument:"):
             initializers.VarianceScaling(
                 scale=scale,
                 seed=seed,

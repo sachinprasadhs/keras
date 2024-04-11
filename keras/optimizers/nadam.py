@@ -105,10 +105,7 @@ class Nadam(optimizer.Optimizer):
             self._u_product,
             self._u_product
             * self.beta_1
-            * (
-                1.0
-                - 0.5 * ops.power(0.96, ops.cast(self.iterations + 1, dtype))
-            ),
+            * (1.0 - 0.5 * ops.power(0.96, ops.cast(self.iterations + 1, dtype))),
         )
         super()._backend_update_step(grads, trainable_variables, learning_rate)
 
@@ -133,9 +130,7 @@ class Nadam(optimizer.Optimizer):
         m = self._momentums[self._get_variable_index(variable)]
         v = self._velocities[self._get_variable_index(variable)]
 
-        self.assign_add(
-            m, ops.multiply(ops.subtract(gradient, m), (1 - beta_1))
-        )
+        self.assign_add(m, ops.multiply(ops.subtract(gradient, m), (1 - beta_1)))
         self.assign_add(
             v, ops.multiply(ops.subtract(ops.square(gradient), v), (1 - beta_2))
         )
@@ -147,9 +142,7 @@ class Nadam(optimizer.Optimizer):
 
         self.assign_sub(
             variable,
-            ops.divide(
-                ops.multiply(m_hat, lr), ops.add(ops.sqrt(v_hat), self.epsilon)
-            ),
+            ops.divide(ops.multiply(m_hat, lr), ops.add(ops.sqrt(v_hat), self.epsilon)),
         )
 
     def get_config(self):

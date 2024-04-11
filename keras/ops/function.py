@@ -50,9 +50,7 @@ class Function(Operation):
             # https://github.com/keras-team/keras/issues/931
             # This stop tensorflow from wrapping tf.function output in a
             # _DictWrapper object.
-            _self_setattr_tracking = getattr(
-                self, "_self_setattr_tracking", True
-            )
+            _self_setattr_tracking = getattr(self, "_self_setattr_tracking", True)
             self._self_setattr_tracking = False
         self._inputs_struct = tree.map_structure(lambda x: x, inputs)
         self._outputs_struct = tree.map_structure(lambda x: x, outputs)
@@ -162,9 +160,7 @@ class Function(Operation):
 
     def _assert_input_compatibility(self, inputs):
         try:
-            tree.assert_same_structure(
-                inputs, self._inputs_struct, check_types=False
-            )
+            tree.assert_same_structure(inputs, self._inputs_struct, check_types=False)
         except ValueError:
             raise ValueError(
                 "Function was called with an invalid input structure. "
@@ -379,8 +375,7 @@ def _build_map_helper(
     # Prevent cycles.
     if node in nodes_in_progress:
         raise ValueError(
-            f"Tensor {tensor} from operation '{operation.name}' is part of a "
-            "cycle."
+            f"Tensor {tensor} from operation '{operation.name}' is part of a " "cycle."
         )
 
     # Store the traversal order for operation sorting.

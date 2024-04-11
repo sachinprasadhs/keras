@@ -57,9 +57,7 @@ class FeatureSpaceTest(testing.TestCase):
         if as_dataset:
             return tf_data.Dataset.from_tensor_slices(data)
         elif as_tensors:
-            return {
-                key: ops.convert_to_tensor(value) for key, value in data.items()
-            }
+            return {key: ops.convert_to_tensor(value) for key, value in data.items()}
         elif as_labeled_dataset:
             labels = [0, 1, 0, 1, 0, 0, 1, 0, 1, 1]
             return tf_data.Dataset.from_tensor_slices((data, labels))
@@ -79,22 +77,16 @@ class FeatureSpaceTest(testing.TestCase):
             output_mode="concat",
         )
         # Test unbatched adapt
-        fs.adapt(
-            self._get_train_data_dict(as_dataset=True, include_strings=False)
-        )
+        fs.adapt(self._get_train_data_dict(as_dataset=True, include_strings=False))
         # Test batched adapt
         fs.adapt(
-            self._get_train_data_dict(
-                as_dataset=True, include_strings=False
-            ).batch(4)
+            self._get_train_data_dict(as_dataset=True, include_strings=False).batch(4)
         )
 
         # Test unbatched call on raw data
         data = {
             key: value[0]
-            for key, value in self._get_train_data_dict(
-                include_strings=False
-            ).items()
+            for key, value in self._get_train_data_dict(include_strings=False).items()
         }
         out = fs(data)
         out_dim = 152
@@ -111,9 +103,7 @@ class FeatureSpaceTest(testing.TestCase):
         self.assertEqual(out.shape, (10, out_dim))
 
         # Test batched call on backend tensors
-        out = fs(
-            self._get_train_data_dict(as_tensors=True, include_strings=False)
-        )
+        out = fs(self._get_train_data_dict(as_tensors=True, include_strings=False))
         self.assertEqual(out.shape, (10, out_dim))
 
     def test_output_mode_dict_no_strings(self):
@@ -129,16 +119,12 @@ class FeatureSpaceTest(testing.TestCase):
             crosses=[("int_1", "int_2")],
             output_mode="dict",
         )
-        fs.adapt(
-            self._get_train_data_dict(as_dataset=True, include_strings=False)
-        )
+        fs.adapt(self._get_train_data_dict(as_dataset=True, include_strings=False))
 
         # Test unbatched call on raw data
         data = {
             key: value[0]
-            for key, value in self._get_train_data_dict(
-                include_strings=False
-            ).items()
+            for key, value in self._get_train_data_dict(include_strings=False).items()
         }
         out = fs(data)
         self.assertIsInstance(out, dict)
@@ -153,9 +139,7 @@ class FeatureSpaceTest(testing.TestCase):
         self.assertEqual(out["int_2"].shape, (10, 32))
 
         # Test batched call on backend tensors
-        out = fs(
-            self._get_train_data_dict(as_tensors=True, include_strings=False)
-        )
+        out = fs(self._get_train_data_dict(as_tensors=True, include_strings=False))
         self.assertIsInstance(out, dict)
         self.assertLen(out, 7)
         self.assertEqual(out["int_2"].shape, (10, 32))
@@ -172,33 +156,23 @@ class FeatureSpaceTest(testing.TestCase):
                 "int_3": cls.integer_categorical(output_mode="int"),
             },
             crosses=[
-                cls.cross(
-                    ("int_1", "int_2"), output_mode="int", crossing_dim=32
-                ),
+                cls.cross(("int_1", "int_2"), output_mode="int", crossing_dim=32),
             ],
             output_mode="dict",
         )
-        fs.adapt(
-            self._get_train_data_dict(as_dataset=True, include_strings=False)
-        )
+        fs.adapt(self._get_train_data_dict(as_dataset=True, include_strings=False))
         data = {
             key: value[0]
-            for key, value in self._get_train_data_dict(
-                include_strings=False
-            ).items()
+            for key, value in self._get_train_data_dict(include_strings=False).items()
         }
         out = fs(data)
         self.assertIsInstance(out, dict)
         self.assertLen(out, 7)
         self.assertEqual(out["int_2"].shape, (1,))
-        self.assertTrue(
-            backend.standardize_dtype(out["int_2"].dtype).startswith("int")
-        )
+        self.assertTrue(backend.standardize_dtype(out["int_2"].dtype).startswith("int"))
         self.assertEqual(out["int_1_X_int_2"].shape, (1,))
         self.assertTrue(
-            backend.standardize_dtype(out["int_1_X_int_2"].dtype).startswith(
-                "int"
-            )
+            backend.standardize_dtype(out["int_1_X_int_2"].dtype).startswith("int")
         )
 
     def test_basic_usage(self):
@@ -222,9 +196,7 @@ class FeatureSpaceTest(testing.TestCase):
         fs.adapt(self._get_train_data_dict(as_dataset=True).batch(4))
 
         # Test unbatched call on raw data
-        data = {
-            key: value[0] for key, value in self._get_train_data_dict().items()
-        }
+        data = {key: value[0] for key, value in self._get_train_data_dict().items()}
         out = fs(data)
         out_dim = 195
         self.assertEqual(out.shape, (out_dim,))
@@ -263,9 +235,7 @@ class FeatureSpaceTest(testing.TestCase):
         fs.adapt(self._get_train_data_dict(as_dataset=True))
 
         # Test unbatched call on raw data
-        data = {
-            key: value[0] for key, value in self._get_train_data_dict().items()
-        }
+        data = {key: value[0] for key, value in self._get_train_data_dict().items()}
         out = fs(data)
         self.assertIsInstance(out, dict)
         self.assertLen(out, 10)
@@ -304,19 +274,13 @@ class FeatureSpaceTest(testing.TestCase):
                 "int_3": cls.integer_categorical(output_mode="int"),
             },
             crosses=[
-                cls.cross(
-                    ("float_3", "string_1"), output_mode="int", crossing_dim=32
-                ),
-                cls.cross(
-                    ("string_2", "int_2"), output_mode="int", crossing_dim=32
-                ),
+                cls.cross(("float_3", "string_1"), output_mode="int", crossing_dim=32),
+                cls.cross(("string_2", "int_2"), output_mode="int", crossing_dim=32),
             ],
             output_mode="dict",
         )
         fs.adapt(self._get_train_data_dict(as_dataset=True))
-        data = {
-            key: value[0] for key, value in self._get_train_data_dict().items()
-        }
+        data = {key: value[0] for key, value in self._get_train_data_dict().items()}
         out = fs(data)
         self.assertIsInstance(out, dict)
         self.assertLen(out, 10)
@@ -325,14 +289,10 @@ class FeatureSpaceTest(testing.TestCase):
             backend.standardize_dtype(out["string_1"].dtype).startswith("int")
         )
         self.assertEqual(out["int_2"].shape, (1,))
-        self.assertTrue(
-            backend.standardize_dtype(out["int_2"].dtype).startswith("int")
-        )
+        self.assertTrue(backend.standardize_dtype(out["int_2"].dtype).startswith("int"))
         self.assertEqual(out["string_2_X_int_2"].shape, (1,))
         self.assertTrue(
-            backend.standardize_dtype(out["string_2_X_int_2"].dtype).startswith(
-                "int"
-            )
+            backend.standardize_dtype(out["string_2_X_int_2"].dtype).startswith("int")
         )
 
     @pytest.mark.skipif(
@@ -365,9 +325,7 @@ class FeatureSpaceTest(testing.TestCase):
         ds = self._get_train_data_dict(as_dataset=True)
         model.predict(ds.batch(4))
 
-    @pytest.mark.skipif(
-        backend.backend() != "tensorflow", reason="TODO: debug it"
-    )
+    @pytest.mark.skipif(backend.backend() != "tensorflow", reason="TODO: debug it")
     def test_tf_data_async_processing(self):
         fs = feature_space.FeatureSpace(
             features={
@@ -381,23 +339,17 @@ class FeatureSpaceTest(testing.TestCase):
             crosses=[("float_3", "int_1"), ("int_1", "int_2")],
             output_mode="concat",
         )
-        fs.adapt(
-            self._get_train_data_dict(as_dataset=True, include_strings=False)
-        )
+        fs.adapt(self._get_train_data_dict(as_dataset=True, include_strings=False))
         features = fs.get_encoded_features()
         outputs = layers.Dense(1)(features)
         model = models.Model(inputs=features, outputs=outputs)
         model.compile("adam", "mse")
-        ds = self._get_train_data_dict(
-            as_labeled_dataset=True, include_strings=False
-        )
+        ds = self._get_train_data_dict(as_labeled_dataset=True, include_strings=False)
         # Try map before batch
         ds = ds.map(lambda x, y: (fs(x), y))
         model.fit(ds.batch(4))
         # Try map after batch
-        ds = self._get_train_data_dict(
-            as_labeled_dataset=True, include_strings=False
-        )
+        ds = self._get_train_data_dict(as_labeled_dataset=True, include_strings=False)
         ds = ds.batch(4)
         ds = ds.map(lambda x, y: (fs(x), y))
         model.evaluate(ds)
@@ -414,9 +366,7 @@ class FeatureSpaceTest(testing.TestCase):
                 "float_3": cls.float_discretized(num_bins=3),
                 "string_1": cls.string_categorical(max_tokens=5),
                 "string_2": cls.string_hashed(num_bins=32),
-                "int_1": cls.integer_categorical(
-                    max_tokens=5, num_oov_indices=2
-                ),
+                "int_1": cls.integer_categorical(max_tokens=5, num_oov_indices=2),
                 "int_2": cls.integer_hashed(num_bins=32),
                 "int_3": cls.integer_categorical(max_tokens=5),
             },
@@ -427,15 +377,11 @@ class FeatureSpaceTest(testing.TestCase):
             output_mode="concat",
         )
         fs.adapt(self._get_train_data_dict(as_dataset=True))
-        data = {
-            key: value[0] for key, value in self._get_train_data_dict().items()
-        }
+        data = {key: value[0] for key, value in self._get_train_data_dict().items()}
         out = fs(data)
         self.assertEqual(out.shape, (148,))
 
-    @pytest.mark.skipif(
-        backend.backend() != "tensorflow", reason="TODO: debug it"
-    )
+    @pytest.mark.skipif(backend.backend() != "tensorflow", reason="TODO: debug it")
     def test_manual_kpl(self):
         data = {
             "text": ["1st string", "2nd string", "3rd string"],
@@ -469,9 +415,7 @@ class FeatureSpaceTest(testing.TestCase):
         out = fs(data)
         self.assertEqual(tuple(out.shape), (10, 32))
 
-    @pytest.mark.skipif(
-        backend.backend() != "tensorflow", reason="TODO: debug it"
-    )
+    @pytest.mark.skipif(backend.backend() != "tensorflow", reason="TODO: debug it")
     def test_saving(self):
         # Torch GPU: `model.predict(ds.batch(4))` fails on device placement
         # JAX GPU: out[0] and ref_out don't match. May be concat feature order?
@@ -481,9 +425,7 @@ class FeatureSpaceTest(testing.TestCase):
                 "float_1": cls.float(),
                 "float_2": cls.float_normalized(),
                 "float_3": cls.float_discretized(num_bins=3),
-                "int_1": cls.integer_categorical(
-                    max_tokens=5, num_oov_indices=2
-                ),
+                "int_1": cls.integer_categorical(max_tokens=5, num_oov_indices=2),
                 "int_2": cls.integer_hashed(num_bins=32),
                 "int_3": cls.integer_categorical(max_tokens=5),
             },
@@ -493,14 +435,10 @@ class FeatureSpaceTest(testing.TestCase):
             ],
             output_mode="concat",
         )
-        fs.adapt(
-            self._get_train_data_dict(as_dataset=True, include_strings=False)
-        )
+        fs.adapt(self._get_train_data_dict(as_dataset=True, include_strings=False))
         data = {
             key: value[0]
-            for key, value in self._get_train_data_dict(
-                include_strings=False
-            ).items()
+            for key, value in self._get_train_data_dict(include_strings=False).items()
         }
         ref_out = fs(data)
 

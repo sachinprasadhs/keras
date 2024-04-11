@@ -54,9 +54,7 @@ class MetricTest(testing.TestCase):
 
         self.assertAllClose(metric.total, 20)
         result = metric.result()
-        self.assertAllClose(
-            result, np.sum((y_true - y_pred) ** 2) / num_samples
-        )
+        self.assertAllClose(result, np.sum((y_true - y_pred) ** 2) / num_samples)
         metric.reset_state()
         self.assertEqual(metric.result(), 0.0)
 
@@ -86,9 +84,7 @@ class MetricTest(testing.TestCase):
         metric.variables[1].assign(metric_variables[1])
         self.assertAllClose(metric.total, 20)
         result = metric.result()
-        self.assertAllClose(
-            result, np.sum((y_true - y_pred) ** 2) / num_samples
-        )
+        self.assertAllClose(result, np.sum((y_true - y_pred) ** 2) / num_samples)
 
         if backend.backend() == "jax":
             # Check no side effects.

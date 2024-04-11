@@ -813,9 +813,7 @@ def average_pool(
             padding,
             data_format,
         ).symbolic_call(inputs)
-    return backend.nn.average_pool(
-        inputs, pool_size, strides, padding, data_format
-    )
+    return backend.nn.average_pool(inputs, pool_size, strides, padding, data_format)
 
 
 class Conv(Operation):
@@ -906,9 +904,7 @@ def conv(
         return Conv(strides, padding, data_format, dilation_rate).symbolic_call(
             inputs, kernel
         )
-    return backend.nn.conv(
-        inputs, kernel, strides, padding, data_format, dilation_rate
-    )
+    return backend.nn.conv(inputs, kernel, strides, padding, data_format, dilation_rate)
 
 
 class DepthwiseConv(Operation):
@@ -1321,9 +1317,9 @@ def one_hot(x, num_classes, axis=-1, dtype=None, sparse=False):
            [1. 0. 0. 0.]], shape=(4, 4), dtype=float32)
     """
     if any_symbolic_tensors((x,)):
-        return OneHot(
-            num_classes, axis=axis, dtype=dtype, sparse=sparse
-        ).symbolic_call(x)
+        return OneHot(num_classes, axis=axis, dtype=dtype, sparse=sparse).symbolic_call(
+            x
+        )
     return backend.nn.one_hot(
         x,
         num_classes,
@@ -1392,12 +1388,8 @@ def binary_crossentropy(target, output, from_logits=False):
           shape=(4,), dtype=float32)
     """
     if any_symbolic_tensors((target, output)):
-        return BinaryCrossentropy(from_logits=from_logits).symbolic_call(
-            target, output
-        )
-    return backend.nn.binary_crossentropy(
-        target, output, from_logits=from_logits
-    )
+        return BinaryCrossentropy(from_logits=from_logits).symbolic_call(target, output)
+    return backend.nn.binary_crossentropy(target, output, from_logits=from_logits)
 
 
 class CategoricalCrossentropy(Operation):
@@ -1570,9 +1562,7 @@ def sparse_categorical_crossentropy(target, output, from_logits=False, axis=-1):
 
 
 class MultiHot(Operation):
-    def __init__(
-        self, num_classes=None, axis=-1, dtype=None, sparse=False, **kwargs
-    ):
+    def __init__(self, num_classes=None, axis=-1, dtype=None, sparse=False, **kwargs):
         if num_classes is None and "num_tokens" in kwargs:
             num_classes = kwargs.pop("num_tokens")
         if num_classes is None:
@@ -1617,9 +1607,7 @@ class MultiHot(Operation):
         "keras.ops.nn.multi_hot",
     ]
 )
-def multi_hot(
-    inputs, num_classes=None, axis=-1, dtype=None, sparse=False, **kwargs
-):
+def multi_hot(inputs, num_classes=None, axis=-1, dtype=None, sparse=False, **kwargs):
     """Encodes integer labels as multi-hot vectors.
 
     This function encodes integer labels as multi-hot vectors, where each label
@@ -1719,9 +1707,7 @@ def moments(x, axes, keepdims=False, synchronized=False):
 
     """
     if any_symbolic_tensors((x,)):
-        return Moments(axes, keepdims, synchronized=synchronized).symbolic_call(
-            x
-        )
+        return Moments(axes, keepdims, synchronized=synchronized).symbolic_call(x)
 
     return backend.nn.moments(x, axes, keepdims, synchronized=synchronized)
 
@@ -1757,9 +1743,7 @@ class BatchNorm(Operation):
         "keras.ops.nn.batch_normalization",
     ]
 )
-def batch_normalization(
-    x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3
-):
+def batch_normalization(x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3):
     """Normalizes `x` by `mean` and `variance`.
 
     This op is typically used by the batch normalization step in a neural
@@ -1801,9 +1785,7 @@ def batch_normalization(
 
     """
     if any_symbolic_tensors((x, mean, variance, offset, scale)):
-        return BatchNorm(axis, epsilon).symbolic_call(
-            x, mean, variance, offset, scale
-        )
+        return BatchNorm(axis, epsilon).symbolic_call(x, mean, variance, offset, scale)
 
     return backend.nn.batch_normalization(
         x, mean, variance, axis, offset, scale, epsilon
@@ -1829,9 +1811,7 @@ class CtcLoss(Operation):
             )
 
     def compute_output_spec(self, target, output, target_length, output_length):
-        self._check_shape_first_dim(
-            "target", target.shape, "output", output.shape
-        )
+        self._check_shape_first_dim("target", target.shape, "output", output.shape)
         self._check_shape_first_dim(
             "target_length", target_length.shape, "target", target.shape
         )
@@ -1868,9 +1848,7 @@ def ctc_loss(target, output, target_length, output_length, mask_index=0):
         return CtcLoss(mask_index).symbolic_call(
             target, output, target_length, output_length
         )
-    return backend.nn.ctc_loss(
-        target, output, target_length, output_length, mask_index
-    )
+    return backend.nn.ctc_loss(target, output, target_length, output_length, mask_index)
 
 
 class Normalize(Operation):

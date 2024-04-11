@@ -89,9 +89,7 @@ class Cropping2DTest(testing.TestCase, parameterized.TestCase):
     ):
         input_layer = layers.Input(batch_shape=(3, 7, 9, 5))
         with self.assertRaises(ValueError):
-            layers.Cropping2D(cropping=cropping, data_format=data_format)(
-                input_layer
-            )
+            layers.Cropping2D(cropping=cropping, data_format=data_format)(input_layer)
 
     def test_cropping_2d_errors_if_cropping_argument_invalid(self):
         with self.assertRaises(ValueError):
@@ -129,7 +127,5 @@ class Cropping2DTest(testing.TestCase, parameterized.TestCase):
             "Values in `cropping` argument should be smaller than the "
             "corresponding spatial dimension of the input.",
         ):
-            layer = layers.Cropping2D(
-                cropping=cropping, data_format=data_format
-            )
+            layer = layers.Cropping2D(cropping=cropping, data_format=data_format)
             _ = layer(inputs)

@@ -29,9 +29,7 @@ class InputLayerTest(testing.TestCase, parameterized.TestCase):
         }
 
         if sparse and not backend.SUPPORTS_SPARSE_TENSORS:
-            with self.assertRaisesRegex(
-                ValueError, "`sparse=True` is not supported"
-            ):
+            with self.assertRaisesRegex(ValueError, "`sparse=True` is not supported"):
                 InputLayer(**init_kwargs)
             return
 

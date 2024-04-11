@@ -160,8 +160,7 @@ def timeseries_dataset_from_array(
             )
         if end_index <= 0:
             raise ValueError(
-                "`end_index` must be higher than 0. "
-                f"Received: end_index={end_index}"
+                "`end_index` must be higher than 0. " f"Received: end_index={end_index}"
             )
 
     # Validate strides
@@ -236,9 +235,7 @@ def timeseries_dataset_from_array(
             lambda i, positions: positions[i],
             num_parallel_calls=tf.data.AUTOTUNE,
         )
-        target_ds = sequences_from_indices(
-            targets, indices, start_index, end_index
-        )
+        target_ds = sequences_from_indices(targets, indices, start_index, end_index)
         dataset = tf.data.Dataset.zip((dataset, target_ds))
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
     if batch_size is not None:

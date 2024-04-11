@@ -137,9 +137,7 @@ class EarlyStopping(Callback):
             )
         if self.monitor_op == ops.less:
             self.min_delta *= -1
-        self.best = (
-            float("inf") if self.monitor_op == ops.less else -float("inf")
-        )
+        self.best = float("inf") if self.monitor_op == ops.less else -float("inf")
 
     def on_train_begin(self, logs=None):
         # Allow instances to be re-used
@@ -171,9 +169,7 @@ class EarlyStopping(Callback):
                 self.best_weights = self.model.get_weights()
             # Only restart wait if we beat both the baseline and our previous
             # best.
-            if self.baseline is None or self._is_improvement(
-                current, self.baseline
-            ):
+            if self.baseline is None or self._is_improvement(current, self.baseline):
                 self.wait = 0
             return
 
@@ -184,9 +180,7 @@ class EarlyStopping(Callback):
 
     def on_train_end(self, logs=None):
         if self.stopped_epoch > 0 and self.verbose > 0:
-            io_utils.print_msg(
-                f"Epoch {self.stopped_epoch + 1}: early stopping"
-            )
+            io_utils.print_msg(f"Epoch {self.stopped_epoch + 1}: early stopping")
         if self.restore_best_weights and self.best_weights is not None:
             if self.verbose > 0:
                 io_utils.print_msg(

@@ -416,9 +416,7 @@ class GAN(keras.Model):
             [torch.ones((batch_size, 1)), torch.zeros((batch_size, 1))], axis=0
         )
         # Add random noise to the labels - important trick!
-        labels += 0.05 * keras.random.uniform(
-            labels.shape, seed=self.seed_generator
-        )
+        labels += 0.05 * keras.random.uniform(labels.shape, seed=self.seed_generator)
 
         # Train the discriminator
         self.zero_grad()
@@ -472,13 +470,9 @@ dataset = torch.utils.data.TensorDataset(
     torch.from_numpy(all_digits), torch.from_numpy(all_digits)
 )
 # Create a DataLoader
-dataloader = torch.utils.data.DataLoader(
-    dataset, batch_size=batch_size, shuffle=True
-)
+dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-gan = GAN(
-    discriminator=discriminator, generator=generator, latent_dim=latent_dim
-)
+gan = GAN(discriminator=discriminator, generator=generator, latent_dim=latent_dim)
 gan.compile(
     d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
     g_optimizer=keras.optimizers.Adam(learning_rate=0.0003),

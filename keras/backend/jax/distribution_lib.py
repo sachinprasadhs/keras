@@ -164,9 +164,7 @@ def distribute_data_input(inputs, layout):
             global_batch_size = per_process_batch_size * (
                 mesh_batch_dim_size // local_device_count
             )
-            per_replica_batches = jax.numpy.split(
-                inputs, local_device_count, axis=0
-            )
+            per_replica_batches = jax.numpy.split(inputs, local_device_count, axis=0)
     else:
         raise ValueError(
             "Only 1D or 2D mesh is supported at the moment. "
@@ -179,9 +177,7 @@ def distribute_data_input(inputs, layout):
         layout,
         arrays=[
             jax.device_put(batch, device)
-            for batch, device in zip(
-                per_replica_batches, layout.addressable_devices
-            )
+            for batch, device in zip(per_replica_batches, layout.addressable_devices)
         ],
     )
     return global_batch_array
@@ -258,8 +254,7 @@ def _to_jax_layout(tensor_layout):
     """
     if tensor_layout.device_mesh is None:
         raise ValueError(
-            "Cannot create sharding when device mesh is not set "
-            "for TensorLayout."
+            "Cannot create sharding when device mesh is not set " "for TensorLayout."
         )
     partition_spec = jax.sharding.PartitionSpec(*tensor_layout.axes)
     jax_mesh = _to_jax_mesh(tensor_layout.device_mesh)

@@ -48,9 +48,7 @@ class SafeModeScope:
         global_state.set_global_attribute("safe_mode_saving", self.safe_mode)
 
     def __exit__(self, *args, **kwargs):
-        global_state.set_global_attribute(
-            "safe_mode_saving", self.original_value
-        )
+        global_state.set_global_attribute("safe_mode_saving", self.original_value)
 
 
 @keras_export("keras.config.enable_unsafe_deserialization")
@@ -72,16 +70,12 @@ class ObjectSharingScope:
 
     def __exit__(self, *args, **kwargs):
         global_state.set_global_attribute("shared_objects/id_to_obj_map", None)
-        global_state.set_global_attribute(
-            "shared_objects/id_to_config_map", None
-        )
+        global_state.set_global_attribute("shared_objects/id_to_config_map", None)
 
 
 def get_shared_object(obj_id):
     """Retrieve an object previously seen during deserialization."""
-    id_to_obj_map = global_state.get_global_attribute(
-        "shared_objects/id_to_obj_map"
-    )
+    id_to_obj_map = global_state.get_global_attribute("shared_objects/id_to_obj_map")
     if id_to_obj_map is not None:
         return id_to_obj_map.get(obj_id, None)
 
@@ -106,9 +100,7 @@ def record_object_after_serialization(obj, config):
 
 def record_object_after_deserialization(obj, obj_id):
     """Call after deserializing an object, to keep track of it in the future."""
-    id_to_obj_map = global_state.get_global_attribute(
-        "shared_objects/id_to_obj_map"
-    )
+    id_to_obj_map = global_state.get_global_attribute("shared_objects/id_to_obj_map")
     if id_to_obj_map is None:
         return  # Not in a sharing scope
     id_to_obj_map[obj_id] = obj
@@ -237,9 +229,7 @@ def serialize_keras_object(obj):
         }
 
     inner_config = _get_class_or_fn_config(obj)
-    config_with_public_class = serialize_with_public_class(
-        obj.__class__, inner_config
-    )
+    config_with_public_class = serialize_with_public_class(obj.__class__, inner_config)
 
     if config_with_public_class is not None:
         get_build_and_compile_config(obj, config_with_public_class)
@@ -259,9 +249,7 @@ def serialize_keras_object(obj):
         if isinstance(obj, types.FunctionType):
             registered_name = object_registration.get_registered_name(obj)
         else:
-            registered_name = object_registration.get_registered_name(
-                obj.__class__
-            )
+            registered_name = object_registration.get_registered_name(obj.__class__)
 
     config = {
         "module": module,
@@ -391,9 +379,7 @@ def serialize_dict(obj):
         "keras.utils.deserialize_keras_object",
     ]
 )
-def deserialize_keras_object(
-    config, custom_objects=None, safe_mode=True, **kwargs
-):
+def deserialize_keras_object(config, custom_objects=None, safe_mode=True, **kwargs):
     """Retrieve the object by deserializing the config dict.
 
     The config dict is a Python dictionary that consists of a set of key-value
@@ -525,18 +511,13 @@ def deserialize_keras_object(
             if "config" in config:
                 inner_config = config["config"]
             if "class_name" not in config:
-                raise ValueError(
-                    f"Unknown `config` as a `dict`, config={config}"
-                )
+                raise ValueError(f"Unknown `config` as a `dict`, config={config}")
 
             # Check case where config is function or class and in custom objects
             if custom_objects and (
                 config["class_name"] in custom_objects
                 or config.get("registered_name") in custom_objects
-                or (
-                    isinstance(inner_config, str)
-                    and inner_config in custom_objects
-                )
+                or (isinstance(inner_config, str) and inner_config in custom_objects)
             ):
                 has_custom_object = True
 
@@ -599,9 +580,7 @@ def deserialize_keras_object(
 
     # Special cases:
     if class_name == "__keras_tensor__":
-        obj = backend.KerasTensor(
-            inner_config["shape"], dtype=inner_config["dtype"]
-        )
+        obj = backend.KerasTensor(inner_config["shape"], dtype=inner_config["dtype"])
         obj._pre_serialization_keras_history = inner_config["keras_history"]
         return obj
 
@@ -728,9 +707,7 @@ def deserialize_keras_object(
             instance.compiled = True
 
     if "shared_object_id" in config:
-        record_object_after_deserialization(
-            instance, config["shared_object_id"]
-        )
+        record_object_after_deserialization(instance, config["shared_object_id"])
     return instance
 
 
@@ -768,9 +745,7 @@ def _retrieve_class_or_fn(
         # the corresponding function from the identifying string.
         if obj_type == "function" and module == "builtins":
             for mod in BUILTIN_MODULES:
-                obj = api_export.get_symbol_from_name(
-                    "keras." + mod + "." + name
-                )
+                obj = api_export.get_symbol_from_name("keras." + mod + "." + name)
                 if obj is not None:
                     return obj
 

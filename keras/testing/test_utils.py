@@ -30,18 +30,14 @@ def get_test_data(
 
     # Generate extra samples in a deterministic manner
     extra_samples = total_samples - len(y)
-    y_extra = np.array(
-        [i % num_classes for i in range(extra_samples)], dtype=np.int64
-    )
+    y_extra = np.array([i % num_classes for i in range(extra_samples)], dtype=np.int64)
     y = np.concatenate([y, y_extra])
 
     # Generate data
     templates = 2 * num_classes * np.random.random((num_classes,) + input_shape)
     x = np.zeros((total_samples,) + input_shape, dtype=np.float32)
     for i in range(total_samples):
-        x[i] = templates[y[i]] + np.random.normal(
-            loc=0, scale=1.0, size=input_shape
-        )
+        x[i] = templates[y[i]] + np.random.normal(loc=0, scale=1.0, size=input_shape)
 
     # Shuffle the entire dataset to ensure randomness based on seed
     indices = np.arange(total_samples)

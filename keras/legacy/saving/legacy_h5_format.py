@@ -26,8 +26,7 @@ HDF5_OBJECT_HEADER_LIMIT = 64512
 def save_model_to_hdf5(model, filepath, overwrite=True, include_optimizer=True):
     if h5py is None:
         raise ImportError(
-            "`save_model()` using h5 format requires h5py. Could not "
-            "import h5py."
+            "`save_model()` using h5 format requires h5py. Could not " "import h5py."
         )
 
     if not isinstance(filepath, h5py.File):
@@ -48,14 +47,12 @@ def save_model_to_hdf5(model, filepath, overwrite=True, include_optimizer=True):
         opened_new_file = False
     try:
         with saving_options.keras_option_scope(use_legacy_config=True):
-            model_metadata = saving_utils.model_metadata(
-                model, include_optimizer
-            )
+            model_metadata = saving_utils.model_metadata(model, include_optimizer)
             for k, v in model_metadata.items():
                 if isinstance(v, (dict, list, tuple)):
-                    f.attrs[k] = json.dumps(
-                        v, default=json_utils.get_json_type
-                    ).encode("utf8")
+                    f.attrs[k] = json.dumps(v, default=json_utils.get_json_type).encode(
+                        "utf8"
+                    )
                 else:
                     f.attrs[k] = v
 
@@ -100,8 +97,7 @@ def load_model_from_hdf5(filepath, custom_objects=None, compile=True):
     """
     if h5py is None:
         raise ImportError(
-            "`load_model()` using h5 format requires h5py. Could not "
-            "import h5py."
+            "`load_model()` using h5 format requires h5py. Could not " "import h5py."
         )
 
     if not custom_objects:
@@ -122,9 +118,7 @@ def load_model_from_hdf5(filepath, custom_objects=None, compile=True):
         # instantiate model
         model_config = f.attrs.get("model_config")
         if model_config is None:
-            raise ValueError(
-                f"No model config found in the file at {filepath}."
-            )
+            raise ValueError(f"No model config found in the file at {filepath}.")
         if hasattr(model_config, "decode"):
             model_config = model_config.decode("utf-8")
         model_config = json_utils.decode(model_config)
@@ -164,9 +158,7 @@ def load_model_from_hdf5(filepath, custom_objects=None, compile=True):
                     if isinstance(model.optimizer, optimizers.Optimizer):
                         model.optimizer.build(model._trainable_variables)
                     else:
-                        model.optimizer._create_all_weights(
-                            model._trainable_variables
-                        )
+                        model.optimizer._create_all_weights(model._trainable_variables)
                 except (NotImplementedError, AttributeError):
                     logging.warning(
                         "Error when creating the weights of optimizer {}, "
@@ -175,9 +167,7 @@ def load_model_from_hdf5(filepath, custom_objects=None, compile=True):
                         "a freshly initialized optimizer."
                     )
 
-                optimizer_weight_values = (
-                    load_optimizer_weights_from_hdf5_group(f)
-                )
+                optimizer_weight_values = load_optimizer_weights_from_hdf5_group(f)
                 try:
                     model.optimizer.set_weights(optimizer_weight_values)
                 except ValueError:
@@ -256,14 +246,10 @@ def save_optimizer_weights_to_hdf5_group(hdf5_group, optimizer):
     if symbolic_weights:
         weights_group = hdf5_group.create_group("optimizer_weights")
         weight_names = [str(w.name).encode("utf8") for w in symbolic_weights]
-        save_attributes_to_hdf5_group(
-            weights_group, "weight_names", weight_names
-        )
+        save_attributes_to_hdf5_group(weights_group, "weight_names", weight_names)
         weight_values = [backend.convert_to_numpy(w) for w in symbolic_weights]
         for name, val in zip(weight_names, weight_values):
-            param_dset = weights_group.create_dataset(
-                name, val.shape, dtype=val.dtype
-            )
+            param_dset = weights_group.create_dataset(name, val.shape, dtype=val.dtype)
             if not val.shape:
                 # scalar
                 param_dset[()] = val
@@ -561,9 +547,7 @@ def load_optimizer_weights_from_hdf5_group(hdf5_group):
     optimizer_weight_names = load_attributes_from_hdf5_group(
         weights_group, "weight_names"
     )
-    return [
-        weights_group[weight_name] for weight_name in optimizer_weight_names
-    ]
+    return [weights_group[weight_name] for weight_name in optimizer_weight_names]
 
 
 def load_attributes_from_hdf5_group(group, name):
@@ -582,8 +566,7 @@ def load_attributes_from_hdf5_group(group, name):
     """
     if name in group.attrs:
         data = [
-            n.decode("utf8") if hasattr(n, "decode") else n
-            for n in group.attrs[name]
+            n.decode("utf8") if hasattr(n, "decode") else n for n in group.attrs[name]
         ]
     else:
         data = []

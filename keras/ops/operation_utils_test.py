@@ -182,9 +182,7 @@ class OperationUtilsTest(testing.TestCase):
     def test_reduce_shape_single_axis_with_keepdims(self):
         input_shape = (1, 4, 4, 1)
         axes = [1]
-        output_shape = operation_utils.reduce_shape(
-            input_shape, axes, keepdims=True
-        )
+        output_shape = operation_utils.reduce_shape(input_shape, axes, keepdims=True)
         expected_output_shape = (1, 1, 4, 1)
         self.assertEqual(output_shape, expected_output_shape)
 

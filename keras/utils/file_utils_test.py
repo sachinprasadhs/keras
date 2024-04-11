@@ -221,9 +221,7 @@ class ExtractArchiveTest(test_case.TestCase):
     def create_tar(self):
         archive_path = os.path.join(self.temp_dir, "sample.tar")
         with tarfile.open(archive_path, "w") as archive:
-            archive.add(
-                os.path.join(self.temp_dir, "sample.txt"), arcname="sample.txt"
-            )
+            archive.add(os.path.join(self.temp_dir, "sample.txt"), arcname="sample.txt")
         return archive_path
 
     def create_zip(self):
@@ -258,12 +256,8 @@ class ExtractArchiveTest(test_case.TestCase):
         extract_tar_path = os.path.join(self.temp_dir, "extract_auto_tar")
         extract_zip_path = os.path.join(self.temp_dir, "extract_auto_zip")
 
-        self.assertTrue(
-            file_utils.extract_archive(tar_archive_path, extract_tar_path)
-        )
-        self.assertTrue(
-            file_utils.extract_archive(zip_archive_path, extract_zip_path)
-        )
+        self.assertTrue(file_utils.extract_archive(tar_archive_path, extract_tar_path))
+        self.assertTrue(file_utils.extract_archive(zip_archive_path, extract_zip_path))
 
         with open(os.path.join(extract_tar_path, "sample.txt"), "r") as f:
             self.assertEqual(f.read(), self.file_content)
@@ -286,22 +280,16 @@ class ExtractArchiveTest(test_case.TestCase):
         tar_path = self.create_tar()
         extract_path = os.path.join(self.temp_dir, "runtime_error_extraction")
 
-        with patch.object(
-            tarfile.TarFile, "extractall", side_effect=RuntimeError
-        ):
+        with patch.object(tarfile.TarFile, "extractall", side_effect=RuntimeError):
             with self.assertRaises(RuntimeError):
                 file_utils.extract_archive(tar_path, extract_path, "tar")
         self.assertFalse(os.path.exists(extract_path))
 
     def test_keyboard_interrupt_during_extraction(self):
         tar_path = self.create_tar()
-        extract_path = os.path.join(
-            self.temp_dir, "keyboard_interrupt_extraction"
-        )
+        extract_path = os.path.join(self.temp_dir, "keyboard_interrupt_extraction")
 
-        with patch.object(
-            tarfile.TarFile, "extractall", side_effect=KeyboardInterrupt
-        ):
+        with patch.object(tarfile.TarFile, "extractall", side_effect=KeyboardInterrupt):
             with self.assertRaises(KeyboardInterrupt):
                 file_utils.extract_archive(tar_path, extract_path, "tar")
         self.assertFalse(os.path.exists(extract_path))
@@ -320,18 +308,14 @@ class GetFileTest(test_case.TestCase):
         dest_dir = self.get_temp_dir()
         orig_dir = self.get_temp_dir()
         text_file_path, tar_file_path = self._create_tar_file(orig_dir)
-        self._test_file_extraction_and_validation(
-            dest_dir, tar_file_path, "tar.gz"
-        )
+        self._test_file_extraction_and_validation(dest_dir, tar_file_path, "tar.gz")
 
     def test_valid_zip_extraction(self):
         """Test valid zip extraction and hash validation."""
         dest_dir = self.get_temp_dir()
         orig_dir = self.get_temp_dir()
         text_file_path, zip_file_path = self._create_zip_file(orig_dir)
-        self._test_file_extraction_and_validation(
-            dest_dir, zip_file_path, "zip"
-        )
+        self._test_file_extraction_and_validation(dest_dir, zip_file_path, "zip")
 
     def test_valid_text_file_download(self):
         """Test valid text file download and hash validation."""
@@ -340,9 +324,7 @@ class GetFileTest(test_case.TestCase):
         text_file_path = os.path.join(orig_dir, "test.txt")
         with open(text_file_path, "w") as text_file:
             text_file.write("Float like a butterfly, sting like a bee.")
-        self._test_file_extraction_and_validation(
-            dest_dir, text_file_path, None
-        )
+        self._test_file_extraction_and_validation(dest_dir, text_file_path, None)
 
     def test_get_file_with_tgz_extension(self):
         """Test extraction of file with .tar.gz extension."""
@@ -446,9 +428,7 @@ class GetFileTest(test_case.TestCase):
             "file://", urllib.request.pathname2url(os.path.abspath(file_path))
         )
 
-        with self.assertRaisesRegex(
-            ValueError, "Incomplete or corrupted file.*"
-        ):
+        with self.assertRaisesRegex(ValueError, "Incomplete or corrupted file.*"):
             _ = file_utils.get_file("test.txt", origin, file_hash=hashval)
 
     def _create_tar_file(self, directory):
@@ -475,9 +455,7 @@ class GetFileTest(test_case.TestCase):
 
         return text_file_path, zip_file_path
 
-    def _test_file_extraction_and_validation(
-        self, dest_dir, file_path, archive_type
-    ):
+    def _test_file_extraction_and_validation(self, dest_dir, file_path, archive_type):
         """Helper function for file extraction and validation."""
         origin = urllib.parse.urljoin(
             "file://",
@@ -519,9 +497,7 @@ class GetFileTest(test_case.TestCase):
             f.write("test")
 
         self.assertTrue(file_utils.exists(file_path))
-        self.assertFalse(
-            file_utils.exists(os.path.join(temp_dir, "non_existent.txt"))
-        )
+        self.assertFalse(file_utils.exists(os.path.join(temp_dir, "non_existent.txt")))
 
     def test_file_open_read(self):
         temp_dir = self.get_temp_dir()
@@ -627,9 +603,7 @@ class HashFileTest(test_case.TestCase):
     def test_hash_file_md5(self):
         """Test MD5 hashing of a file."""
         expected_md5 = "65a8e27d8879283831b664bd8b7f0ad4"
-        calculated_md5 = file_utils.hash_file(
-            self.temp_file.name, algorithm="md5"
-        )
+        calculated_md5 = file_utils.hash_file(self.temp_file.name, algorithm="md5")
         self.assertEqual(expected_md5, calculated_md5)
 
 
@@ -647,9 +621,7 @@ class TestValidateFile(test_case.TestCase):
     def test_validate_file_sha256(self):
         """Validate SHA256 hash of a file."""
         self.assertTrue(
-            file_utils.validate_file(
-                self.tmp_file.name, self.sha256_hash, "sha256"
-            )
+            file_utils.validate_file(self.tmp_file.name, self.sha256_hash, "sha256")
         )
 
     def test_validate_file_md5(self):
@@ -661,9 +633,7 @@ class TestValidateFile(test_case.TestCase):
     def test_validate_file_auto_sha256(self):
         """Auto-detect and validate SHA256 hash."""
         self.assertTrue(
-            file_utils.validate_file(
-                self.tmp_file.name, self.sha256_hash, "auto"
-            )
+            file_utils.validate_file(self.tmp_file.name, self.sha256_hash, "auto")
         )
 
     def test_validate_file_auto_md5(self):

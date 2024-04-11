@@ -68,12 +68,12 @@ def np_depthwise_conv1d(
                 x_in.strides[1],
             )
             inner_dim = h_kernel
-            x_strided = as_strided(
-                x_in, shape=stride_shape, strides=strides
-            ).reshape(-1, inner_dim)
-            kernel_weights_grp = kernel_weights[
-                ..., ch_in_idx, ch_out_idx
-            ].reshape(-1, 1)
+            x_strided = as_strided(x_in, shape=stride_shape, strides=strides).reshape(
+                -1, inner_dim
+            )
+            kernel_weights_grp = kernel_weights[..., ch_in_idx, ch_out_idx].reshape(
+                -1, 1
+            )
             bias_weights_grp = bias_weights[..., ch_in_idx, ch_out_idx]
             out_grps.append(
                 (x_strided @ kernel_weights_grp + bias_weights_grp).reshape(
@@ -148,12 +148,12 @@ def np_depthwise_conv2d(
                 x_in.strides[2],
             )
             inner_dim = h_kernel * w_kernel
-            x_strided = as_strided(
-                x_in, shape=stride_shape, strides=strides
-            ).reshape(-1, inner_dim)
-            kernel_weights_grp = kernel_weights[
-                ..., ch_in_idx, ch_out_idx
-            ].reshape(-1, 1)
+            x_strided = as_strided(x_in, shape=stride_shape, strides=strides).reshape(
+                -1, inner_dim
+            )
+            kernel_weights_grp = kernel_weights[..., ch_in_idx, ch_out_idx].reshape(
+                -1, 1
+            )
             bias_weights_grp = bias_weights[..., ch_in_idx, ch_out_idx]
             out_grps.append(
                 (x_strided @ kernel_weights_grp + bias_weights_grp).reshape(

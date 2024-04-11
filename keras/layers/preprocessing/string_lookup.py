@@ -370,9 +370,7 @@ class StringLookup(IndexLookup):
     # Overridden methods from IndexLookup.
     def _tensor_vocab_to_numpy(self, vocabulary):
         vocabulary = vocabulary.numpy()
-        return np.array(
-            [tf.compat.as_text(x, self.encoding) for x in vocabulary]
-        )
+        return np.array([tf.compat.as_text(x, self.encoding) for x in vocabulary])
 
     def get_config(self):
         config = {"encoding": self.encoding}

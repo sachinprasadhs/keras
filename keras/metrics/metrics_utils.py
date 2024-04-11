@@ -12,22 +12,17 @@ NEG_INF = -1e10
 
 def assert_thresholds_range(thresholds):
     if thresholds is not None:
-        invalid_thresholds = [
-            t for t in thresholds if t is None or t < 0 or t > 1
-        ]
+        invalid_thresholds = [t for t in thresholds if t is None or t < 0 or t > 1]
         if invalid_thresholds:
             raise ValueError(
-                "Threshold values must be in [0, 1]. "
-                f"Received: {invalid_thresholds}"
+                "Threshold values must be in [0, 1]. " f"Received: {invalid_thresholds}"
             )
 
 
 def parse_init_thresholds(thresholds, default_threshold=0.5):
     if thresholds is not None:
         assert_thresholds_range(to_list(thresholds))
-    thresholds = to_list(
-        default_threshold if thresholds is None else thresholds
-    )
+    thresholds = to_list(default_threshold if thresholds is None else thresholds)
     return thresholds
 
 
@@ -206,9 +201,7 @@ def _update_confusion_matrix_variables_optimized(
         label_weights = ops.broadcast_to(label_weights, ops.shape(y_pred))
         if not multi_label:
             label_weights = ops.reshape(label_weights, [-1])
-    weights = ops.cast(
-        ops.multiply(sample_weights, label_weights), y_true.dtype
-    )
+    weights = ops.cast(ops.multiply(sample_weights, label_weights), y_true.dtype)
 
     # We shouldn't need this, but in case there are predict value that is out of
     # the range of [0.0, 1.0]
@@ -227,8 +220,7 @@ def _update_confusion_matrix_variables_optimized(
     # eg, buckets like [0, 0.5], (0.5, 1], and 0.5 belongs to first bucket.
     # We have to use math.ceil(val) - 1 for the bucket.
     bucket_indices = (
-        ops.ceil(y_pred * (ops.cast(num_thresholds, dtype=y_pred.dtype) - 1))
-        - 1
+        ops.ceil(y_pred * (ops.cast(num_thresholds, dtype=y_pred.dtype) - 1)) - 1
     )
 
     if thresholds_with_epsilon:
@@ -329,9 +321,7 @@ def is_evenly_distributed_thresholds(thresholds):
     num_thresholds = len(thresholds)
     if num_thresholds < 3:
         return False
-    even_thresholds = np.arange(num_thresholds, dtype=np.float32) / (
-        num_thresholds - 1
-    )
+    even_thresholds = np.arange(num_thresholds, dtype=np.float32) / (num_thresholds - 1)
     return np.allclose(thresholds, even_thresholds, atol=backend.epsilon())
 
 
@@ -409,9 +399,7 @@ def update_confusion_matrix_variables(
         )
     if variables_to_update is None:
         return
-    if not any(
-        key for key in variables_to_update if key in list(ConfusionMatrix)
-    ):
+    if not any(key for key in variables_to_update if key in list(ConfusionMatrix)):
         raise ValueError(
             "Please provide at least one valid confusion matrix "
             "variable to update. Valid variable key options are: "
@@ -495,9 +483,7 @@ def update_confusion_matrix_variables(
         if len(y_pred.shape) == 1:
             num_labels = 1
         else:
-            num_labels = ops.cast(
-                ops.prod(ops.array(pred_shape[1:]), axis=0), "int32"
-            )
+            num_labels = ops.cast(ops.prod(ops.array(pred_shape[1:]), axis=0), "int32")
         thresh_label_tile = ops.where(one_thresh, num_labels, 1)
     else:
         pred_shape = y_pred.shape
@@ -527,9 +513,7 @@ def update_confusion_matrix_variables(
         thresh_tiles = [1, num_predictions * num_labels]
         data_tiles = [num_thresholds, 1]
 
-    thresh_tiled = ops.tile(
-        ops.reshape(thresholds, thresh_pretile_shape), thresh_tiles
-    )
+    thresh_tiled = ops.tile(ops.reshape(thresholds, thresh_pretile_shape), thresh_tiles)
 
     # Tile the predictions for every threshold.
     preds_tiled = ops.tile(predictions_extra_dim, data_tiles)
@@ -544,9 +528,7 @@ def update_confusion_matrix_variables(
         sample_weight = ops.broadcast_to(
             ops.cast(sample_weight, dtype=y_pred.dtype), ops.shape(y_pred)
         )
-        weights_tiled = ops.tile(
-            ops.reshape(sample_weight, thresh_tiles), data_tiles
-        )
+        weights_tiled = ops.tile(ops.reshape(sample_weight, thresh_tiles), data_tiles)
     else:
         weights_tiled = None
 
@@ -608,9 +590,7 @@ def _filter_top_k(x, k):
       tensor with same shape and dtype as x.
     """
     _, top_k_idx = ops.top_k(x, k)
-    top_k_mask = ops.sum(
-        ops.one_hot(top_k_idx, ops.shape(x)[-1], axis=-1), axis=-2
-    )
+    top_k_mask = ops.sum(ops.one_hot(top_k_idx, ops.shape(x)[-1], axis=-1), axis=-2)
     return x * top_k_mask + NEG_INF * (1 - top_k_mask)
 
 

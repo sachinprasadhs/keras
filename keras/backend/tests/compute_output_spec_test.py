@@ -28,9 +28,7 @@ class ComputeOutputSpecTest(unittest.TestCase):
         x1 = KerasTensor(shape=(None, 3, 5))
         x2 = KerasTensor(shape=(None, 3, 5))
         x3 = KerasTensor(shape=(None, 3, 5))
-        y = backend.compute_output_spec(
-            three_args_2_kwarg_test_fn, x1, x2, x3=x3
-        )
+        y = backend.compute_output_spec(three_args_2_kwarg_test_fn, x1, x2, x3=x3)
         self.assertEqual(y.shape, (None, 5))
 
     def test_dynamic_everything(self):
@@ -41,9 +39,7 @@ class ComputeOutputSpecTest(unittest.TestCase):
         x1 = KerasTensor(shape=(None, None, 5))
         x2 = KerasTensor(shape=(None, None, 5))
         x3 = KerasTensor(shape=(None, None, 5))
-        y = backend.compute_output_spec(
-            three_args_2_kwarg_test_fn, x1, x2, x3=x3
-        )
+        y = backend.compute_output_spec(three_args_2_kwarg_test_fn, x1, x2, x3=x3)
         self.assertEqual(y.shape, (None, 5))
 
     @pytest.mark.skipif(

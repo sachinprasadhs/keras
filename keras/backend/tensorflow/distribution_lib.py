@@ -76,8 +76,7 @@ def _to_dtensor_layout(tensor_layout):
     """
     if tensor_layout.device_mesh is None:
         raise ValueError(
-            "Cannot create sharding when device mesh is not set for "
-            "TensorLayout."
+            "Cannot create sharding when device mesh is not set for " "TensorLayout."
         )
 
     sharding_specs = [

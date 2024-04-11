@@ -180,9 +180,7 @@ class CategoryEncoding(TFDataLayer):
 
     def compute_output_spec(self, inputs, count_weights=None):
         output_shape = self.compute_output_shape(inputs.shape)
-        return KerasTensor(
-            output_shape, dtype=self.compute_dtype, sparse=self.sparse
-        )
+        return KerasTensor(output_shape, dtype=self.compute_dtype, sparse=self.sparse)
 
     def get_config(self):
         config = {

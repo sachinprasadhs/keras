@@ -14,9 +14,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
         audio_samples = []
         for _ in range(count):
             if different_sequence_lengths:
-                random_sequence_length = np.random.randint(
-                    10, sequence_length + 1
-                )
+                random_sequence_length = np.random.randint(10, sequence_length + 1)
                 audio = np.random.random((random_sequence_length, num_channels))
             else:
                 audio = np.random.random((sequence_length, num_channels))
@@ -42,9 +40,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
                     class_directory,
                     os.path.join(class_directory, "subfolder_1"),
                     os.path.join(class_directory, "subfolder_2"),
-                    os.path.join(
-                        class_directory, "subfolder_1", "sub-subfolder"
-                    ),
+                    os.path.join(class_directory, "subfolder_1", "sub-subfolder"),
                 ]
             else:
                 class_paths = [class_directory]
@@ -233,9 +229,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
         self.assertAllClose(batch[1], [0, 1])
 
     def test_audio_dataset_from_directory_follow_links(self):
-        directory = self._prepare_directory(
-            num_classes=2, count=25, nested_dirs=True
-        )
+        directory = self._prepare_directory(num_classes=2, count=25, nested_dirs=True)
         dataset = audio_dataset_utils.audio_dataset_from_directory(
             directory,
             batch_size=8,
@@ -250,9 +244,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
 
     def test_audio_dataset_from_directory_no_audio(self):
         directory = self._prepare_directory(num_classes=2, count=0)
-        with self.assertRaisesRegex(
-            ValueError, "No audio files found in directory"
-        ):
+        with self.assertRaisesRegex(ValueError, "No audio files found in directory"):
             _ = audio_dataset_utils.audio_dataset_from_directory(directory)
 
     def test_audio_dataset_from_directory_ragged(self):
@@ -358,9 +350,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`label_mode` argument must be"
-        ):
+        with self.assertRaisesRegex(ValueError, "`label_mode` argument must be"):
             _ = audio_dataset_utils.audio_dataset_from_directory(
                 directory, label_mode="other"
             )
@@ -382,9 +372,7 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels=[0, 0, 1, 1]
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`class_names` passed did not match"
-        ):
+        with self.assertRaisesRegex(ValueError, "`class_names` passed did not match"):
             _ = audio_dataset_utils.audio_dataset_from_directory(
                 directory, class_names=["class_0", "wrong_class"]
             )
@@ -401,16 +389,12 @@ class AudioDatasetFromDirectoryTest(testing.TestCase):
                 directory, validation_split=2
             )
 
-        with self.assertRaisesRegex(
-            ValueError, '`subset` must be either "training",'
-        ):
+        with self.assertRaisesRegex(ValueError, '`subset` must be either "training",'):
             _ = audio_dataset_utils.audio_dataset_from_directory(
                 directory, validation_split=0.2, subset="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`validation_split` must be set"
-        ):
+        with self.assertRaisesRegex(ValueError, "`validation_split` must be set"):
             _ = audio_dataset_utils.audio_dataset_from_directory(
                 directory, validation_split=0.0, subset="training"
             )

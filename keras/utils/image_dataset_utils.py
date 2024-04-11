@@ -214,9 +214,7 @@ def image_dataset_from_directory(
             f"Received: interpolation={interpolation}"
         )
 
-    dataset_utils.check_validation_split_arg(
-        validation_split, subset, shuffle, seed
-    )
+    dataset_utils.check_validation_split_arg(validation_split, subset, shuffle, seed)
 
     if seed is None:
         seed = np.random.randint(1e6)
@@ -298,9 +296,7 @@ def image_dataset_from_directory(
             val_dataset = val_dataset.batch(batch_size)
         else:
             if shuffle:
-                train_dataset = train_dataset.shuffle(
-                    buffer_size=1024, seed=seed
-                )
+                train_dataset = train_dataset.shuffle(buffer_size=1024, seed=seed)
 
         train_dataset = train_dataset.prefetch(tf.data.AUTOTUNE)
         val_dataset = val_dataset.prefetch(tf.data.AUTOTUNE)
@@ -383,9 +379,7 @@ def paths_and_labels_to_dataset(
         lambda x: load_image(x, *args), num_parallel_calls=tf.data.AUTOTUNE
     )
     if label_mode:
-        label_ds = dataset_utils.labels_to_dataset(
-            labels, label_mode, num_classes
-        )
+        label_ds = dataset_utils.labels_to_dataset(labels, label_mode, num_classes)
         img_ds = tf.data.Dataset.zip((img_ds, label_ds))
     return img_ds
 
@@ -401,9 +395,7 @@ def load_image(
 ):
     """Load an image from a path and resize it."""
     img = tf.io.read_file(path)
-    img = tf.image.decode_image(
-        img, channels=num_channels, expand_animations=False
-    )
+    img = tf.image.decode_image(img, channels=num_channels, expand_animations=False)
 
     if pad_to_aspect_ratio and crop_to_aspect_ratio:
         raise ValueError(

@@ -256,9 +256,7 @@ class Progbar:
             #    multiple times, e.g. as part of a finalizing call
             # in these cases, we just fall back to the simple calculation
             if self._time_after_first_step is not None and current > 1:
-                time_per_unit = (now - self._time_after_first_step) / (
-                    current - 1
-                )
+                time_per_unit = (now - self._time_after_first_step) / (current - 1)
             else:
                 time_per_unit = (now - self._start) / current
 

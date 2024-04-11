@@ -25,9 +25,7 @@ class TimeseriesDatasetTest(testing.TestCase):
             self.assertAllClose(targets, inputs[:, 0] * 2)
             for j in range(min(5, len(inputs))):
                 # Check each sample in the batch
-                self.assertAllClose(
-                    inputs[j], np.arange(i * 5 + j, i * 5 + j + 9)
-                )
+                self.assertAllClose(inputs[j], np.arange(i * 5 + j, i * 5 + j + 9))
 
     def test_timeseries_regression(self):
         # Test simple timeseries regression use case
@@ -62,9 +60,7 @@ class TimeseriesDatasetTest(testing.TestCase):
                 self.assertEqual(batch.shape, (1, 10))
             for j in range(min(5, len(batch))):
                 # Check each sample in the batch
-                self.assertAllClose(
-                    batch[j], np.arange(i * 5 + j, i * 5 + j + 10)
-                )
+                self.assertAllClose(batch[j], np.arange(i * 5 + j, i * 5 + j + 10))
         self.assertEqual(i, 8)
 
     def test_shuffle(self):
@@ -120,9 +116,7 @@ class TimeseriesDatasetTest(testing.TestCase):
                 # Check each sample in the batch
                 start_index = i * 5 + j
                 end_index = start_index + 9 * 2
-                self.assertAllClose(
-                    inputs[j], np.arange(start_index, end_index, 2)
-                )
+                self.assertAllClose(inputs[j], np.arange(start_index, end_index, 2))
 
     def test_sequence_stride(self):
         data = np.arange(100)
@@ -144,9 +138,7 @@ class TimeseriesDatasetTest(testing.TestCase):
                 # Check each sample in the batch
                 start_index = i * 5 * 3 + j * 3
                 end_index = start_index + 9
-                self.assertAllClose(
-                    inputs[j], np.arange(start_index, end_index)
-                )
+                self.assertAllClose(inputs[j], np.arange(start_index, end_index))
 
     def test_start_and_end_index(self):
         data = np.arange(100)

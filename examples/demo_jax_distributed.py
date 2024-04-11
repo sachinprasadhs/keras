@@ -187,9 +187,7 @@ special_layer_var = model.get_layer("backbone").get_layer("large_k").kernel
 # - model.non_trainable_variables and optimizer.variables
 
 # Apply the distribution settings to the model variables
-non_trainable_variables = jax.device_put(
-    model.non_trainable_variables, var_replication
-)
+non_trainable_variables = jax.device_put(model.non_trainable_variables, var_replication)
 optimizer_variables = jax.device_put(optimizer.variables, var_replication)
 # this is what you would do replicate all trainable variables:
 # trainable_variables = jax.device_put(model.trainable_variables, var_replication)
@@ -206,9 +204,7 @@ for i, v in enumerate(trainable_variables):
         trainable_variables[i] = sharded_v
 
         print("Sharding of convolutional", v.name, v.shape)
-        jax.debug.visualize_array_sharding(
-            jnp.reshape(sharded_v, [-1, v.shape[-1]])
-        )
+        jax.debug.visualize_array_sharding(jnp.reshape(sharded_v, [-1, v.shape[-1]]))
     else:
         # Apply distribution settings: replication
         replicated_v = jax.device_put(v, var_replication)
@@ -216,9 +212,7 @@ for i, v in enumerate(trainable_variables):
 
         if print_once:
             print_once = False
-            print(
-                "\nSharding of all other model variables (they are replicated)"
-            )
+            print("\nSharding of all other model variables (they are replicated)")
             jax.debug.visualize_array_sharding(
                 jnp.reshape(replicated_v, [-1, v.shape[-1]])
             )
@@ -318,17 +312,13 @@ jax.debug.visualize_array_sharding(predictions)
 # Post-processing model state update to write them back into the model
 update = lambda variable, value: variable.assign(value)
 
-jax.tree_map(
-    update, model.trainable_variables, device_train_state.trainable_variables
-)
+jax.tree_map(update, model.trainable_variables, device_train_state.trainable_variables)
 jax.tree_map(
     update,
     model.non_trainable_variables,
     device_train_state.non_trainable_variables,
 )
-jax.tree_map(
-    update, optimizer.variables, device_train_state.optimizer_variables
-)
+jax.tree_map(update, optimizer.variables, device_train_state.optimizer_variables)
 
 # check that the model has the new state by running an eval
 # known issue: the optimizer should not be required here

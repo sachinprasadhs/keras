@@ -71,9 +71,7 @@ class CastToCommonDtype(test_case.TestCase):
         tensor1 = KerasTensor([1, 2, 3], dtype="float16")
         tensor2 = KerasTensor([4, 5, 6], dtype="float32")
         tensor3 = KerasTensor([7, 8, 9], dtype="float64")
-        casted_tensors = dtype_utils.cast_to_common_dtype(
-            [tensor1, tensor2, tensor3]
-        )
+        casted_tensors = dtype_utils.cast_to_common_dtype([tensor1, tensor2, tensor3])
         for tensor in casted_tensors:
             self.assertEqual(tensor.dtype, "float64")
 
@@ -81,9 +79,7 @@ class CastToCommonDtype(test_case.TestCase):
         tensor1 = KerasTensor([1, 2, 3], dtype="float16")
         tensor2 = KerasTensor([4, 5, 6], dtype="int16")
         tensor3 = KerasTensor([7, 8, 9], dtype="float32")
-        casted_tensors = dtype_utils.cast_to_common_dtype(
-            [tensor1, tensor2, tensor3]
-        )
+        casted_tensors = dtype_utils.cast_to_common_dtype([tensor1, tensor2, tensor3])
         for tensor in casted_tensors:
             self.assertEqual(tensor.dtype, "float32")
 
@@ -91,9 +87,7 @@ class CastToCommonDtype(test_case.TestCase):
         tensor1 = KerasTensor([1, 2, 3], dtype="float32")
         tensor2 = KerasTensor([4, 5, 6], dtype="float32")
         tensor3 = KerasTensor([7, 8, 9], dtype="float32")
-        casted_tensors = dtype_utils.cast_to_common_dtype(
-            [tensor1, tensor2, tensor3]
-        )
+        casted_tensors = dtype_utils.cast_to_common_dtype([tensor1, tensor2, tensor3])
         for tensor in casted_tensors:
             self.assertEqual(tensor.dtype, "float32")
 
@@ -115,9 +109,7 @@ class CastToCommonDtype(test_case.TestCase):
         tensor1 = KerasTensor([1, 2, 3], dtype="float32")
         tensor2 = KerasTensor([4, 5, 6], dtype="int32")
         tensor3 = KerasTensor([7, 8, 9], dtype="bool")
-        casted_tensors = dtype_utils.cast_to_common_dtype(
-            [tensor1, tensor2, tensor3]
-        )
+        casted_tensors = dtype_utils.cast_to_common_dtype([tensor1, tensor2, tensor3])
         for tensor in casted_tensors:
             self.assertEqual(tensor.dtype, "float32")
 

@@ -14,9 +14,7 @@ from keras.utils.torch_utils import TorchModuleWrapper
 
 
 class Classifier(models.Model):
-    def __init__(
-        self, use_batch_norm=False, num_torch_layers=1, *args, **kwargs
-    ):
+    def __init__(self, use_batch_norm=False, num_torch_layers=1, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.use_batch_norm = use_batch_norm
         self.num_torch_layers = num_torch_layers
@@ -53,9 +51,7 @@ class ClassifierWithNoSpecialCasing(models.Model):
         return self.fc3(self.fc2(self.bn1(self.fc1(x))))
 
 
-@pytest.mark.skipif(
-    backend.backend() != "torch", reason="Requires torch backend"
-)
+@pytest.mark.skipif(backend.backend() != "torch", reason="Requires torch backend")
 class TorchUtilsTest(testing.TestCase, parameterized.TestCase):
     @parameterized.parameters(
         {"use_batch_norm": False, "num_torch_layers": 1},
@@ -70,15 +66,11 @@ class TorchUtilsTest(testing.TestCase, parameterized.TestCase):
             layer_trainable_count = 2
             if use_batch_norm:
                 layer_trainable_count += 2
-            self.assertEqual(
-                len(layer.trainable_weights), layer_trainable_count
-            )
+            self.assertEqual(len(layer.trainable_weights), layer_trainable_count)
             torch_trainable_count += layer_trainable_count
         model(np.random.random((3, 2)))
         self.assertEqual(len(model.layers), 2 * num_torch_layers)
-        self.assertEqual(
-            len(model.trainable_weights), torch_trainable_count + 2
-        )
+        self.assertEqual(len(model.trainable_weights), torch_trainable_count + 2)
         model.compile(optimizer="sgd", loss="mse")
         model.fit(np.random.random((3, 2)), np.random.random((3, 1)))
 

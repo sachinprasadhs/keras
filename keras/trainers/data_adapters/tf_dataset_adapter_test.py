@@ -125,9 +125,7 @@ class TestTFDatasetAdapter(testing.TestCase, parameterized.TestCase):
             ValueError,
             "You cannot `class_weight` and `sample_weight` at the same time.",
         ):
-            tf_dataset_adapter.TFDatasetAdapter(
-                base_ds, class_weight=class_weight
-            )
+            tf_dataset_adapter.TFDatasetAdapter(base_ds, class_weight=class_weight)
 
     def test_different_y_shapes_with_class_weight(self):
         x = np.random.random((4, 2))
@@ -172,15 +170,11 @@ class TestTFDatasetAdapter(testing.TestCase, parameterized.TestCase):
             ValueError,
             "`class_weight` is only supported for Models with a single output.",
         ):
-            tf_dataset_adapter.TFDatasetAdapter(
-                base_ds, class_weight=class_weight
-            )
+            tf_dataset_adapter.TFDatasetAdapter(base_ds, class_weight=class_weight)
 
     def test_class_weights_map_fn_with_sample_weight(self):
         class_weight = {0: 0.1, 1: 0.2, 2: 0.3, 3: 0.4}
-        class_weights_map_fn = tf_dataset_adapter.make_class_weight_map_fn(
-            class_weight
-        )
+        class_weights_map_fn = tf_dataset_adapter.make_class_weight_map_fn(class_weight)
 
         x = np.array([[0.5, 0.5], [0.5, 0.5]])
         y = np.array([[1, 0], [0, 1]])
@@ -194,9 +188,7 @@ class TestTFDatasetAdapter(testing.TestCase, parameterized.TestCase):
 
     def test_class_weights_map_fn_nested_y(self):
         class_weight = {0: 0.1, 1: 0.2, 2: 0.3, 3: 0.4}
-        class_weights_map_fn = tf_dataset_adapter.make_class_weight_map_fn(
-            class_weight
-        )
+        class_weights_map_fn = tf_dataset_adapter.make_class_weight_map_fn(class_weight)
 
         x = np.array([[0.5, 0.5]])
         y1 = np.array([1])
@@ -258,9 +250,7 @@ class TestTFDatasetAdapter(testing.TestCase, parameterized.TestCase):
                 self.assertEqual(tuple(bx.shape), (2, 4))
                 self.assertEqual(tuple(by.shape), (2, 2))
 
-    @parameterized.named_parameters(
-        named_product(iterator_type=["np", "tf", "jax"])
-    )
+    @parameterized.named_parameters(named_product(iterator_type=["np", "tf", "jax"]))
     def test_tf_sparse_tensors(self, iterator_type):
         x = tf.SparseTensor(
             indices=[[0, 0], [1, 2]], values=[1.0, 2.0], dense_shape=(2, 4)

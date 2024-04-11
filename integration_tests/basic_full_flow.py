@@ -40,9 +40,7 @@ class BasicFlowTest(testing.TestCase):
             metrics=[metrics.MeanSquaredError()],
         )
         output_before_fit = model(x)
-        model.fit(
-            x, y, batch_size=batch_size, epochs=epochs, validation_split=0.2
-        )
+        model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.2)
         output_after_fit = model(x)
 
         self.assertNotAllClose(output_before_fit, output_after_fit)

@@ -11,13 +11,9 @@ from keras.optimizers.sgd import SGD
 class LossScaleOptimizerTest(testing.TestCase, parameterized.TestCase):
     def _skip_test_for_stateless(self, stateless):
         if not stateless and backend.backend() == "jax":
-            self.skipTest(
-                "LossScaleOptimizer must use stateless_apply with JAX."
-            )
+            self.skipTest("LossScaleOptimizer must use stateless_apply with JAX.")
         if stateless and backend.backend() == "tensorflow":
-            self.skipTest(
-                "stateless_apply is not supported with the TF backend."
-            )
+            self.skipTest("stateless_apply is not supported with the TF backend.")
 
     def test_config(self):
         inner_optimizer = SGD(
@@ -39,14 +35,10 @@ class LossScaleOptimizerTest(testing.TestCase, parameterized.TestCase):
         vars = [backend.Variable([1.0, 2.0, 3.0, 4.0])]
         if stateless:
             optimizer.build(vars)
-            vars, _ = optimizer.stateless_apply(
-                optimizer.variables, grads, vars
-            )
+            vars, _ = optimizer.stateless_apply(optimizer.variables, grads, vars)
         else:
             optimizer.apply(grads, vars)
-        self.assertAllClose(
-            vars, [[0.5, -1.0, -0.5, 3.0]], rtol=1e-4, atol=1e-4
-        )
+        self.assertAllClose(vars, [[0.5, -1.0, -0.5, 3.0]], rtol=1e-4, atol=1e-4)
 
     @parameterized.named_parameters(("stateless", True), ("stateful", False))
     def test_infinite_step(self, stateless):
@@ -58,9 +50,7 @@ class LossScaleOptimizerTest(testing.TestCase, parameterized.TestCase):
         vars = [backend.Variable([1.0, 2.0, 3.0, 4.0])]
         if stateless:
             optimizer.build(vars)
-            vars, _ = optimizer.stateless_apply(
-                optimizer.variables, grads, vars
-            )
+            vars, _ = optimizer.stateless_apply(optimizer.variables, grads, vars)
         else:
             optimizer.apply(grads, vars)
         self.assertAllClose(vars, [[1.0, 2.0, 3.0, 4.0]], rtol=1e-4, atol=1e-4)

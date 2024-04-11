@@ -39,9 +39,7 @@ class Concatenate(Merge):
 
     def build(self, input_shape):
         # Used purely for shape validation.
-        if len(input_shape) < 1 or not isinstance(
-            input_shape[0], (tuple, list)
-        ):
+        if len(input_shape) < 1 or not isinstance(input_shape[0], (tuple, list)):
             raise ValueError(
                 "A `Concatenate` layer should be called on a list of "
                 f"at least 1 input. Received: input_shape={input_shape}"
@@ -57,9 +55,7 @@ class Concatenate(Merge):
             # in case self.axis is a negative number
             concat_axis = self.axis % len(reduced_inputs_shapes[i])
             #  Skip batch axis.
-            for axis, axis_value in enumerate(
-                reduced_inputs_shapes[i][1:], start=1
-            ):
+            for axis, axis_value in enumerate(reduced_inputs_shapes[i][1:], start=1):
                 # Remove squeezable axes (axes with value of 1)
                 # if not in the axis that will be used for concatenation
                 # otherwise leave it.
@@ -89,9 +85,7 @@ class Concatenate(Merge):
                 # Skip the Nones in the shape since they are dynamic, also the
                 # axis for concat has been removed above.
                 unique_dims = set(
-                    shape[axis]
-                    for shape in shape_set
-                    if shape[axis] is not None
+                    shape[axis] for shape in shape_set if shape[axis] is not None
                 )
                 if len(unique_dims) > 1:
                     raise ValueError(err_msg)
@@ -124,9 +118,7 @@ class Concatenate(Merge):
         if not isinstance(mask, (tuple, list)):
             raise ValueError(f"`mask` should be a list. Received mask={mask}")
         if not isinstance(inputs, (tuple, list)):
-            raise ValueError(
-                f"`inputs` should be a list. Received: inputs={inputs}"
-            )
+            raise ValueError(f"`inputs` should be a list. Received: inputs={inputs}")
         if len(mask) != len(inputs):
             raise ValueError(
                 "The lists `inputs` and `mask` should have the same length. "

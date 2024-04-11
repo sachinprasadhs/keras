@@ -49,9 +49,7 @@ def in_top_k(targets, predictions, k):
 
 def logsumexp(x, axis=None, keepdims=False):
     max_x = jnp.max(x, axis=axis, keepdims=True)
-    result = (
-        jnp.log(jnp.sum(jnp.exp(x - max_x), axis=axis, keepdims=True)) + max_x
-    )
+    result = jnp.log(jnp.sum(jnp.exp(x - max_x), axis=axis, keepdims=True)) + max_x
     return jnp.squeeze(result) if not keepdims else result
 
 
@@ -100,8 +98,7 @@ def _get_complex_tensor_from_tuple(x):
         imag.dtype, jnp.floating
     ):
         raise ValueError(
-            "At least one tensor in input `x` is not of type float."
-            f"Received: x={x}."
+            "At least one tensor in input `x` is not of type float." f"Received: x={x}."
         )
     complex_input = jax.lax.complex(real, imag)
     return complex_input
@@ -129,9 +126,7 @@ def irfft(x, fft_length=None):
     return jnp.fft.irfft(complex_input, n=fft_length, axis=-1, norm="backward")
 
 
-def stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     if standardize_dtype(x.dtype) not in {"float32", "float64"}:
         raise TypeError(
             "Invalid input type. Expected `float32` or `float64`. "

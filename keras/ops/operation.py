@@ -35,9 +35,7 @@ class Operation:
             if any_symbolic_tensors(args, kwargs):
                 call_fn = self.symbolic_call
             else:
-                if isinstance(
-                    self.dtype_policy, dtype_policies.QuantizedDTypePolicy
-                ):
+                if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
                     call_fn = self.quantized_call
                 else:
                     call_fn = self.call
@@ -64,9 +62,7 @@ class Operation:
         # sets _keras_history on the outputs, and adds itself to the
         # `_outbound_nodes` of the ops that produced the inputs to this
         # call.
-        Node(
-            operation=self, call_args=args, call_kwargs=kwargs, outputs=outputs
-        )
+        Node(operation=self, call_args=args, call_kwargs=kwargs, outputs=outputs)
         return outputs
 
     def call(self, *args, **kwargs):
@@ -122,9 +118,7 @@ class Operation:
             if auto_config:
                 from keras.saving import serialization_lib
 
-                instance._auto_config = serialization_lib.SerializableDict(
-                    **kwargs
-                )
+                instance._auto_config = serialization_lib.SerializableDict(**kwargs)
             else:
                 instance._auto_config = None
             instance._lock = True

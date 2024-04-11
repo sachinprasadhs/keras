@@ -26,9 +26,7 @@ class AdamWTest(testing.TestCase):
         grads = ops.array([1.0, 6.0, 7.0, 2.0])
         vars = backend.Variable([1.0, 2.0, 3.0, 4.0])
         optimizer.apply_gradients(zip([grads], [vars]))
-        self.assertAllClose(
-            vars, [0.4980, 1.4960, 2.494, 3.492], rtol=1e-4, atol=1e-4
-        )
+        self.assertAllClose(vars, [0.4980, 1.4960, 2.494, 3.492], rtol=1e-4, atol=1e-4)
 
     def test_weight_decay(self):
         grads, var1, var2, var3 = (

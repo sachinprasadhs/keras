@@ -78,8 +78,6 @@ class GeneratorDataAdapter(DataAdapter):
 
 def peek_and_restore(generator):
     batches = list(
-        itertools.islice(
-            generator, data_adapter_utils.NUM_BATCHES_FOR_TENSOR_SPEC
-        )
+        itertools.islice(generator, data_adapter_utils.NUM_BATCHES_FOR_TENSOR_SPEC)
     )
     return batches, itertools.chain(batches, generator)

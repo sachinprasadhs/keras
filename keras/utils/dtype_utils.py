@@ -34,9 +34,7 @@ def cast_to_common_dtype(tensors):
         Same list, casted to a common dtype.
     """
     highest_float = None
-    highest_float_size = (
-        -1
-    )  # Initially set to an impossible value for comparison
+    highest_float_size = -1  # Initially set to an impossible value for comparison
     for x in tensors:
         dtype = backend.standardize_dtype(x.dtype)
         if is_float(dtype):

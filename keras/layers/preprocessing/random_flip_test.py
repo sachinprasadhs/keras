@@ -94,9 +94,7 @@ class RandomFlipTest(testing.TestCase, parameterized.TestCase):
                 "seed": 42,
             },
             input_data=np.asarray([[[2, 3, 4]], [[5, 6, 7]]]),
-            expected_output=backend.convert_to_tensor(
-                [[[5, 6, 7]], [[2, 3, 4]]]
-            ),
+            expected_output=backend.convert_to_tensor([[[5, 6, 7]], [[2, 3, 4]]]),
             supports_masking=False,
             run_training_check=run_training_check,
         )

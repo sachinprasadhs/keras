@@ -85,9 +85,7 @@ class OptimizerTest(testing.TestCase):
         optimizer = optimizers.SGD(global_clipnorm=1)
         grad = np.array([50.0, 100.0], dtype="float32")
         global_norm = np.linalg.norm(grad)
-        clipped_grad = optimizer._clip_gradients(
-            [backend.convert_to_tensor(grad)]
-        )
+        clipped_grad = optimizer._clip_gradients([backend.convert_to_tensor(grad)])
         self.assertAllClose(clipped_grad[0], grad / global_norm)
 
     def test_ema(self):
@@ -123,9 +121,7 @@ class OptimizerTest(testing.TestCase):
     def test_ema_with_model_fit(self):
         x_train = np.ones((1, 1)).astype("float32")
         y_train = np.zeros((1, 1)).astype("float32")
-        optimizer = optimizers.SGD(
-            learning_rate=0.1, use_ema=True, ema_momentum=0.9
-        )
+        optimizer = optimizers.SGD(learning_rate=0.1, use_ema=True, ema_momentum=0.9)
         model = models.Sequential(
             [layers.Dense(2, kernel_initializer="ones", use_bias=False)]
         )
@@ -189,9 +185,7 @@ class OptimizerTest(testing.TestCase):
     def test_gradient_accumulation(self):
         v = backend.Variable([[1.0, 2.0], [3.0, 4.0]])
         grads = backend.convert_to_tensor([[1.0, 1.0], [1.0, 1.0]])
-        optimizer = optimizers.SGD(
-            learning_rate=1.0, gradient_accumulation_steps=3
-        )
+        optimizer = optimizers.SGD(learning_rate=1.0, gradient_accumulation_steps=3)
         self.assertEqual(optimizer.gradient_accumulation_steps, 3)
         optimizer.apply_gradients([(grads, v)])
         self.assertAllClose(v, [[1.0, 2.0], [3.0, 4.0]])
@@ -256,7 +250,5 @@ class OptimizerTest(testing.TestCase):
     def test_setting_lr_to_callable_untracks_lr_var(self):
         adam = optimizers.Adam(learning_rate=0.001)
         self.assertLen(adam.variables, 2)
-        adam.learning_rate = optimizers.schedules.PolynomialDecay(
-            adam.learning_rate, 4
-        )
+        adam.learning_rate = optimizers.schedules.PolynomialDecay(adam.learning_rate, 4)
         self.assertLen(adam.variables, 1)

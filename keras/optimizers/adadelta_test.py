@@ -53,9 +53,7 @@ class AdadeltaTest(testing.TestCase):
         grads = ops.arange(0.1, 1.1, 0.1)
         first_grads = ops.full((10,), 0.01)
 
-        golden = np.tile(
-            [[0.9978], [0.9947], [0.9915], [0.9882], [0.9849]], (1, 10)
-        )
+        golden = np.tile([[0.9978], [0.9947], [0.9915], [0.9882], [0.9849]], (1, 10))
 
         optimizer.apply_gradients(zip([first_grads], [x]))
         for i in range(5):

@@ -55,9 +55,7 @@ class AdamTest(testing.TestCase):
         grads = ops.arange(0.1, 1.1, 0.1)
         first_grads = ops.full((10,), 0.01)
 
-        golden = np.tile(
-            [[0.999], [0.9982], [0.9974], [0.9965], [0.9955]], (1, 10)
-        )
+        golden = np.tile([[0.999], [0.9982], [0.9974], [0.9965], [0.9955]], (1, 10))
 
         optimizer.apply_gradients(zip([first_grads], [x]))
         for i in range(5):

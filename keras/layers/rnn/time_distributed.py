@@ -104,9 +104,7 @@ class TimeDistributed(Wrapper):
         # Implementation #1: is the time axis is static, use a Python for loop.
 
         if inputs.shape[0] is not None:
-            outputs = ops.stack(
-                [step_function(i) for i in range(inputs.shape[0])]
-            )
+            outputs = ops.stack([step_function(i) for i in range(inputs.shape[0])])
             return time_distributed_transpose(outputs)
 
         # Implementation #2: use backend.vectorized_map.

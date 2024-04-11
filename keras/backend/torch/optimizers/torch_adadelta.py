@@ -5,9 +5,7 @@ from keras import optimizers
 from keras.backend.torch.optimizers import torch_parallel_optimizer
 
 
-class Adadelta(
-    torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adadelta
-):
+class Adadelta(torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adadelta):
     def _parallel_update_step(
         self,
         grads,
@@ -26,9 +24,7 @@ class Adadelta(
             for variable in keras_variables
         ]
         accumulated_delta_vars = [
-            self._accumulated_delta_vars[
-                self._get_variable_index(variable)
-            ].value
+            self._accumulated_delta_vars[self._get_variable_index(variable)].value
             for variable in keras_variables
         ]
         torch._foreach_mul_(accumulated_grads, rho)

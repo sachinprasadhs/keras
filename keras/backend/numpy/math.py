@@ -146,8 +146,7 @@ def _get_complex_tensor_from_tuple(x):
         imag.dtype, np.floating
     ):
         raise ValueError(
-            "At least one tensor in input `x` is not of type float."
-            f"Received: x={x}."
+            "At least one tensor in input `x` is not of type float." f"Received: x={x}."
         )
     complex_input = real + 1j * imag
     return complex_input
@@ -175,14 +174,12 @@ def rfft(x, fft_length=None):
 def irfft(x, fft_length=None):
     complex_input = _get_complex_tensor_from_tuple(x)
     # numpy always outputs float64, so we need to recast the dtype
-    return np.fft.irfft(
-        complex_input, n=fft_length, axis=-1, norm="backward"
-    ).astype(x[0].dtype)
+    return np.fft.irfft(complex_input, n=fft_length, axis=-1, norm="backward").astype(
+        x[0].dtype
+    )
 
 
-def stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     if standardize_dtype(x.dtype) not in {"float32", "float64"}:
         raise TypeError(
             "Invalid input type. Expected `float32` or `float64`. "
@@ -324,6 +321,4 @@ def norm(x, ord=None, axis=None, keepdims=False):
     dtype = standardize_dtype(x.dtype)
     if "int" in dtype or dtype == "bool":
         dtype = dtypes.result_type(x.dtype, "float32")
-    return np.linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims).astype(
-        dtype
-    )
+    return np.linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims).astype(dtype)

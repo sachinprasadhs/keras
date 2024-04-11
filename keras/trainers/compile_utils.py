@@ -69,13 +69,9 @@ def get_metric(identifier, y_true, y_pred):
         if is_binary:
             metric_obj = metrics_module.BinaryAccuracy(name=str(identifier))
         elif is_sparse_categorical:
-            metric_obj = metrics_module.SparseCategoricalAccuracy(
-                name=str(identifier)
-            )
+            metric_obj = metrics_module.SparseCategoricalAccuracy(name=str(identifier))
         else:
-            metric_obj = metrics_module.CategoricalAccuracy(
-                name=str(identifier)
-            )
+            metric_obj = metrics_module.CategoricalAccuracy(name=str(identifier))
 
     if isinstance(identifier, str):
         metric_name = identifier
@@ -131,9 +127,7 @@ class CompileMetrics(metrics_module.Metric):
                 "Expected `metrics` argument to be a list, tuple, or dict. "
                 f"Received instead: metrics={metrics} of type {type(metrics)}"
             )
-        if weighted_metrics and not isinstance(
-            weighted_metrics, (list, tuple, dict)
-        ):
+        if weighted_metrics and not isinstance(weighted_metrics, (list, tuple, dict)):
             raise ValueError(
                 "Expected `weighted_metrics` argument to be a list, tuple, or "
                 f"dict. Received instead: weighted_metrics={weighted_metrics} "
@@ -255,9 +249,7 @@ class CompileMetrics(metrics_module.Metric):
                         f"length {len(metrics)} whereas the model has "
                         f"{len(y_pred)} outputs."
                     )
-                for idx, (mls, yt, yp) in enumerate(
-                    zip(metrics, y_true, y_pred)
-                ):
+                for idx, (mls, yt, yp) in enumerate(zip(metrics, y_true, y_pred)):
                     if not isinstance(mls, list):
                         mls = [mls]
                     name = output_names[idx] if output_names else None
@@ -270,11 +262,7 @@ class CompileMetrics(metrics_module.Metric):
                         )
                     flat_metrics.append(
                         MetricsList(
-                            [
-                                get_metric(m, yt, yp)
-                                for m in mls
-                                if m is not None
-                            ],
+                            [get_metric(m, yt, yp) for m in mls if m is not None],
                             output_name=name,
                         )
                     )

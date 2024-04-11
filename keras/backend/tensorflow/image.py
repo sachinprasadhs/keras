@@ -66,9 +66,7 @@ def resize(
                 f"image.shape={image.shape}"
             )
 
-    resized = tf.image.resize(
-        image, size, method=interpolation, antialias=antialias
-    )
+    resized = tf.image.resize(image, size, method=interpolation, antialias=antialias)
     if data_format == "channels_first":
         if len(image.shape) == 4:
             resized = tf.transpose(resized, (0, 3, 1, 2))
@@ -156,9 +154,7 @@ def _mirror_index_fixer(index, size):
 
 
 def _reflect_index_fixer(index, size):
-    return tf.math.floordiv(
-        _mirror_index_fixer(2 * index + 1, 2 * size + 1) - 1, 2
-    )
+    return tf.math.floordiv(_mirror_index_fixer(2 * index + 1, 2 * size + 1) - 1, 2)
 
 
 _INDEX_FIXERS = {
@@ -171,9 +167,7 @@ _INDEX_FIXERS = {
 
 
 def _nearest_indices_and_weights(coordinate):
-    coordinate = (
-        coordinate if coordinate.dtype.is_integer else tf.round(coordinate)
-    )
+    coordinate = coordinate if coordinate.dtype.is_integer else tf.round(coordinate)
     index = tf.cast(coordinate, tf.int32)
     weight = tf.constant(1, coordinate.dtype)
     return [(index, weight)]
@@ -187,9 +181,7 @@ def _linear_indices_and_weights(coordinate):
     return [(index, lower_weight), (index + 1, upper_weight)]
 
 
-def map_coordinates(
-    input, coordinates, order, fill_mode="constant", fill_value=0.0
-):
+def map_coordinates(input, coordinates, order, fill_mode="constant", fill_value=0.0):
     input_arr = convert_to_tensor(input)
     coordinate_arrs = convert_to_tensor(coordinates)
     # unstack into a list of tensors for following operations

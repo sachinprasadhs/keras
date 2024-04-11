@@ -108,9 +108,7 @@ class SpatialDropout2D(BaseSpatialDropout):
     - [Tompson et al., 2014](https://arxiv.org/abs/1411.4280)
     """
 
-    def __init__(
-        self, rate, data_format=None, seed=None, name=None, dtype=None
-    ):
+    def __init__(self, rate, data_format=None, seed=None, name=None, dtype=None):
         super().__init__(rate, seed=seed, name=name, dtype=dtype)
         self.data_format = backend.standardize_data_format(data_format)
         self.input_spec = InputSpec(ndim=4)
@@ -170,9 +168,7 @@ class SpatialDropout3D(BaseSpatialDropout):
     - [Tompson et al., 2014](https://arxiv.org/abs/1411.4280)
     """
 
-    def __init__(
-        self, rate, data_format=None, seed=None, name=None, dtype=None
-    ):
+    def __init__(self, rate, data_format=None, seed=None, name=None, dtype=None):
         super().__init__(rate, seed=seed, name=name, dtype=dtype)
         self.data_format = backend.standardize_data_format(data_format)
         self.input_spec = InputSpec(ndim=5)

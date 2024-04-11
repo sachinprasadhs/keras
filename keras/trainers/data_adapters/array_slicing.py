@@ -296,9 +296,7 @@ def to_tensorflow_sparse_wrapper(sparse):
     from keras.utils.module_utils import tensorflow as tf
 
     row_ids = sparse.indices[:, 0]
-    row_splits = tf.experimental.RowPartition.from_value_rowids(
-        row_ids
-    ).row_splits()
+    row_splits = tf.experimental.RowPartition.from_value_rowids(row_ids).row_splits()
 
     ragged_indices = tf.cast(
         tf.RaggedTensor.from_row_splits(sparse.indices, row_splits), tf.int64
@@ -326,14 +324,10 @@ def slice_tensorflow_sparse_wrapper(sparse_wrapper, indices):
 
     row_ids = sparse_indices.value_rowids()
     sparse_indices = sparse_indices.flat_values[:, 1:]  # remove first value
-    sparse_indices = tf.concat(
-        [tf.expand_dims(row_ids, -1), sparse_indices], axis=1
-    )
+    sparse_indices = tf.concat([tf.expand_dims(row_ids, -1), sparse_indices], axis=1)
 
     sparse_values = sparse_values.flat_values
-    sparse_shape = (batch_dim,) + tuple(
-        sparse_wrapper.sparse.shape.as_list()[1:]
-    )
+    sparse_shape = (batch_dim,) + tuple(sparse_wrapper.sparse.shape.as_list()[1:])
     return tf.SparseTensor(sparse_indices, sparse_values, sparse_shape)
 
 

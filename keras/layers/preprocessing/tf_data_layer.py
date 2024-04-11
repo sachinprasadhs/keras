@@ -20,15 +20,11 @@ class TFDataLayer(Layer):
         self._allow_non_tensor_positional_args = True
 
     def __call__(self, inputs, **kwargs):
-        if backend_utils.in_tf_graph() and not isinstance(
-            inputs, keras.KerasTensor
-        ):
+        if backend_utils.in_tf_graph() and not isinstance(inputs, keras.KerasTensor):
             # We're in a TF graph, e.g. a tf.data pipeline.
             self.backend.set_backend("tensorflow")
             inputs = tree.map_structure(
-                lambda x: self.backend.convert_to_tensor(
-                    x, dtype=self.compute_dtype
-                ),
+                lambda x: self.backend.convert_to_tensor(x, dtype=self.compute_dtype),
                 inputs,
             )
             switch_convert_input_args = False

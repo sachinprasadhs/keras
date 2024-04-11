@@ -18,16 +18,12 @@ class LambdaCallbackTest(testing.TestCase):
         model = Sequential(
             [layers.Input(shape=(2,), batch_size=batch_size), layers.Dense(1)]
         )
-        model.compile(
-            optimizer=optimizers.SGD(), loss=losses.MeanSquaredError()
-        )
+        model.compile(optimizer=optimizers.SGD(), loss=losses.MeanSquaredError())
         x = np.random.randn(16, 2)
         y = np.random.randn(16, 1)
         lambda_log_callback = callbacks.LambdaCallback(
             on_train_begin=lambda logs: logging.warning("on_train_begin"),
-            on_epoch_begin=lambda epoch, logs: logging.warning(
-                "on_epoch_begin"
-            ),
+            on_epoch_begin=lambda epoch, logs: logging.warning("on_epoch_begin"),
             on_epoch_end=lambda epoch, logs: logging.warning("on_epoch_end"),
             on_train_end=lambda logs: logging.warning("on_train_end"),
         )
@@ -53,9 +49,7 @@ class LambdaCallbackTest(testing.TestCase):
         model = Sequential(
             [layers.Input(shape=(2,), batch_size=batch_size), layers.Dense(1)]
         )
-        model.compile(
-            optimizer=optimizers.SGD(), loss=losses.MeanSquaredError()
-        )
+        model.compile(optimizer=optimizers.SGD(), loss=losses.MeanSquaredError())
         x = np.random.randn(16, 2)
         y = np.random.randn(16, 1)
         lambda_log_callback = callbacks.LambdaCallback(
@@ -76,12 +70,8 @@ class LambdaCallbackTest(testing.TestCase):
                 epochs=5,
                 verbose=0,
             )
-            self.assertTrue(
-                any("on_train_batch_begin" in log for log in logs.output)
-            )
-            self.assertTrue(
-                any("on_train_batch_end" in log for log in logs.output)
-            )
+            self.assertTrue(any("on_train_batch_begin" in log for log in logs.output))
+            self.assertTrue(any("on_train_batch_end" in log for log in logs.output))
 
     @pytest.mark.requires_trainable_backend
     def test_lambda_callback_with_kwargs(self):
@@ -90,9 +80,7 @@ class LambdaCallbackTest(testing.TestCase):
         model = Sequential(
             [layers.Input(shape=(2,), batch_size=batch_size), layers.Dense(1)]
         )
-        model.compile(
-            optimizer=optimizers.SGD(), loss=losses.MeanSquaredError()
-        )
+        model.compile(optimizer=optimizers.SGD(), loss=losses.MeanSquaredError())
         x = np.random.randn(16, 2)
         y = np.random.randn(16, 1)
         model.fit(
@@ -114,10 +102,7 @@ class LambdaCallbackTest(testing.TestCase):
                 verbose=0,
             )
             self.assertTrue(
-                any(
-                    "custom_on_test_begin_executed" in log
-                    for log in logs.output
-                )
+                any("custom_on_test_begin_executed" in log for log in logs.output)
             )
 
     @pytest.mark.requires_trainable_backend
@@ -133,9 +118,7 @@ class LambdaCallbackTest(testing.TestCase):
         def custom_callback(logs):
             pass
 
-        lambda_callback = callbacks.LambdaCallback(
-            custom_method=custom_callback
-        )
+        lambda_callback = callbacks.LambdaCallback(custom_method=custom_callback)
         self.assertTrue(hasattr(lambda_callback, "custom_method"))
 
     @pytest.mark.requires_trainable_backend
@@ -145,9 +128,7 @@ class LambdaCallbackTest(testing.TestCase):
         model = Sequential(
             [layers.Input(shape=(2,), batch_size=batch_size), layers.Dense(1)]
         )
-        model.compile(
-            optimizer=optimizers.SGD(), loss=losses.MeanSquaredError()
-        )
+        model.compile(optimizer=optimizers.SGD(), loss=losses.MeanSquaredError())
         x = np.random.randn(16, 2)
 
         def custom_on_predict_begin(logs):

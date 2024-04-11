@@ -69,9 +69,7 @@ def compute_expand_dims_output_shape(input_shape, axis):
     out_ndim = len(axis) + len(input_shape)
     axis = [canonicalize_axis(a, out_ndim) for a in axis]
     shape_iter = iter(input_shape)
-    new_shape = [
-        1 if ax in axis else next(shape_iter) for ax in range(out_ndim)
-    ]
+    new_shape = [1 if ax in axis else next(shape_iter) for ax in range(out_ndim)]
     return tuple(new_shape)
 
 
@@ -130,9 +128,7 @@ def compute_pooling_output_shape(
             none_dims.append(i)
     pool_size = np.array(pool_size)
     if padding == "valid":
-        output_spatial_shape = (
-            np.floor((spatial_shape - pool_size) / strides) + 1
-        )
+        output_spatial_shape = np.floor((spatial_shape - pool_size) / strides) + 1
         for i in range(len(output_spatial_shape)):
             if i not in none_dims and output_spatial_shape[i] < 0:
                 raise ValueError(
@@ -152,9 +148,7 @@ def compute_pooling_output_shape(
     output_spatial_shape = tuple(output_spatial_shape)
     if data_format == "channels_last":
         output_shape = (
-            (input_shape_origin[0],)
-            + output_spatial_shape
-            + (input_shape_origin[-1],)
+            (input_shape_origin[0],) + output_spatial_shape + (input_shape_origin[-1],)
         )
     else:
         output_shape = (
@@ -228,17 +222,14 @@ def compute_conv_output_shape(
         output_spatial_shape = np.floor((spatial_shape - 1) / strides) + 1
     else:
         raise ValueError(
-            "`padding` must be either `'valid'` or `'same'`. Received "
-            f"{padding}."
+            "`padding` must be either `'valid'` or `'same'`. Received " f"{padding}."
         )
     output_spatial_shape = [int(i) for i in output_spatial_shape]
     for i in none_dims:
         output_spatial_shape[i] = None
     output_spatial_shape = tuple(output_spatial_shape)
     if data_format == "channels_last":
-        output_shape = (
-            (input_shape[0],) + output_spatial_shape + (kernel_shape[-1],)
-        )
+        output_shape = (input_shape[0],) + output_spatial_shape + (kernel_shape[-1],)
     else:
         output_shape = (input_shape[0], kernel_shape[-1]) + output_spatial_shape
     return output_shape
@@ -258,11 +249,7 @@ def compute_matmul_output_shape(shape1, shape2):
         shape1 = (1, shape1[0])
     if len(shape2) == 1:
         shape2 = (shape2[0], 1)
-    if (
-        shape1[-1] is not None
-        and shape2[-2] is not None
-        and shape1[-1] != shape2[-2]
-    ):
+    if shape1[-1] is not None and shape2[-2] is not None and shape1[-1] != shape2[-2]:
         raise ValueError(
             "Inner dimensions (`x1.shape[-1]` and `x2.shape[-2]`) must be "
             f"equal, but received `x1.shape={shape1}` and "

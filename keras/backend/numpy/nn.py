@@ -24,9 +24,7 @@ def relu6(x):
     x = convert_to_tensor(x)
     # np.clip incorrectly promote bfloat16 to float32, so we replace it with
     # np.minimum and np.maximum here
-    return np.minimum(
-        np.maximum(x, np.array(0.0, x.dtype)), np.array(6.0, x.dtype)
-    )
+    return np.minimum(np.maximum(x, np.array(0.0, x.dtype)), np.array(6.0, x.dtype))
 
 
 def sigmoid(x):
@@ -168,9 +166,7 @@ def _pool(
         The output of the reduction for each window slice.
     """
     if padding not in ("same", "valid"):
-        raise ValueError(
-            f"Invalid padding '{padding}', must be 'same' or 'valid'."
-        )
+        raise ValueError(f"Invalid padding '{padding}', must be 'same' or 'valid'.")
     padding = padding.upper()
     return np.array(
         lax.reduce_window(
@@ -193,13 +189,9 @@ def max_pool(
 ):
     data_format = standardize_data_format(data_format)
     num_spatial_dims = inputs.ndim - 2
-    pool_size = _convert_to_spatial_operand(
-        pool_size, num_spatial_dims, data_format
-    )
+    pool_size = _convert_to_spatial_operand(pool_size, num_spatial_dims, data_format)
     strides = pool_size if strides is None else strides
-    strides = _convert_to_spatial_operand(
-        strides, num_spatial_dims, data_format
-    )
+    strides = _convert_to_spatial_operand(strides, num_spatial_dims, data_format)
     return _pool(inputs, -jnp.inf, lax.max, pool_size, strides, padding)
 
 
@@ -212,13 +204,9 @@ def average_pool(
 ):
     data_format = standardize_data_format(data_format)
     num_spatial_dims = inputs.ndim - 2
-    pool_size = _convert_to_spatial_operand(
-        pool_size, num_spatial_dims, data_format
-    )
+    pool_size = _convert_to_spatial_operand(pool_size, num_spatial_dims, data_format)
     strides = pool_size if strides is None else strides
-    strides = _convert_to_spatial_operand(
-        strides, num_spatial_dims, data_format
-    )
+    strides = _convert_to_spatial_operand(strides, num_spatial_dims, data_format)
 
     pooled = _pool(inputs, 0.0, lax.add, pool_size, strides, padding)
     if padding == "valid":
@@ -229,9 +217,7 @@ def average_pool(
         # for computing average. Assumes that any two arrays of same shape will
         # be padded the same. Avoid broadcasting on axis where pooling is
         # skipped.
-        shape = [
-            (a if b != 1 else 1) for (a, b) in zip(inputs.shape, pool_size)
-        ]
+        shape = [(a if b != 1 else 1) for (a, b) in zip(inputs.shape, pool_size)]
         window_counts = _pool(
             jnp.ones(shape, inputs.dtype),
             0.0,
@@ -588,17 +574,13 @@ def moments(x, axes, keepdims=False, synchronized=False):
     if need_cast:
         # avoid overflow and underflow when casting from float16 to float32
         mean = np.clip(mean, np.finfo(np.float16).min, np.finfo(np.float16).max)
-        variance = np.clip(
-            variance, np.finfo(np.float16).min, np.finfo(np.float16).max
-        )
+        variance = np.clip(variance, np.finfo(np.float16).min, np.finfo(np.float16).max)
         mean = cast(mean, ori_dtype)
         variance = cast(variance, ori_dtype)
     return mean, variance
 
 
-def batch_normalization(
-    x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3
-):
+def batch_normalization(x, mean, variance, axis, offset=None, scale=None, epsilon=1e-3):
     shape = [1] * len(x.shape)
     shape[axis] = mean.shape[0]
     mean = np.reshape(mean, shape)

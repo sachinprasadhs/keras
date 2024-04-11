@@ -178,9 +178,7 @@ model = keras.Sequential(
 model.trainable = False  # Freeze the outer model
 
 assert inner_model.trainable == False  # All layers in `model` are now frozen
-assert (
-    inner_model.layers[0].trainable == False
-)  # `trainable` is propagated recursively
+assert inner_model.layers[0].trainable == False  # `trainable` is propagated recursively
 
 """
 ## The typical transfer-learning workflow
@@ -437,9 +435,7 @@ from tensorflow import data as tf_data
 batch_size = 64
 
 train_ds = train_ds.batch(batch_size).prefetch(tf_data.AUTOTUNE).cache()
-validation_ds = (
-    validation_ds.batch(batch_size).prefetch(tf_data.AUTOTUNE).cache()
-)
+validation_ds = validation_ds.batch(batch_size).prefetch(tf_data.AUTOTUNE).cache()
 test_ds = test_ds.batch(batch_size).prefetch(tf_data.AUTOTUNE).cache()
 
 """

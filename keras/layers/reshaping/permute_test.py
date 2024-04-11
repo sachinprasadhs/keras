@@ -23,9 +23,7 @@ class PermuteTest(testing.TestCase, parameterized.TestCase):
         inputs = np.random.random((10, 3, 5, 5)).astype("float32")
         # Make the ndarray relatively sparse
         inputs = np.multiply(inputs, inputs >= 0.8)
-        expected_output = ops.convert_to_tensor(
-            np.transpose(inputs, axes=(0, 3, 1, 2))
-        )
+        expected_output = ops.convert_to_tensor(np.transpose(inputs, axes=(0, 3, 1, 2)))
         if sparse:
             if backend.backend() == "tensorflow":
                 import tensorflow as tf
@@ -38,9 +36,7 @@ class PermuteTest(testing.TestCase, parameterized.TestCase):
                 inputs = jax_sparse.BCOO.fromdense(inputs)
                 expected_output = jax_sparse.BCOO.fromdense(expected_output)
             else:
-                self.fail(
-                    f"Backend {backend.backend()} does not support sparse"
-                )
+                self.fail(f"Backend {backend.backend()} does not support sparse")
 
         self.run_layer_test(
             layers.Permute,
@@ -58,9 +54,7 @@ class PermuteTest(testing.TestCase, parameterized.TestCase):
         self.assertEqual(permuted.shape, (None, 5, 3))
 
     def test_permute_errors_on_invalid_starting_dims_index(self):
-        with self.assertRaisesRegex(
-            ValueError, r"Invalid permutation .*dims.*"
-        ):
+        with self.assertRaisesRegex(ValueError, r"Invalid permutation .*dims.*"):
             self.run_layer_test(
                 layers.Permute,
                 init_kwargs={"dims": (0, 1, 2)},
@@ -68,9 +62,7 @@ class PermuteTest(testing.TestCase, parameterized.TestCase):
             )
 
     def test_permute_errors_on_invalid_set_of_dims_indices(self):
-        with self.assertRaisesRegex(
-            ValueError, r"Invalid permutation .*dims.*"
-        ):
+        with self.assertRaisesRegex(ValueError, r"Invalid permutation .*dims.*"):
             self.run_layer_test(
                 layers.Permute,
                 init_kwargs={"dims": (1, 4, 2)},

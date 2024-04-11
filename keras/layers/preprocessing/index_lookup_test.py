@@ -12,9 +12,7 @@ from keras import testing
 from keras.saving import saving_api
 
 
-@pytest.mark.skipif(
-    backend.backend() == "numpy", reason="Failing for numpy backend."
-)
+@pytest.mark.skipif(backend.backend() == "numpy", reason="Failing for numpy backend.")
 class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
     def test_basics_string_vocab(self):
         # Case: adapt + list inputs
@@ -29,9 +27,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
         }
         layer = layers.IndexLookup(**kwargs)
         layer.adapt(adapt_data)
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],
@@ -48,9 +44,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
         # Case: fixed vocab + list inputs
         vocabulary = ["one", "two", "three"]
         layer = layers.IndexLookup(vocabulary=vocabulary, **kwargs)
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],
@@ -62,12 +56,8 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
 
         # Case: fixed vocab with special tokens + list inputs
         vocabulary_with_special_tokens = ["", "[OOV]", "one", "two", "three"]
-        layer = layers.IndexLookup(
-            vocabulary=vocabulary_with_special_tokens, **kwargs
-        )
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        layer = layers.IndexLookup(vocabulary=vocabulary_with_special_tokens, **kwargs)
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],
@@ -80,9 +70,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
         # Case: set vocabulary
         layer = layers.IndexLookup(**kwargs)
         layer.set_vocabulary(vocabulary)
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],
@@ -95,9 +83,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
         # Case: set vocabulary (with special tokens)
         layer = layers.IndexLookup(**kwargs)
         layer.set_vocabulary(vocabulary_with_special_tokens)
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],
@@ -149,9 +135,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
 
         # Case: fixed vocab with special tokens + list inputs
         vocabulary_with_special_tokens = [0, -1, 1, 2, 3]
-        layer = layers.IndexLookup(
-            vocabulary=vocabulary_with_special_tokens, **kwargs
-        )
+        layer = layers.IndexLookup(vocabulary=vocabulary_with_special_tokens, **kwargs)
         self.assertEqual(layer.get_vocabulary(), [0, -1, 1, 2, 3])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
@@ -416,9 +400,7 @@ class IndexLookupLayerTest(testing.TestCase, parameterized.TestCase):
         }
         layer = layers.IndexLookup(**kwargs)
         layer.adapt(adapt_data)
-        self.assertEqual(
-            layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"]
-        )
+        self.assertEqual(layer.get_vocabulary(), ["", "[OOV]", "one", "two", "three"])
         self.assertEqual(
             layer.get_vocabulary(include_special_tokens=False),
             ["one", "two", "three"],

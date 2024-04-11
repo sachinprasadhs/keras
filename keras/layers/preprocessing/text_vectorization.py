@@ -292,8 +292,7 @@ class TextVectorization(Layer):
         # 'output_sequence_length' must be one of (None, int) and is only
         # set if output_mode is "int"".
         if output_mode == "int" and not (
-            isinstance(output_sequence_length, int)
-            or (output_sequence_length is None)
+            isinstance(output_sequence_length, int) or (output_sequence_length is None)
         ):
             raise ValueError(
                 "`output_sequence_length` must be either None or an "
@@ -471,9 +470,7 @@ class TextVectorization(Layer):
             "sparse": self._lookup_layer.sparse,
             "ragged": self._ragged,
             "vocabulary": listify_tensors(self._lookup_layer.input_vocabulary),
-            "idf_weights": listify_tensors(
-                self._lookup_layer.input_idf_weights
-            ),
+            "idf_weights": listify_tensors(self._lookup_layer.input_idf_weights),
             "encoding": self._encoding,
             "vocabulary_size": self.vocabulary_size(),
         }
@@ -560,9 +557,7 @@ class TextVectorization(Layer):
         # configuration choices for this Layer. The strings.ngrams op, however,
         # does support both ragged and dense inputs.
         if self._ngrams is not None:
-            inputs = tf.strings.ngrams(
-                inputs, ngram_width=self._ngrams, separator=" "
-            )
+            inputs = tf.strings.ngrams(inputs, ngram_width=self._ngrams, separator=" ")
         return inputs
 
     def call(self, inputs):
@@ -606,9 +601,7 @@ class TextVectorization(Layer):
                 padded_shape = tf.concat(
                     (shape[:-1], [self._output_sequence_length]), 0
                 )
-                padding, _ = tf.required_space_to_batch_paddings(
-                    shape, padded_shape
-                )
+                padding, _ = tf.required_space_to_batch_paddings(shape, padded_shape)
                 outputs = tf.pad(outputs, padding)
 
         return backend_utils.convert_tf_tensor(outputs)

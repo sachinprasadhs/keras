@@ -19,15 +19,11 @@ class TestCountLoc(test_case.TestCase):
                 os.rmdir(os.path.join(root, name))
 
     def create_file(self, filename, content):
-        with open(
-            os.path.join(self.test_dir, filename), "w", encoding="utf-8"
-        ) as f:
+        with open(os.path.join(self.test_dir, filename), "w", encoding="utf-8") as f:
             f.write(content)
 
     def test_count_loc_valid_python(self):
-        self.create_file(
-            "sample.py", "# This is a test file\n\nprint('Hello')\n"
-        )
+        self.create_file("sample.py", "# This is a test file\n\nprint('Hello')\n")
         loc = count_loc(self.test_dir)
         self.assertEqual(loc, 1)
 
@@ -42,9 +38,7 @@ class TestCountLoc(test_case.TestCase):
         self.assertEqual(loc, 0)
 
     def test_comment_lines(self):
-        self.create_file(
-            "sample.py", "# Comment\nprint('Hello')\n# Another comment\n"
-        )
+        self.create_file("sample.py", "# Comment\nprint('Hello')\n# Another comment\n")
         loc = count_loc(self.test_dir)
         self.assertEqual(loc, 1)
 

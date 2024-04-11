@@ -452,9 +452,7 @@ class SparseTopKCategoricalAccuracy(reduction_metrics.MeanMetricWrapper):
     ```
     """
 
-    def __init__(
-        self, k=5, name="sparse_top_k_categorical_accuracy", dtype=None
-    ):
+    def __init__(self, k=5, name="sparse_top_k_categorical_accuracy", dtype=None):
         super().__init__(
             fn=sparse_top_k_categorical_accuracy,
             name=name,

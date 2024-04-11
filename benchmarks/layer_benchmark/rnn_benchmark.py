@@ -224,9 +224,7 @@ def benchmark_time_distributed(
     layer_name = "TimeDistributed"
     init_args = {}
     keras_layer = keras.layers.TimeDistributed(keras.layers.Conv2D(16, (3, 3)))
-    tf_keras_layer = tf.keras.layers.TimeDistributed(
-        tf.keras.layers.Conv2D(16, (3, 3))
-    )
+    tf_keras_layer = tf.keras.layers.TimeDistributed(tf.keras.layers.Conv2D(16, (3, 3)))
     benchmark = LayerBenchmark(
         layer_name,
         init_args,

@@ -19,9 +19,7 @@ class VariableInitializationTest(test_case.TestCase):
     def test_deferred_initialization(self):
         """Tests deferred initialization of variables."""
         with backend.StatelessScope():
-            v = backend.Variable(
-                initializer=initializers.RandomNormal(), shape=(2, 2)
-            )
+            v = backend.Variable(initializer=initializers.RandomNormal(), shape=(2, 2))
             self.assertEqual(v._value, None)
             # Variables can nevertheless be accessed
             _ = v + 1
@@ -85,9 +83,7 @@ class VariablePropertiesTest(test_case.TestCase, parameterized.TestCase):
     def test_deferred_assignment(self):
         """Tests deferred assignment to variables."""
         with backend.StatelessScope() as scope:
-            v = backend.Variable(
-                initializer=initializers.RandomNormal(), shape=(2, 2)
-            )
+            v = backend.Variable(initializer=initializers.RandomNormal(), shape=(2, 2))
             self.assertEqual(v._value, None)
             v.assign(np.zeros((2, 2)))
             v.assign_add(2 * np.ones((2, 2)))
@@ -121,9 +117,7 @@ class VariablePropertiesTest(test_case.TestCase, parameterized.TestCase):
         self.assertEqual(v.dtype, "float32")
         self.assertEqual(backend.standardize_dtype(v.value.dtype), "float32")
         with AutocastScope("float16"):
-            self.assertEqual(
-                backend.standardize_dtype(v.value.dtype), "float16"
-            )
+            self.assertEqual(backend.standardize_dtype(v.value.dtype), "float16")
         self.assertEqual(backend.standardize_dtype(v.value.dtype), "float32")
 
         # Test non-float variables are not affected
@@ -188,28 +182,20 @@ class VariablePropertiesTest(test_case.TestCase, parameterized.TestCase):
 
     def test_name_validation(self):
         """Tests validation of variable names."""
-        with self.assertRaisesRegex(
-            ValueError, "Argument `name` must be a string"
-        ):
+        with self.assertRaisesRegex(ValueError, "Argument `name` must be a string"):
             KerasVariable(initializer=initializers.RandomNormal(), name=12345)
 
         with self.assertRaisesRegex(ValueError, "cannot contain character `/`"):
-            KerasVariable(
-                initializer=initializers.RandomNormal(), name="invalid/name"
-            )
+            KerasVariable(initializer=initializers.RandomNormal(), name="invalid/name")
 
     def test_standardize_shape_with_none(self):
         """Tests standardizing shape with None."""
-        with self.assertRaisesRegex(
-            ValueError, "Undefined shapes are not supported."
-        ):
+        with self.assertRaisesRegex(ValueError, "Undefined shapes are not supported."):
             standardize_shape(None)
 
     def test_standardize_shape_with_non_iterable(self):
         """Tests shape standardization with non-iterables."""
-        with self.assertRaisesRegex(
-            ValueError, "Cannot convert '42' to a shape."
-        ):
+        with self.assertRaisesRegex(ValueError, "Cannot convert '42' to a shape."):
             standardize_shape(42)
 
     def test_standardize_shape_with_valid_input(self):
@@ -291,9 +277,7 @@ class VariableNumpyValueAndAssignmentTest(test_case.TestCase):
     def test_deferred_initialize_within_stateless_scope(self):
         """Test deferred init within a stateless scope."""
         with backend.StatelessScope():
-            v = backend.Variable(
-                initializer=initializers.RandomNormal(), shape=(2, 2)
-            )
+            v = backend.Variable(initializer=initializers.RandomNormal(), shape=(2, 2))
             with self.assertRaisesRegex(
                 ValueError,
                 "You are attempting to initialize a variable "
@@ -323,9 +307,7 @@ class VariableDtypeShapeNdimRepr(test_case.TestCase):
     def test_variable_repr(self):
         """Test the string representation of a variable."""
         v = backend.Variable(initializer=np.array([1, 2, 3]), name="test_var")
-        expected_repr = (
-            "<KerasVariable shape=(3,), dtype=float32, path=test_var>"
-        )
+        expected_repr = "<KerasVariable shape=(3,), dtype=float32, path=test_var>"
         self.assertEqual(repr(v), expected_repr)
 
     def test_variable_getitem(self):
@@ -394,16 +376,12 @@ class VariableOperationsTest(test_case.TestCase):
     def test__ne__(self):
         """Test inequality comparison on a variable."""
         v = backend.Variable(initializer=np.array([1, 2]), trainable=False)
-        self.assertAllClose(
-            v.__ne__(np.array([1, 2])), np.array([False, False])
-        )
+        self.assertAllClose(v.__ne__(np.array([1, 2])), np.array([False, False]))
 
     def test__lt__(self):
         """Test less than comparison on a variable."""
         v = backend.Variable(initializer=np.array([1, 2]), trainable=False)
-        self.assertAllClose(
-            v.__lt__(np.array([1, 2])), np.array([False, False])
-        )
+        self.assertAllClose(v.__lt__(np.array([1, 2])), np.array([False, False]))
 
     def test__le__(self):
         """Test less than or equal to comparison on a variable."""
@@ -413,9 +391,7 @@ class VariableOperationsTest(test_case.TestCase):
     def test__gt__(self):
         """Test greater than comparison on a variable."""
         v = backend.Variable(initializer=np.array([1, 2]), trainable=False)
-        self.assertAllClose(
-            v.__gt__(np.array([1, 2])), np.array([False, False])
-        )
+        self.assertAllClose(v.__gt__(np.array([1, 2])), np.array([False, False]))
 
     def test__ge__(self):
         """Test greater than or equal to comparison on a variable."""
@@ -622,9 +598,7 @@ class VariableBinaryOperationsTest(test_case.TestCase):
     def test_invalid_dtype(self):
         """Test invalid dtype standardization."""
         invalid_dtype = "invalid_dtype"
-        with self.assertRaisesRegex(
-            ValueError, f"Invalid dtype: {invalid_dtype}"
-        ):
+        with self.assertRaisesRegex(ValueError, f"Invalid dtype: {invalid_dtype}"):
             standardize_dtype(invalid_dtype)
 
     def test_negative_shape_entry(self):

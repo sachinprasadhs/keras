@@ -20,9 +20,9 @@ batch_size = 4096
 num_batches = 20
 num_epochs = 1
 
-x_train = np.random.normal(
-    size=(num_batches * batch_size, *input_shape)
-).astype(np.float32)
+x_train = np.random.normal(size=(num_batches * batch_size, *input_shape)).astype(
+    np.float32
+)
 y_train = np.random.randint(0, num_classes, size=(num_batches * batch_size,))
 
 # Create a TensorDataset

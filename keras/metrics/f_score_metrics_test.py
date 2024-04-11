@@ -16,9 +16,7 @@ class FBetaScoreTest(parameterized.TestCase, testing.TestCase):
         threshold,
         reference_result,
     ):
-        fbeta = f_score_metrics.FBetaScore(
-            average, beta, threshold, dtype="float32"
-        )
+        fbeta = f_score_metrics.FBetaScore(average, beta, threshold, dtype="float32")
         fbeta.update_state(y_true, y_pred, sample_weights)
         result = fbeta.result()
         self.assertAllClose(result, reference_result, atol=1e-6)
@@ -33,9 +31,7 @@ class FBetaScoreTest(parameterized.TestCase, testing.TestCase):
         self.assertEqual(fbeta_obj.dtype, "float32")
 
         # Check save and restore config
-        fbeta_obj2 = f_score_metrics.FBetaScore.from_config(
-            fbeta_obj.get_config()
-        )
+        fbeta_obj2 = f_score_metrics.FBetaScore.from_config(fbeta_obj.get_config())
         self.assertEqual(fbeta_obj2.beta, 0.5)
         self.assertEqual(fbeta_obj2.average, None)
         self.assertEqual(fbeta_obj2.threshold, 0.3)
@@ -270,8 +266,7 @@ class FBetaScoreTest(parameterized.TestCase, testing.TestCase):
 
     def test_beta_zero_raises_value_error(self):
         expected_message = (
-            "Invalid `beta` argument value. It should be > 0. "
-            "Received: beta=0.0"
+            "Invalid `beta` argument value. It should be > 0. " "Received: beta=0.0"
         )
         with self.assertRaisesRegex(ValueError, expected_message):
             f_score_metrics.FBetaScore(
@@ -280,8 +275,7 @@ class FBetaScoreTest(parameterized.TestCase, testing.TestCase):
 
     def test_beta_negative_one_raises_value_error(self):
         expected_message = (
-            "Invalid `beta` argument value. It should be > 0. "
-            "Received: beta=-1.0"
+            "Invalid `beta` argument value. It should be > 0. " "Received: beta=-1.0"
         )
         with self.assertRaisesRegex(ValueError, expected_message):
             f_score_metrics.FBetaScore(
@@ -290,8 +284,7 @@ class FBetaScoreTest(parameterized.TestCase, testing.TestCase):
 
     def test_beta_negative_half_raises_value_error(self):
         expected_message = (
-            "Invalid `beta` argument value. It should be > 0. "
-            "Received: beta=-0.5"
+            "Invalid `beta` argument value. It should be > 0. " "Received: beta=-0.5"
         )
         with self.assertRaisesRegex(ValueError, expected_message):
             f_score_metrics.FBetaScore(

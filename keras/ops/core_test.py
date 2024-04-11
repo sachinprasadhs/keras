@@ -29,16 +29,12 @@ class CoreOpsStaticShapeTest(testing.TestCase):
         inputs = KerasTensor((4, 4))
         indices = KerasTensor((5, 2))
         updates = KerasTensor((5,))
-        self.assertEqual(
-            core.scatter_update(inputs, indices, updates).shape, (4, 4)
-        )
+        self.assertEqual(core.scatter_update(inputs, indices, updates).shape, (4, 4))
 
         inputs = KerasTensor((4, 4, 4))
         indices = KerasTensor((5, 2))
         updates = KerasTensor((5, 4))
-        self.assertEqual(
-            core.scatter_update(inputs, indices, updates).shape, (4, 4, 4)
-        )
+        self.assertEqual(core.scatter_update(inputs, indices, updates).shape, (4, 4, 4))
 
     def test_slice_update(self):
         inputs = KerasTensor((4, 4))
@@ -322,9 +318,7 @@ class CoreOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
                 return x * ops.stop_gradient(self.w.value) + self.b
 
         model = models.Sequential([ExampleLayer()])
-        model.compile(
-            optimizer=optimizers.SGD(), loss=losses.MeanSquaredError()
-        )
+        model.compile(optimizer=optimizers.SGD(), loss=losses.MeanSquaredError())
         rng = np.random.default_rng(0)
         x = np.ones((2, 4), dtype=np.float32)
         y = rng.standard_normal((2, 4), dtype=np.float32)
@@ -497,9 +491,7 @@ class CoreOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             return ops.stack([x, x])
 
         output = ops.vectorized_map(fn, ops.zeros((2, 3), dtype="float32"))
-        self.assertAllClose(
-            backend.convert_to_numpy(output), np.zeros((2, 2, 3))
-        )
+        self.assertAllClose(backend.convert_to_numpy(output), np.zeros((2, 2, 3)))
 
         # Case: multiple args
         def fn(elems):
@@ -507,9 +499,7 @@ class CoreOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
             return x + y
 
         output = ops.vectorized_map(fn, [ops.ones((2, 3)), ops.ones((2, 3))])
-        self.assertAllClose(
-            backend.convert_to_numpy(output), 2 * np.ones((2, 3))
-        )
+        self.assertAllClose(backend.convert_to_numpy(output), 2 * np.ones((2, 3)))
 
     def test_is_tensor(self):
         np_x = np.array([[1, 2, 3], [3, 2, 1]])
@@ -575,15 +565,13 @@ class CoreOpsDtypeTest(testing.TestCase, parameterized.TestCase):
     # TODO: Using uint64 will lead to weak type promotion (`float`),
     # resulting in different behavior between JAX and Keras. Currently, we
     # are skipping the test for uint64
-    ALL_DTYPES = [
-        x for x in dtypes.ALLOWED_DTYPES if x not in ["string", "uint64"]
-    ] + [None]
+    ALL_DTYPES = [x for x in dtypes.ALLOWED_DTYPES if x not in ["string", "uint64"]] + [
+        None
+    ]
 
     if backend.backend() == "torch":
         # TODO: torch doesn't support uint16, uint32 and uint64
-        ALL_DTYPES = [
-            x for x in ALL_DTYPES if x not in ["uint16", "uint32", "uint64"]
-        ]
+        ALL_DTYPES = [x for x in ALL_DTYPES if x not in ["uint16", "uint32", "uint64"]]
     # Remove float8 dtypes for the following tests
     ALL_DTYPES = [x for x in ALL_DTYPES if x not in dtypes.FLOAT8_TYPES]
 
@@ -625,9 +613,7 @@ class CoreOpsDtypeTest(testing.TestCase, parameterized.TestCase):
 
         with jax_disable_x64:
             self.assertEqual(
-                backend.standardize_dtype(
-                    ops.convert_to_tensor(x, dtype=dtype).dtype
-                ),
+                backend.standardize_dtype(ops.convert_to_tensor(x, dtype=dtype).dtype),
                 expected_dtype,
             )
 
@@ -737,9 +723,7 @@ class CoreOpsCallsTests(testing.TestCase):
     def test_whileloop_compute_output_spec(self):
         # Define loop variables with different shapes and data types
         loop_vars = (np.random.rand(5, 5), np.random.randint(10, size=(3, 7)))
-        keras_loop_vars = [
-            KerasTensor(v.shape, dtype=v.dtype) for v in loop_vars
-        ]
+        keras_loop_vars = [KerasTensor(v.shape, dtype=v.dtype) for v in loop_vars]
 
         def cond(v):
             return v[0] < 5
@@ -814,9 +798,7 @@ class CoreOpsCallsTests(testing.TestCase):
         cond_op = core.Cond()
         mock_spec = Mock(dtype="float32", shape=(2, 2))
         self.assertTrue(
-            cond_op._check_output_spec(
-                [mock_spec, mock_spec], [mock_spec, mock_spec]
-            )
+            cond_op._check_output_spec([mock_spec, mock_spec], [mock_spec, mock_spec])
         )
 
     def test_cond_check_output_spec_other_types(self):
@@ -829,25 +811,17 @@ class CoreOpsCallsTests(testing.TestCase):
         cond_op = core.Cond()
         self.assertTrue(cond_op._check_output_spec(None, None))
         self.assertFalse(
-            cond_op._check_output_spec(
-                None, Mock(dtype="float32", shape=(2, 2))
-            )
+            cond_op._check_output_spec(None, Mock(dtype="float32", shape=(2, 2)))
         )
         self.assertFalse(
-            cond_op._check_output_spec(
-                Mock(dtype="float32", shape=(2, 2)), None
-            )
+            cond_op._check_output_spec(Mock(dtype="float32", shape=(2, 2)), None)
         )
 
     def test_cond_check_output_spec_dict(self):
         cond_op = core.Cond()
         mock_spec = Mock(dtype="float32", shape=(2, 2))
-        self.assertTrue(
-            cond_op._check_output_spec({"a": mock_spec}, {"a": mock_spec})
-        )
-        self.assertFalse(
-            cond_op._check_output_spec({"a": mock_spec}, {"b": mock_spec})
-        )
+        self.assertTrue(cond_op._check_output_spec({"a": mock_spec}, {"a": mock_spec}))
+        self.assertFalse(cond_op._check_output_spec({"a": mock_spec}, {"b": mock_spec}))
         self.assertFalse(
             cond_op._check_output_spec(
                 {"a": mock_spec}, {"a": mock_spec, "b": mock_spec}
@@ -860,9 +834,7 @@ class CoreOpsCallsTests(testing.TestCase):
         mock_spec_different = Mock(dtype="int32", shape=(3, 3))
         self.assertTrue(cond_op._check_output_spec([mock_spec], [mock_spec]))
         self.assertFalse(
-            cond_op._check_output_spec(
-                [mock_spec], [mock_spec, mock_spec_different]
-            )
+            cond_op._check_output_spec([mock_spec], [mock_spec, mock_spec_different])
         )
 
     def test_cond_check_output_spec_tuple(self):
@@ -871,7 +843,5 @@ class CoreOpsCallsTests(testing.TestCase):
         mock_spec_different = Mock(dtype="int32", shape=(3, 3))
         self.assertTrue(cond_op._check_output_spec((mock_spec,), (mock_spec,)))
         self.assertFalse(
-            cond_op._check_output_spec(
-                (mock_spec,), (mock_spec, mock_spec_different)
-            )
+            cond_op._check_output_spec((mock_spec,), (mock_spec, mock_spec_different))
         )

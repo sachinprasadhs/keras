@@ -83,9 +83,7 @@ class LinalgOpsDynamicShapeTest(testing.TestCase):
 
         x = KerasTensor((None, 3, 3))
         self.assertEqual(linalg.norm(x, axis=1).shape, (None, 3))
-        self.assertEqual(
-            linalg.norm(x, axis=1, keepdims=True).shape, (None, 1, 3)
-        )
+        self.assertEqual(linalg.norm(x, axis=1, keepdims=True).shape, (None, 1, 3))
 
     def test_qr(self):
         x = KerasTensor((None, 4, 3), dtype="float32")
@@ -237,9 +235,7 @@ class LinalgOpsStaticShapeTest(testing.TestCase):
 
         x = KerasTensor((10, 3, 3))
         self.assertEqual(linalg.norm(x, axis=1).shape, (10, 3))
-        self.assertEqual(
-            linalg.norm(x, axis=1, keepdims=True).shape, (10, 1, 3)
-        )
+        self.assertEqual(linalg.norm(x, axis=1, keepdims=True).shape, (10, 1, 3))
 
     def test_qr(self):
         x = KerasTensor((4, 3), dtype="float32")
@@ -427,9 +423,7 @@ class LinalgOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
 
         vector_norm = (ndim == 1) or isinstance(axis, int)
 
-        axis_out_of_bounds = ndim == 1 and (
-            axis == 1 or isinstance(axis, tuple)
-        )
+        axis_out_of_bounds = ndim == 1 and (axis == 1 or isinstance(axis, tuple))
         expected_error = None
         # when an out of bounds axis triggers an IndexError on torch is complex
         if (
@@ -455,9 +449,7 @@ class LinalgOpsCorrectnessTest(testing.TestCase, parameterized.TestCase):
                 linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims)
             return
         output = linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims)
-        expected_result = np.linalg.norm(
-            x, ord=ord, axis=axis, keepdims=keepdims
-        )
+        expected_result = np.linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims)
         self.assertAllClose(output, expected_result)
 
     def test_qr(self):
@@ -542,8 +534,7 @@ class QrOpTest(testing.TestCase):
         undefined_dim_input = KerasTensor(shape=(None, 4), dtype="float32")
         with self.assertRaisesRegex(
             ValueError,
-            r"Input should have its last 2 dimensions "
-            r"fully-defined. Received: .*",
+            r"Input should have its last 2 dimensions " r"fully-defined. Received: .*",
         ):
             qr_op.compute_output_spec(undefined_dim_input)
 

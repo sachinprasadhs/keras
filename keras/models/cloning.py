@@ -99,9 +99,7 @@ def clone_model(model, input_tensors=None, clone_function=None):
         # is custom, this may not necessarily work, but if clone_function
         # or input_tensors are passed, we attempt it anyway
         # in order to preserve backwards compatibility.
-        if utils.is_default(model.get_config) or (
-            clone_function or input_tensors
-        ):
+        if utils.is_default(model.get_config) or (clone_function or input_tensors):
             return _clone_functional_model(
                 model,
                 input_tensors=input_tensors,
@@ -250,8 +248,7 @@ def _clone_functional_model(model, input_tensors=None, clone_function=None):
 
     if input_tensors is not None:
         if not all(
-            isinstance(x, backend.KerasTensor)
-            for x in tree.flatten(input_tensors)
+            isinstance(x, backend.KerasTensor) for x in tree.flatten(input_tensors)
         ):
             raise ValueError(
                 "All entries in `input_tensors` must be KerasTensors. "
@@ -275,14 +272,10 @@ def _clone_functional_model(model, input_tensors=None, clone_function=None):
         new_layer = clone_function(layer)
         return new_layer
 
-    output_tensors = model._run_through_graph(
-        input_tensors, operation_fn=operation_fn
-    )
+    output_tensors = model._run_through_graph(input_tensors, operation_fn=operation_fn)
 
     if functional_like_constructor(model.__class__):
-        new_model = model.__class__(
-            input_tensors, output_tensors, name=model.name
-        )
+        new_model = model.__class__(input_tensors, output_tensors, name=model.name)
     else:
         # This may be incorrect: the new model will end up having a different
         # class than the original. However various existing models rely

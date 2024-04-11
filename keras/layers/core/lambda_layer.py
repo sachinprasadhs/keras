@@ -130,9 +130,7 @@ class Lambda(Layer):
         }
         if self._output_shape is not None:
             if callable(self._output_shape):
-                output_shape = self._serialize_function_to_config(
-                    self._output_shape
-                )
+                output_shape = self._serialize_function_to_config(self._output_shape)
             else:
                 output_shape = self._output_shape
             config["output_shape"] = output_shape
@@ -142,9 +140,7 @@ class Lambda(Layer):
             else:
                 mask = serialization_lib.serialize_keras_object(self.mask)
             config["mask"] = mask
-        config["arguments"] = serialization_lib.serialize_keras_object(
-            self.arguments
-        )
+        config["arguments"] = serialization_lib.serialize_keras_object(self.arguments)
         base_config = super().get_config()
         return {**base_config, **config}
 
@@ -215,10 +211,8 @@ class Lambda(Layer):
                 )
                 config["output_shape"] = fn
             else:
-                config["output_shape"] = (
-                    serialization_lib.deserialize_keras_object(
-                        fn_config, custom_objects=custom_objects
-                    )
+                config["output_shape"] = serialization_lib.deserialize_keras_object(
+                    fn_config, custom_objects=custom_objects
                 )
         if "arguments" in config:
             config["arguments"] = serialization_lib.deserialize_keras_object(

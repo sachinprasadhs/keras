@@ -87,9 +87,7 @@ class GlobalAveragePoolingBasicTest(testing.TestCase, parameterized.TestCase):
         )
 
 
-class GlobalAveragePoolingCorrectnessTest(
-    testing.TestCase, parameterized.TestCase
-):
+class GlobalAveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
     @parameterized.parameters(
         ("channels_last", False),
         ("channels_last", True),
@@ -100,9 +98,7 @@ class GlobalAveragePoolingCorrectnessTest(
         def np_gap1d(x, data_format, keepdims, mask=None):
             steps_axis = 1 if data_format == "channels_last" else 2
             if mask is not None:
-                mask = np.expand_dims(
-                    mask, 2 if data_format == "channels_last" else 1
-                )
+                mask = np.expand_dims(mask, 2 if data_format == "channels_last" else 1)
                 x *= mask
                 res = np.sum(x, axis=steps_axis) / np.sum(mask, axis=steps_axis)
             else:
@@ -159,9 +155,7 @@ class GlobalAveragePoolingCorrectnessTest(
     )
     def test_global_average_pooling3d(self, data_format, keepdims):
         def np_gap3d(x, data_format, keepdims):
-            steps_axis = (
-                [1, 2, 3] if data_format == "channels_last" else [2, 3, 4]
-            )
+            steps_axis = [1, 2, 3] if data_format == "channels_last" else [2, 3, 4]
             res = np.apply_over_axes(np.mean, x, steps_axis)
             if not keepdims:
                 res = res.squeeze()

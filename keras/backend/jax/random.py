@@ -33,9 +33,7 @@ def categorical(logits, num_samples, dtype="int32", seed=None):
     output_shape = list(logits.shape)
     output_shape[1] = num_samples
     output_shape = tuple(output_shape)
-    output = jax.random.categorical(
-        seed, logits[..., None], shape=output_shape, axis=1
-    )
+    output = jax.random.categorical(seed, logits[..., None], shape=output_shape, axis=1)
     return output.astype(dtype)
 
 
@@ -76,9 +74,7 @@ def dropout(inputs, rate, noise_shape=None, seed=None):
     noise_shape = _get_concrete_noise_shape(inputs, noise_shape)
     mask = jax.random.bernoulli(seed, p=keep_prob, shape=noise_shape)
     mask = jax.numpy.broadcast_to(mask, inputs.shape)
-    return jax.lax.select(
-        mask, inputs / keep_prob, jax.numpy.zeros_like(inputs)
-    )
+    return jax.lax.select(mask, inputs / keep_prob, jax.numpy.zeros_like(inputs))
 
 
 def shuffle(x, axis=0, seed=None):
@@ -110,7 +106,5 @@ def beta(shape, alpha, beta, dtype=None, seed=None):
     # jax doesn't accept python lists as arguments
     alpha = jax.numpy.array(alpha)
     beta = jax.numpy.array(beta)
-    sample = jax.random.beta(
-        key=seed, a=alpha, b=beta, shape=shape, dtype=dtype
-    )
+    sample = jax.random.beta(key=seed, a=alpha, b=beta, shape=shape, dtype=dtype)
     return sample

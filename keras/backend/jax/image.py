@@ -71,9 +71,7 @@ def resize(
             "or rank 4 (batch of images). Received input with shape: "
             f"image.shape={image.shape}"
         )
-    return jax.image.resize(
-        image, size, method=interpolation, antialias=antialias
-    )
+    return jax.image.resize(image, size, method=interpolation, antialias=antialias)
 
 
 AFFINE_TRANSFORM_INTERPOLATIONS = {  # map to order
@@ -141,9 +139,7 @@ def affine_transform(
     meshgrid = jnp.meshgrid(
         *[jnp.arange(size) for size in image.shape[1:]], indexing="ij"
     )
-    indices = jnp.concatenate(
-        [jnp.expand_dims(x, axis=-1) for x in meshgrid], axis=-1
-    )
+    indices = jnp.concatenate([jnp.expand_dims(x, axis=-1) for x in meshgrid], axis=-1)
     indices = jnp.tile(indices, (batch_size, 1, 1, 1, 1))
 
     # swap the values
@@ -157,9 +153,7 @@ def affine_transform(
     transform = transform.at[:, 5].set(a2)
 
     # deal with transform
-    transform = jnp.pad(
-        transform, pad_width=[[0, 0], [0, 1]], constant_values=1
-    )
+    transform = jnp.pad(transform, pad_width=[[0, 0], [0, 1]], constant_values=1)
     transform = jnp.reshape(transform, (batch_size, 3, 3))
     offset = transform[:, 0:2, 2]
     offset = jnp.pad(offset, pad_width=[[0, 0], [0, 1]])
@@ -195,9 +189,7 @@ MAP_COORDINATES_FILL_MODES = {
 }
 
 
-def map_coordinates(
-    input, coordinates, order, fill_mode="constant", fill_value=0.0
-):
+def map_coordinates(input, coordinates, order, fill_mode="constant", fill_value=0.0):
     if fill_mode not in MAP_COORDINATES_FILL_MODES:
         raise ValueError(
             "Invalid value for argument `fill_mode`. Expected one of "

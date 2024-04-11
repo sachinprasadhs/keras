@@ -79,16 +79,13 @@ def dropout(inputs, rate, noise_shape=None, seed=None):
         # If noise_shape is provided, replace None with corresponding
         # input shape
         noise_shape = [
-            n if n is not None else inputs.shape[i]
-            for i, n in enumerate(noise_shape)
+            n if n is not None else inputs.shape[i] for i, n in enumerate(noise_shape)
         ]
 
     rng = np.random.default_rng(seed)
     mask = rng.uniform(size=noise_shape) < keep_prob
     mask = np.broadcast_to(mask, inputs.shape)
-    return np.where(
-        mask, (inputs / keep_prob).astype(dtype), np.zeros_like(inputs)
-    )
+    return np.where(mask, (inputs / keep_prob).astype(dtype), np.zeros_like(inputs))
 
 
 def shuffle(x, axis=0, seed=None):

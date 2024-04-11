@@ -67,9 +67,7 @@ class JsonUtilsTestTF(testing.TestCase):
             "serialized": None,
         }
         string = json_utils.Encoder().encode(invalid_type_spec)
-        with self.assertRaisesRegexp(
-            ValueError, "No TypeSpec has been registered"
-        ):
+        with self.assertRaisesRegexp(ValueError, "No TypeSpec has been registered"):
             loaded = json_utils.decode(string)
 
     def test_encode_decode_ragged_tensor(self):

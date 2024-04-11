@@ -90,9 +90,7 @@ class Cropping3DTest(testing.TestCase, parameterized.TestCase):
         ),
     )
     @pytest.mark.requires_trainable_backend
-    def test_cropping_3d_with_same_cropping(
-        self, cropping, data_format, expected
-    ):
+    def test_cropping_3d_with_same_cropping(self, cropping, data_format, expected):
         if data_format == "channels_first":
             inputs = np.random.rand(3, 5, 7, 9, 13)
             expected_output = ops.convert_to_tensor(
@@ -150,9 +148,7 @@ class Cropping3DTest(testing.TestCase, parameterized.TestCase):
     ):
         input_layer = layers.Input(batch_shape=(3, 7, 9, 13, 5))
         with self.assertRaises(ValueError):
-            layers.Cropping3D(cropping=cropping, data_format=data_format)(
-                input_layer
-            )
+            layers.Cropping3D(cropping=cropping, data_format=data_format)(input_layer)
 
     def test_cropping_3d_errors_if_cropping_argument_invalid(self):
         with self.assertRaises(ValueError):
@@ -189,11 +185,7 @@ class Cropping3DTest(testing.TestCase, parameterized.TestCase):
             shape = (3, 7, 9, 13, 5)
             input_layer = layers.Input(batch_shape=shape)
 
-        expected_error_msg = (
-            "Values in `cropping` argument should be smaller than the"
-        )
+        expected_error_msg = "Values in `cropping` argument should be smaller than the"
 
         with self.assertRaisesRegex(ValueError, expected_error_msg):
-            layers.Cropping3D(cropping=cropping, data_format=data_format)(
-                input_layer
-            )
+            layers.Cropping3D(cropping=cropping, data_format=data_format)(input_layer)

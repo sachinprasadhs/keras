@@ -138,9 +138,7 @@ def text_dataset_from_directory(
     if labels is None or label_mode is None:
         labels = None
         label_mode = None
-    dataset_utils.check_validation_split_arg(
-        validation_split, subset, shuffle, seed
-    )
+    dataset_utils.check_validation_split_arg(validation_split, subset, shuffle, seed)
 
     if seed is None:
         seed = np.random.randint(1e6)
@@ -211,9 +209,7 @@ def text_dataset_from_directory(
             val_dataset = val_dataset.batch(batch_size)
         else:
             if shuffle:
-                train_dataset = train_dataset.shuffle(
-                    buffer_size=1024, seed=seed
-                )
+                train_dataset = train_dataset.shuffle(buffer_size=1024, seed=seed)
         # Users may need to reference `class_names`.
         train_dataset.class_names = class_names
         val_dataset.class_names = class_names
@@ -224,8 +220,7 @@ def text_dataset_from_directory(
         )
         if not file_paths:
             raise ValueError(
-                f"No text files found in directory {directory}. "
-                "Allowed format: .txt"
+                f"No text files found in directory {directory}. " "Allowed format: .txt"
             )
         dataset = paths_and_labels_to_dataset(
             file_paths=file_paths,
@@ -258,9 +253,7 @@ def paths_and_labels_to_dataset(
         num_parallel_calls=tf.data.AUTOTUNE,
     )
     if label_mode:
-        label_ds = dataset_utils.labels_to_dataset(
-            labels, label_mode, num_classes
-        )
+        label_ds = dataset_utils.labels_to_dataset(labels, label_mode, num_classes)
         string_ds = tf.data.Dataset.zip((string_ds, label_ds))
     return string_ds
 

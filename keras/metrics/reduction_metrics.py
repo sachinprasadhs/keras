@@ -26,14 +26,10 @@ def reduce_to_samplewise_values(values, sample_weight, reduce_fn, dtype):
         weight_ndim = len(sample_weight.shape)
         values_ndim = len(values.shape)
         if values_ndim > weight_ndim:
-            values = reduce_fn(
-                values, axis=list(range(weight_ndim, values_ndim))
-            )
+            values = reduce_fn(values, axis=list(range(weight_ndim, values_ndim)))
         values = values * sample_weight
         if values_ndim > 1:
-            sample_weight = reduce_fn(
-                sample_weight, axis=list(range(1, weight_ndim))
-            )
+            sample_weight = reduce_fn(sample_weight, axis=list(range(1, weight_ndim)))
 
     values_ndim = len(values.shape)
     if values_ndim > 1:
@@ -152,9 +148,7 @@ class Mean(Metric):
         self.count.assign(0)
 
     def result(self):
-        return ops.divide_no_nan(
-            self.total, ops.cast(self.count, dtype=self.dtype)
-        )
+        return ops.divide_no_nan(self.total, ops.cast(self.count, dtype=self.dtype))
 
 
 @keras_export("keras.metrics.MeanMetricWrapper")

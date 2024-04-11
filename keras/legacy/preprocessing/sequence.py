@@ -94,9 +94,9 @@ class TimeseriesGenerator(PyDataset):
             )
 
     def __len__(self):
-        return (
-            self.end_index - self.start_index + self.batch_size * self.stride
-        ) // (self.batch_size * self.stride)
+        return (self.end_index - self.start_index + self.batch_size * self.stride) // (
+            self.batch_size * self.stride
+        )
 
     def __getitem__(self, index):
         if self.shuffle:
@@ -112,10 +112,7 @@ class TimeseriesGenerator(PyDataset):
             )
 
         samples = np.array(
-            [
-                self.data[row - self.length : row : self.sampling_rate]
-                for row in rows
-            ]
+            [self.data[row - self.length : row : self.sampling_rate] for row in rows]
         )
         targets = np.array([self.targets[row] for row in rows])
 

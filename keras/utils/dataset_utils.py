@@ -12,9 +12,7 @@ from keras.utils.module_utils import tensorflow as tf
 
 
 @keras_export("keras.utils.split_dataset")
-def split_dataset(
-    dataset, left_size=None, right_size=None, shuffle=False, seed=None
-):
+def split_dataset(dataset, left_size=None, right_size=None, shuffle=False, seed=None):
     """Splits a dataset into a left half and a right half (e.g. train / test).
 
     Args:
@@ -81,12 +79,8 @@ def split_dataset(
     left_split = list(dataset_as_list[:left_size])
     right_split = list(dataset_as_list[-right_size:])
 
-    left_split = _restore_dataset_from_list(
-        left_split, dataset_type_spec, dataset
-    )
-    right_split = _restore_dataset_from_list(
-        right_split, dataset_type_spec, dataset
-    )
+    left_split = _restore_dataset_from_list(left_split, dataset_type_spec, dataset)
+    right_split = _restore_dataset_from_list(right_split, dataset_type_spec, dataset)
 
     left_split = tf.data.Dataset.from_tensor_slices(left_split)
     right_split = tf.data.Dataset.from_tensor_slices(right_split)
@@ -125,9 +119,7 @@ def _convert_dataset_to_list(
     Returns:
         List: A list of samples.
     """
-    dataset_iterator = _get_data_iterator_from_dataset(
-        dataset, dataset_type_spec
-    )
+    dataset_iterator = _get_data_iterator_from_dataset(dataset, dataset_type_spec)
     dataset_as_list = []
 
     start_time = time.time()
@@ -298,9 +290,9 @@ def _get_next_sample(
 def is_torch_dataset(dataset):
     if hasattr(dataset, "__class__"):
         for parent in dataset.__class__.__mro__:
-            if parent.__name__ == "Dataset" and str(
-                parent.__module__
-            ).startswith("torch.utils.data"):
+            if parent.__name__ == "Dataset" and str(parent.__module__).startswith(
+                "torch.utils.data"
+            ):
                 return True
     return False
 
@@ -385,10 +377,7 @@ def _rescale_dataset_split_sizes(left_size, right_size, total_length):
 
     # check sum of left_size and right_size is less than or equal to
     # total_length
-    if (
-        right_size_type == left_size_type == float
-        and right_size + left_size > 1
-    ):
+    if right_size_type == left_size_type == float and right_size + left_size > 1:
         raise ValueError(
             "The sum of `left_size` and `right_size` is greater "
             "than 1. It must be less than or equal to 1."
@@ -430,9 +419,7 @@ def _rescale_dataset_split_sizes(left_size, right_size, total_length):
     return left_size, right_size
 
 
-def _restore_dataset_from_list(
-    dataset_as_list, dataset_type_spec, original_dataset
-):
+def _restore_dataset_from_list(dataset_as_list, dataset_type_spec, original_dataset):
     """Restore the dataset from the list of arrays."""
     if dataset_type_spec in [tuple, list]:
         return tuple(np.array(sample) for sample in zip(*dataset_as_list))
@@ -701,8 +688,7 @@ def get_training_or_validation_split(samples, labels, validation_split, subset):
             labels = labels[-num_val_samples:]
     else:
         raise ValueError(
-            '`subset` must be either "training" '
-            f'or "validation", received: {subset}'
+            '`subset` must be either "training" ' f'or "validation", received: {subset}'
         )
     return samples, labels
 

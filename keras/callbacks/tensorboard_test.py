@@ -124,9 +124,7 @@ def list_summaries(logdir):
 
 class TestTensorBoardV2(testing.TestCase):
     def _get_log_dirs(self):
-        logdir = os.path.join(
-            self.get_temp_dir(), str(random.randint(1, 1e7)), "tb"
-        )
+        logdir = os.path.join(self.get_temp_dir(), str(random.randint(1, 1e7)), "tb")
         train_dir = os.path.join(logdir, "train")
         validation_dir = os.path.join(logdir, "validation")
         return logdir, train_dir, validation_dir
@@ -306,12 +304,8 @@ class TestTensorBoardV2(testing.TestCase):
                 _ObservedSummary(logdir=train_dir, tag="batch_loss"),
                 _ObservedSummary(logdir=train_dir, tag="epoch_loss"),
                 _ObservedSummary(logdir=train_dir, tag="epoch_learning_rate"),
-                _ObservedSummary(
-                    logdir=train_dir, tag="epoch_steps_per_second"
-                ),
-                _ObservedSummary(
-                    logdir=train_dir, tag="batch_steps_per_second"
-                ),
+                _ObservedSummary(logdir=train_dir, tag="epoch_steps_per_second"),
+                _ObservedSummary(logdir=train_dir, tag="batch_steps_per_second"),
             },
         )
 
@@ -359,9 +353,7 @@ class TestTensorBoardV2(testing.TestCase):
             x_shape = (10, 1, 10, 10)
         x, y = np.ones(x_shape), np.ones((10, 1))
         logdir, train_dir, validation_dir = self._get_log_dirs()
-        tb_cbk = callbacks.TensorBoard(
-            logdir, histogram_freq=1, write_images=True
-        )
+        tb_cbk = callbacks.TensorBoard(logdir, histogram_freq=1, write_images=True)
         model_type = "sequential"
         model = models.Sequential(
             [
@@ -491,9 +483,7 @@ class TestTensorBoardV2(testing.TestCase):
         logdir, train_dir, validation_dir = self._get_log_dirs()
         tb_cbk = callbacks.TensorBoard(logdir, update_freq=1)
         x, y = np.ones((10, 5)), np.ones((10, 5))
-        model.fit(
-            x, y, batch_size=2, validation_data=(x, y), callbacks=[tb_cbk]
-        )
+        model.fit(x, y, batch_size=2, validation_data=(x, y), callbacks=[tb_cbk])
         summary_file = list_summaries(logdir)
         # TODO: tensorflow will tag with model/layer_with_summary/custom_summary
         # Jax will only use custom_summary tag
@@ -664,9 +654,7 @@ class TestTensorBoardV2(testing.TestCase):
     def fitModelAndAssertKerasModelWritten(self, model):
         x, y = np.ones((10, 10, 10, 1)), np.ones((10, 1))
         logdir, train_dir, validation_dir = self._get_log_dirs()
-        tb_cbk = callbacks.TensorBoard(
-            logdir, write_graph=True, profile_batch=0
-        )
+        tb_cbk = callbacks.TensorBoard(logdir, write_graph=True, profile_batch=0)
         model.fit(
             x,
             y,

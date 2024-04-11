@@ -32,9 +32,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
             self._distribute_strategy = None
 
         self._distribute_reduction_method = None
-        self._supports_reduce_retracing = Version(tf.__version__) >= Version(
-            "2.9.0"
-        )
+        self._supports_reduce_retracing = Version(tf.__version__) >= Version("2.9.0")
 
     @property
     def distribute_strategy(self):
@@ -84,9 +82,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
             y_pred = self(x, training=False)
         else:
             y_pred = self(x)
-        loss = self.compute_loss(
-            x=x, y=y, y_pred=y_pred, sample_weight=sample_weight
-        )
+        loss = self.compute_loss(x=x, y=y, y_pred=y_pred, sample_weight=sample_weight)
         self._loss_tracker.update_state(
             loss, sample_weight=tf.shape(tree.flatten(x)[0])[0]
         )
@@ -119,9 +115,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
         def one_step_on_iterator(iterator):
             """Runs a single training step given a Dataset iterator."""
             data = next(iterator)
-            outputs = self.distribute_strategy.run(
-                one_step_on_data, args=(data,)
-            )
+            outputs = self.distribute_strategy.run(one_step_on_data, args=(data,))
             outputs = reduce_per_replica(
                 outputs,
                 self.distribute_strategy,
@@ -167,9 +161,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
         def one_step_on_iterator(iterator):
             """Runs a single test step given a Dataset iterator."""
             data = next(iterator)
-            outputs = self.distribute_strategy.run(
-                one_step_on_data, args=(data,)
-            )
+            outputs = self.distribute_strategy.run(one_step_on_data, args=(data,))
             outputs = reduce_per_replica(
                 outputs,
                 self.distribute_strategy,
@@ -214,9 +206,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
         @tf.autograph.experimental.do_not_convert
         def one_step_on_data_distributed(data):
             data = data[0]
-            outputs = self.distribute_strategy.run(
-                one_step_on_data, args=(data,)
-            )
+            outputs = self.distribute_strategy.run(one_step_on_data, args=(data,))
             outputs = reduce_per_replica(
                 outputs,
                 self.distribute_strategy,
@@ -327,9 +317,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
                 for step, iterator in epoch_iterator.enumerate_epoch():
                     callbacks.on_train_batch_begin(step)
                     logs = self.train_function(iterator)
-                    callbacks.on_train_batch_end(
-                        step, self._pythonify_logs(logs)
-                    )
+                    callbacks.on_train_batch_end(step, self._pythonify_logs(logs))
                     if self.stop_training:
                         break
 
@@ -362,9 +350,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
                     return_dict=True,
                     _use_cached_eval_dataset=True,
                 )
-                val_logs = {
-                    "val_" + name: val for name, val in val_logs.items()
-                }
+                val_logs = {"val_" + name: val for name, val in val_logs.items()}
                 epoch_logs.update(val_logs)
 
             callbacks.on_epoch_end(epoch, epoch_logs)
@@ -372,10 +358,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
             if self.stop_training:
                 break
 
-        if (
-            isinstance(self.optimizer, optimizers_module.Optimizer)
-            and epochs > 0
-        ):
+        if isinstance(self.optimizer, optimizers_module.Optimizer) and epochs > 0:
             self.optimizer.finalize_variable_values(self.trainable_weights)
 
         # If _eval_epoch_iterator exists, delete it after all epochs are done.
@@ -450,9 +433,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
         return self._flatten_metrics_in_order(logs)
 
     @traceback_utils.filter_traceback
-    def predict(
-        self, x, batch_size=None, verbose="auto", steps=None, callbacks=None
-    ):
+    def predict(self, x, batch_size=None, verbose="auto", steps=None, callbacks=None):
         # Create an iterator that yields batches of input data.
         epoch_iterator = TFEpochIterator(
             x=x,
@@ -580,9 +561,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
     def predict_on_batch(self, x):
         self.make_predict_function()
         batch_outputs = self.predict_function([(x,)])
-        batch_outputs = tree.map_structure(
-            convert_to_np_if_not_ragged, batch_outputs
-        )
+        batch_outputs = tree.map_structure(convert_to_np_if_not_ragged, batch_outputs)
         return batch_outputs
 
     # Backwards compatibility shims.
@@ -612,9 +591,7 @@ class TensorFlowTrainer(base_trainer.Trainer):
             else:
                 metric.update_state(y, y_pred, sample_weight=sample_weight)
 
-    def compiled_loss(
-        self, y, y_pred, sample_weight=None, regularization_losses=None
-    ):
+    def compiled_loss(self, y, y_pred, sample_weight=None, regularization_losses=None):
         warnings.warn(
             "`model.compiled_loss()` is deprecated. "
             "Instead, use `model.compute_loss(x, y, y_pred, sample_weight)`.",
@@ -639,9 +616,7 @@ class TFEpochIterator(EpochIterator):
         self._distribute_strategy = distribute_strategy
         dataset = self._get_iterator()
         if not isinstance(dataset, tf.distribute.DistributedDataset):
-            dataset = self._distribute_strategy.experimental_distribute_dataset(
-                dataset
-            )
+            dataset = self._distribute_strategy.experimental_distribute_dataset(dataset)
         self._distributed_dataset = dataset
         self._steps_seen = 0
 
@@ -652,16 +627,12 @@ class TFEpochIterator(EpochIterator):
         if self.steps_per_epoch:
             if not self._current_iterator:
                 self._current_iterator = iter(self._distributed_dataset)
-            for step in range(
-                0, self.steps_per_epoch, self.steps_per_execution
-            ):
+            for step in range(0, self.steps_per_epoch, self.steps_per_execution):
                 yield step, self._current_iterator
         else:
             iterator = iter(self._distributed_dataset)
             if self.num_batches:
-                for step in range(
-                    0, self.num_batches, self.steps_per_execution
-                ):
+                for step in range(0, self.num_batches, self.steps_per_execution):
                     yield step, iterator
             else:
                 step = -1
@@ -793,9 +764,7 @@ def _multi_worker_concat(v, strategy):
         all_shapes = strategy.gather(shapes, axis=0)
     else:
         # v is a tensor. This may happen when, say, we have 2x1 multi-worker.
-        all_shapes = strategy.gather(
-            tf.expand_dims(tf.shape(v)[0], axis=0), axis=0
-        )
+        all_shapes = strategy.gather(tf.expand_dims(tf.shape(v)[0], axis=0), axis=0)
 
     replicas = tf.split(
         replicas,
@@ -891,9 +860,7 @@ def potentially_ragged_concat(tensors):
         return tf.concat(tensors, axis=0)
 
     non_batch_shapes = tf.stack([tf.shape(tensor)[1:] for tensor in tensors])
-    constant_dims = tf.math.reduce_all(
-        non_batch_shapes == non_batch_shapes[:1], axis=0
-    )
+    constant_dims = tf.math.reduce_all(non_batch_shapes == non_batch_shapes[:1], axis=0)
     if tf.math.reduce_all(constant_dims).numpy().item():
         # All non-batch dims are constant
         if _is_scalar(tensors[0]):
@@ -903,9 +870,7 @@ def potentially_ragged_concat(tensors):
 
     # First, identify constant inner dimensions by finding the
     # rightmost dimension that is not constant
-    constant_inner_dimensions = (
-        constant_dims.numpy().tolist()[::-1].index(False)
-    )
+    constant_inner_dimensions = constant_dims.numpy().tolist()[::-1].index(False)
     # If there are constant inner dimensions, define a constant inner shape
     if constant_inner_dimensions == 0:
         constant_inner_shape = None

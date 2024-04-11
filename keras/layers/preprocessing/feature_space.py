@@ -48,18 +48,14 @@ class Feature:
             )
         self.dtype = dtype
         if isinstance(preprocessor, dict):
-            preprocessor = serialization_lib.deserialize_keras_object(
-                preprocessor
-            )
+            preprocessor = serialization_lib.deserialize_keras_object(preprocessor)
         self.preprocessor = preprocessor
         self.output_mode = output_mode
 
     def get_config(self):
         return {
             "dtype": self.dtype,
-            "preprocessor": serialization_lib.serialize_keras_object(
-                self.preprocessor
-            ),
+            "preprocessor": serialization_lib.serialize_keras_object(self.preprocessor),
             "output_mode": self.output_mode,
         }
 
@@ -280,12 +276,8 @@ class FeatureSpace(Layer):
         from keras.layers.core import identity
 
         name = name or auto_name("float")
-        preprocessor = identity.Identity(
-            dtype="float32", name=f"{name}_preprocessor"
-        )
-        return Feature(
-            dtype="float32", preprocessor=preprocessor, output_mode="float"
-        )
+        preprocessor = identity.Identity(dtype="float32", name=f"{name}_preprocessor")
+        return Feature(dtype="float32", preprocessor=preprocessor, output_mode="float")
 
     @classmethod
     def float_rescaled(cls, scale=1.0, offset=0.0, name=None):
@@ -293,19 +285,13 @@ class FeatureSpace(Layer):
         preprocessor = layers.Rescaling(
             scale=scale, offset=offset, name=f"{name}_preprocessor"
         )
-        return Feature(
-            dtype="float32", preprocessor=preprocessor, output_mode="float"
-        )
+        return Feature(dtype="float32", preprocessor=preprocessor, output_mode="float")
 
     @classmethod
     def float_normalized(cls, name=None):
         name = name or auto_name("float_normalized")
-        preprocessor = layers.Normalization(
-            axis=-1, name=f"{name}_preprocessor"
-        )
-        return Feature(
-            dtype="float32", preprocessor=preprocessor, output_mode="float"
-        )
+        preprocessor = layers.Normalization(axis=-1, name=f"{name}_preprocessor")
+        return Feature(dtype="float32", preprocessor=preprocessor, output_mode="float")
 
     @classmethod
     def float_discretized(
@@ -360,9 +346,7 @@ class FeatureSpace(Layer):
     @classmethod
     def string_hashed(cls, num_bins, output_mode="one_hot", name=None):
         name = name or auto_name("string_hashed")
-        preprocessor = layers.Hashing(
-            name=f"{name}_preprocessor", num_bins=num_bins
-        )
+        preprocessor = layers.Hashing(name=f"{name}_preprocessor", num_bins=num_bins)
         return Feature(
             dtype="string", preprocessor=preprocessor, output_mode=output_mode
         )
@@ -370,9 +354,7 @@ class FeatureSpace(Layer):
     @classmethod
     def integer_hashed(cls, num_bins, output_mode="one_hot", name=None):
         name = name or auto_name("integer_hashed")
-        preprocessor = layers.Hashing(
-            name=f"{name}_preprocessor", num_bins=num_bins
-        )
+        preprocessor = layers.Hashing(name=f"{name}_preprocessor", num_bins=num_bins)
         return Feature(
             dtype="int32", preprocessor=preprocessor, output_mode=output_mode
         )
@@ -525,9 +507,7 @@ class FeatureSpace(Layer):
                 # If the rank is 1, add a dimension
                 # so we can reduce on axis=-1.
                 # Note: if rank was previously 0, it is now 1.
-                feature_dataset = feature_dataset.map(
-                    lambda x: tf.expand_dims(x, -1)
-                )
+                feature_dataset = feature_dataset.map(lambda x: tf.expand_dims(x, -1))
             preprocessor.adapt(feature_dataset)
         self._is_adapted = True
         self.get_encoded_features()  # Finish building the layer
@@ -552,8 +532,7 @@ class FeatureSpace(Layer):
 
     def _preprocess_features(self, features):
         return {
-            name: self.preprocessors[name](features[name])
-            for name in features.keys()
+            name: self.preprocessors[name](features[name]) for name in features.keys()
         }
 
     def _cross_features(self, features):
@@ -566,17 +545,12 @@ class FeatureSpace(Layer):
 
     def _merge_features(self, preprocessed_features, crossed_features):
         if not self._preprocessed_features_names:
-            self._preprocessed_features_names = sorted(
-                preprocessed_features.keys()
-            )
+            self._preprocessed_features_names = sorted(preprocessed_features.keys())
             self._crossed_features_names = sorted(crossed_features.keys())
 
-        all_names = (
-            self._preprocessed_features_names + self._crossed_features_names
-        )
+        all_names = self._preprocessed_features_names + self._crossed_features_names
         all_features = [
-            preprocessed_features[name]
-            for name in self._preprocessed_features_names
+            preprocessed_features[name] for name in self._preprocessed_features_names
         ] + [crossed_features[name] for name in self._crossed_features_names]
 
         if self.output_mode == "dict":
@@ -603,9 +577,7 @@ class FeatureSpace(Layer):
         # we create the encoder and concat layers below
         all_specs = [
             self.features[name] for name in self._preprocessed_features_names
-        ] + [
-            self.crosses_by_name[name] for name in self._crossed_features_names
-        ]
+        ] + [self.crosses_by_name[name] for name in self._crossed_features_names]
 
         for name, feature, spec in zip(all_names, all_features, all_specs):
             if tree.is_nested(feature):
@@ -615,9 +587,7 @@ class FeatureSpace(Layer):
             dtype = backend.standardize_dtype(dtype)
 
             if spec.output_mode == "one_hot":
-                preprocessor = self.preprocessors.get(
-                    name
-                ) or self.crossers.get(name)
+                preprocessor = self.preprocessors.get(name) or self.crossers.get(name)
 
                 cardinality = None
                 if not dtype.startswith("int"):
@@ -635,9 +605,7 @@ class FeatureSpace(Layer):
                     cardinality = preprocessor.num_tokens
                 elif isinstance(preprocessor, layers.Discretization):
                     cardinality = preprocessor.num_bins
-                elif isinstance(
-                    preprocessor, (layers.HashedCrossing, layers.Hashing)
-                ):
+                elif isinstance(preprocessor, (layers.HashedCrossing, layers.Hashing)):
                     cardinality = preprocessor.num_bins
                 else:
                     raise ValueError(
@@ -742,10 +710,7 @@ class FeatureSpace(Layer):
                     if len(x.shape) == 2 and x.shape[0] == 1:
                         merged_data[name] = tf.squeeze(x, axis=0)
 
-        if (
-            backend.backend() != "tensorflow"
-            and not backend_utils.in_tf_graph()
-        ):
+        if backend.backend() != "tensorflow" and not backend_utils.in_tf_graph():
             merged_data = tree.map_structure(
                 lambda x: backend.convert_to_tensor(x, dtype=x.dtype),
                 merged_data,

@@ -145,9 +145,7 @@ def affine_transform(
     meshgrid = np.meshgrid(
         *[np.arange(size) for size in image.shape[1:]], indexing="ij"
     )
-    indices = np.concatenate(
-        [np.expand_dims(x, axis=-1) for x in meshgrid], axis=-1
-    )
+    indices = np.concatenate([np.expand_dims(x, axis=-1) for x in meshgrid], axis=-1)
     indices = np.tile(indices, (batch_size, 1, 1, 1, 1))
 
     # swap the values
@@ -205,9 +203,7 @@ MAP_COORDINATES_FILL_MODES = {
 }
 
 
-def map_coordinates(
-    input, coordinates, order, fill_mode="constant", fill_value=0.0
-):
+def map_coordinates(input, coordinates, order, fill_mode="constant", fill_value=0.0):
     if fill_mode not in MAP_COORDINATES_FILL_MODES:
         raise ValueError(
             "Invalid value for argument `fill_mode`. Expected one of "
@@ -237,9 +233,7 @@ def map_coordinates(
         "reflect": "symmetric",
     }.get(fill_mode, fill_mode)
     if fill_mode == "constant":
-        padded = np.pad(
-            input, padding, mode=pad_mode, constant_values=fill_value
-        )
+        padded = np.pad(input, padding, mode=pad_mode, constant_values=fill_value)
     else:
         padded = np.pad(input, padding, mode=pad_mode)
     result = scipy.ndimage.map_coordinates(

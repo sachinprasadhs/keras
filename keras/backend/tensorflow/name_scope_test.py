@@ -12,17 +12,13 @@ class TFNameScopeTest(TestCase):
             self.assertEqual(tf.Variable(0, name="x").name, "outer/x:0")
             with name_scope("middle") as middle:
                 self.assertEqual(middle.name, "middle")
-                self.assertEqual(
-                    tf.Variable(0, name="x").name, "outer/middle/x:0"
-                )
+                self.assertEqual(tf.Variable(0, name="x").name, "outer/middle/x:0")
                 with name_scope("inner") as inner:
                     self.assertEqual(inner.name, "inner")
                     self.assertEqual(
                         tf.Variable(0, name="x").name, "outer/middle/inner/x:0"
                     )
-                self.assertEqual(
-                    tf.Variable(0, name="x").name, "outer/middle/x:0"
-                )
+                self.assertEqual(tf.Variable(0, name="x").name, "outer/middle/x:0")
             self.assertEqual(tf.Variable(0, name="x").name, "outer/x:0")
         self.assertEqual(tf.Variable(0, name="x").name, "x:0")
 

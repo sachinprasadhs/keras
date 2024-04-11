@@ -27,9 +27,7 @@ def get_data_adapter(
     # is supported at the moment, we will raise error if the inputs fail
     # the type check
     distribution = distribution_lib.distribution()
-    if getattr(distribution, "_is_multi_process", False) and not is_tf_dataset(
-        x
-    ):
+    if getattr(distribution, "_is_multi_process", False) and not is_tf_dataset(x):
         raise ValueError(
             "When using multi-worker distribution, the data must be provided "
             f"as a `tf.data.Dataset` instance. Received: type(x)={type(x)}."
@@ -53,9 +51,7 @@ def get_data_adapter(
             raise_unsupported_arg(
                 "sample_weights", "the sample weights", "tf.data.Dataset"
             )
-        return TFDatasetAdapter(
-            x, class_weight=class_weight, distribution=distribution
-        )
+        return TFDatasetAdapter(x, class_weight=class_weight, distribution=distribution)
         # TODO: should we warn or not?
         # warnings.warn(
         #     "`shuffle=True` was passed, but will be ignored since the "
@@ -67,9 +63,7 @@ def get_data_adapter(
         if y is not None:
             raise_unsupported_arg("y", "the targets", "PyDataset")
         if sample_weight is not None:
-            raise_unsupported_arg(
-                "sample_weights", "the sample weights", "PyDataset"
-            )
+            raise_unsupported_arg("sample_weights", "the sample weights", "PyDataset")
         return PyDatasetAdapter(x, class_weight=class_weight, shuffle=shuffle)
     elif is_torch_dataloader(x):
         if y is not None:
@@ -94,9 +88,7 @@ def get_data_adapter(
         if y is not None:
             raise_unsupported_arg("y", "the targets", "PyDataset")
         if sample_weight is not None:
-            raise_unsupported_arg(
-                "sample_weights", "the sample weights", "PyDataset"
-            )
+            raise_unsupported_arg("sample_weights", "the sample weights", "PyDataset")
         if class_weight is not None:
             raise ValueError(
                 "Argument `class_weight` is not supported for Python "

@@ -35,9 +35,7 @@ class HingeTest(testing.TestCase):
 
 class SquaredHingeTest(testing.TestCase):
     def test_config(self):
-        sq_hinge_obj = hinge_metrics.SquaredHinge(
-            name="squared_hinge", dtype="int32"
-        )
+        sq_hinge_obj = hinge_metrics.SquaredHinge(name="squared_hinge", dtype="int32")
         self.assertEqual(sq_hinge_obj.name, "squared_hinge")
         self.assertEqual(sq_hinge_obj._dtype, "int32")
 
@@ -68,9 +66,7 @@ class SquaredHingeTest(testing.TestCase):
 
 class CategoricalHingeTest(testing.TestCase):
     def test_config(self):
-        cat_hinge_obj = hinge_metrics.CategoricalHinge(
-            name="cat_hinge", dtype="int32"
-        )
+        cat_hinge_obj = hinge_metrics.CategoricalHinge(name="cat_hinge", dtype="int32")
         self.assertEqual(cat_hinge_obj.name, "cat_hinge")
         self.assertEqual(cat_hinge_obj._dtype, "int32")
 

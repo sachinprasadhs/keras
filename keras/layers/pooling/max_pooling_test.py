@@ -254,9 +254,7 @@ class MaxPoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_maxpool1d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_maxpool1d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -276,9 +274,7 @@ class MaxPoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_maxpool2d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_maxpool2d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -297,7 +293,5 @@ class MaxPoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_maxpool3d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_maxpool3d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)

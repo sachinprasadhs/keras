@@ -103,9 +103,7 @@ class TorchModuleWrapper(Layer):
         for param in self.module.parameters():
             # The Variable will reuse the raw `param`
             # and simply wrap it.
-            variable = Variable(
-                initializer=param, trainable=param.requires_grad
-            )
+            variable = Variable(initializer=param, trainable=param.requires_grad)
             self._track_variable(variable)
         self.built = True
 

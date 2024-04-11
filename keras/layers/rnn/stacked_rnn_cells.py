@@ -64,9 +64,7 @@ class StackedRNNCells(Layer):
         for cell in self.cells:
             get_initial_state_fn = getattr(cell, "get_initial_state", None)
             if get_initial_state_fn:
-                initial_states.append(
-                    get_initial_state_fn(batch_size=batch_size)
-                )
+                initial_states.append(get_initial_state_fn(batch_size=batch_size))
             else:
                 if isinstance(cell.state_size, int):
                     initial_states.append(

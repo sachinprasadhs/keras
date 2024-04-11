@@ -52,12 +52,8 @@ class AttentionTest(testing.TestCase):
             [query, value, key],
             return_attention_scores=True,
         )
-        self.assertAllClose(
-            output, [[[2.462, 3.462], [1.538, 2.538]]], atol=1e-3
-        )
-        self.assertAllClose(
-            scores, [[[0.269, 0.731], [0.731, 0.269]]], atol=1e-3
-        )
+        self.assertAllClose(output, [[[2.462, 3.462], [1.538, 2.538]]], atol=1e-3)
+        self.assertAllClose(scores, [[[0.269, 0.731], [0.731, 0.269]]], atol=1e-3)
 
         # Concat.
         layer = layers.Attention(score_mode="concat")
@@ -65,12 +61,8 @@ class AttentionTest(testing.TestCase):
             [query, value, key],
             return_attention_scores=True,
         )
-        self.assertAllClose(
-            output, [[[1.727, 2.727], [2.272, 3.272]]], atol=1e-3
-        )
-        self.assertAllClose(
-            scores, [[[0.636, 0.363], [0.363, 0.636]]], atol=1e-3
-        )
+        self.assertAllClose(output, [[[1.727, 2.727], [2.272, 3.272]]], atol=1e-3)
+        self.assertAllClose(scores, [[[0.636, 0.363], [0.363, 0.636]]], atol=1e-3)
 
     def test_attention_with_mask(self):
         layer = layers.Attention()
@@ -137,13 +129,10 @@ class AttentionTest(testing.TestCase):
     def test_attention_calculate_score_mask_no_causal_no_vmask(self):
         scores = np.random.random((2, 3, 4))
         layer = layers.Attention()
-        mask = layer._calculate_score_mask(
-            scores, v_mask=None, use_causal_mask=False
-        )
+        mask = layer._calculate_score_mask(scores, v_mask=None, use_causal_mask=False)
         self.assertIsNone(
             mask,
-            "Mask should be None when no causal mask and no value mask "
-            "are used",
+            "Mask should be None when no causal mask and no value mask " "are used",
         )
 
     def test_attention_calculate_score_mask_with_causal_no_vmask(self):
@@ -326,9 +315,7 @@ class AttentionTest(testing.TestCase):
             np.array([True, False, True]),
         ]
         for mask in edge_case_masks:
-            computed_mask = layer.compute_mask(
-                inputs=dummy_inputs, mask=[mask, mask]
-            )
+            computed_mask = layer.compute_mask(inputs=dummy_inputs, mask=[mask, mask])
             computed_mask = ops.convert_to_numpy(computed_mask)
             self.assertTrue(np.array_equal(computed_mask, mask))
 

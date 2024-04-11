@@ -110,9 +110,7 @@ def model_metadata(model, include_optimizer=True, require_config=True):
         if model.compiled:
             training_config = model._compile_config.config
             training_config.pop("optimizer", None)  # Handled separately.
-            metadata["training_config"] = _serialize_nested_config(
-                training_config
-            )
+            metadata["training_config"] = _serialize_nested_config(training_config)
             optimizer_config = {
                 "class_name": object_registration.get_registered_name(
                     model.optimizer.__class__
@@ -148,9 +146,7 @@ def compile_args_from_training_config(training_config, custom_objects=None):
         metrics = None
         metrics_config = training_config.get("metrics", None)
         if metrics_config is not None:
-            metrics = _deserialize_nested_config(
-                _deserialize_metric, metrics_config
-            )
+            metrics = _deserialize_nested_config(_deserialize_metric, metrics_config)
             # Ensure backwards compatibility for metrics in legacy H5 files
             metrics = _resolve_compile_arguments_compat(
                 metrics, metrics_config, metrics_module
@@ -202,13 +198,10 @@ def _deserialize_nested_config(deserialize_fn, config):
         return deserialize_fn(config)
     elif isinstance(config, dict):
         return {
-            k: _deserialize_nested_config(deserialize_fn, v)
-            for k, v in config.items()
+            k: _deserialize_nested_config(deserialize_fn, v) for k, v in config.items()
         }
     elif isinstance(config, (tuple, list)):
-        return [
-            _deserialize_nested_config(deserialize_fn, obj) for obj in config
-        ]
+        return [_deserialize_nested_config(deserialize_fn, obj) for obj in config]
 
     raise ValueError(
         "Saved configuration not understood. Configuration should be a "

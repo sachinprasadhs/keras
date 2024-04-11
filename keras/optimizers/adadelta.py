@@ -87,9 +87,7 @@ class Adadelta(optimizer.Optimizer):
         grad = ops.cast(grad, variable.dtype)
 
         rho = self.rho
-        accumulated_grad = self._accumulated_grads[
-            self._get_variable_index(variable)
-        ]
+        accumulated_grad = self._accumulated_grads[self._get_variable_index(variable)]
         accumulated_delta_var = self._accumulated_delta_vars[
             self._get_variable_index(variable)
         ]
@@ -99,9 +97,7 @@ class Adadelta(optimizer.Optimizer):
 
         self.assign(
             accumulated_grad,
-            ops.add(
-                rho * accumulated_grad, ops.multiply(1 - rho, ops.square(grad))
-            ),
+            ops.add(rho * accumulated_grad, ops.multiply(1 - rho, ops.square(grad))),
         )
         delta_var = ops.negative(
             ops.divide(

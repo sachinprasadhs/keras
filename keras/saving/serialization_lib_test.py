@@ -127,9 +127,7 @@ class SerializationLibTest(testing.TestCase):
         # Test inside layer
         dense = keras.layers.Dense(1, activation=custom_fn)
         dense.build((None, 2))
-        _, new_dense, _ = self.roundtrip(
-            dense, custom_objects={"custom_fn": custom_fn}
-        )
+        _, new_dense, _ = self.roundtrip(dense, custom_objects={"custom_fn": custom_fn})
         x = ops.random.normal((2, 2))
         y1 = dense(x)
         _ = new_dense(x)
@@ -208,12 +206,8 @@ class SerializationLibTest(testing.TestCase):
             {"foo": output_foo, "bar": output_bar},
         )
         _, new_model, _ = self.roundtrip(model)
-        original_output = model(
-            {"foo": np.zeros((2, 2)), "bar": np.zeros((2, 2))}
-        )
-        restored_output = model(
-            {"foo": np.zeros((2, 2)), "bar": np.zeros((2, 2))}
-        )
+        original_output = model({"foo": np.zeros((2, 2)), "bar": np.zeros((2, 2))})
+        restored_output = model({"foo": np.zeros((2, 2)), "bar": np.zeros((2, 2))})
         self.assertAllClose(original_output["foo"], restored_output["foo"])
         self.assertAllClose(original_output["bar"], restored_output["bar"])
 
@@ -282,8 +276,8 @@ class SerializationLibTest(testing.TestCase):
             def __init__(self, activation, **kwargs):
                 super().__init__(**kwargs)
                 if isinstance(activation, dict):
-                    self.activation = (
-                        serialization_lib.deserialize_keras_object(activation)
+                    self.activation = serialization_lib.deserialize_keras_object(
+                        activation
                     )
                 else:
                     self.activation = activation
@@ -343,12 +337,7 @@ class SerializationLibTest(testing.TestCase):
 @keras.saving.register_keras_serializable()
 class MyDense(keras.layers.Layer):
     def __init__(
-        self,
-        units,
-        *,
-        kernel_regularizer=None,
-        kernel_initializer=None,
-        **kwargs
+        self, units, *, kernel_regularizer=None, kernel_initializer=None, **kwargs
     ):
         super().__init__(**kwargs)
         self._units = units
@@ -388,9 +377,7 @@ class MyWrapper(keras.layers.Layer):
 
     @classmethod
     def from_config(cls, config):
-        config["wrapped"] = keras.saving.deserialize_keras_object(
-            config["wrapped"]
-        )
+        config["wrapped"] = keras.saving.deserialize_keras_object(config["wrapped"])
         return cls(**config)
 
     def call(self, inputs):

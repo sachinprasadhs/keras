@@ -105,9 +105,7 @@ def create_legacy_directory():
             if fname.endswith(".py"):
                 legacy_fpath = os.path.join(root, fname)
                 tf_keras_root = root.replace("/_legacy", "/_tf_keras/keras")
-                core_api_fpath = os.path.join(
-                    root.replace("/_legacy", ""), fname
-                )
+                core_api_fpath = os.path.join(root.replace("/_legacy", ""), fname)
                 if not os.path.exists(tf_keras_root):
                     os.makedirs(tf_keras_root)
                 tf_keras_fpath = os.path.join(tf_keras_root, fname)
@@ -170,9 +168,7 @@ def build_and_save_output(root_path, __version__):
     os.chdir(root_path)
     if not os.path.exists(dist_directory):
         os.mkdir(dist_directory)
-    for fpath in glob.glob(
-        os.path.join(build_directory, dist_directory, "*.*")
-    ):
+    for fpath in glob.glob(os.path.join(build_directory, dist_directory, "*.*")):
         shutil.copy(fpath, dist_directory)
 
     # Find the .whl file path

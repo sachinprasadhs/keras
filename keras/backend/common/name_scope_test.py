@@ -42,7 +42,5 @@ class NameScopeTest(testing.TestCase):
             with name_scope("middle", override_parent="/absolute/path"):
                 self.assertEqual(current_path(), "absolute/path/middle")
                 with name_scope("inner"):
-                    self.assertEqual(
-                        current_path(), "absolute/path/middle/inner"
-                    )
+                    self.assertEqual(current_path(), "absolute/path/middle/inner")
             self.assertEqual(current_path(), "outer")

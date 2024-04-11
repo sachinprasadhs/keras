@@ -54,9 +54,7 @@ class Linear(keras.layers.Layer):
             initializer="random_normal",
             trainable=True,
         )
-        self.b = self.add_weight(
-            shape=(units,), initializer="zeros", trainable=True
-        )
+        self.b = self.add_weight(shape=(units,), initializer="zeros", trainable=True)
 
     def call(self, inputs):
         return ops.matmul(inputs, self.w) + self.b
@@ -135,9 +133,7 @@ class Linear(keras.layers.Layer):
             initializer="random_normal",
             trainable=True,
         )
-        self.b = self.add_weight(
-            shape=(units,), initializer="zeros", trainable=True
-        )
+        self.b = self.add_weight(shape=(units,), initializer="zeros", trainable=True)
 
     def call(self, inputs):
         return ops.matmul(inputs, self.w) + self.b
@@ -215,9 +211,7 @@ class MLPBlock(keras.layers.Layer):
 
 
 mlp = MLPBlock()
-y = mlp(
-    ops.ones(shape=(3, 64))
-)  # The first call to the `mlp` will create the weights
+y = mlp(ops.ones(shape=(3, 64)))  # The first call to the `mlp` will create the weights
 print("weights:", len(mlp.weights))
 print("trainable weights:", len(mlp.trainable_weights))
 
@@ -316,9 +310,7 @@ class OuterLayer(keras.layers.Layer):
 
 
 layer = OuterLayer()
-assert (
-    len(layer.losses) == 0
-)  # No losses yet since the layer has never been called
+assert len(layer.losses) == 0  # No losses yet since the layer has never been called
 
 _ = layer(ops.zeros((1, 1)))
 assert len(layer.losses) == 1  # We created one loss value
@@ -602,9 +594,7 @@ class Sampling(layers.Layer):
 class Encoder(layers.Layer):
     """Maps MNIST digits to a triplet (z_mean, z_log_var, z)."""
 
-    def __init__(
-        self, latent_dim=32, intermediate_dim=64, name="encoder", **kwargs
-    ):
+    def __init__(self, latent_dim=32, intermediate_dim=64, name="encoder", **kwargs):
         super().__init__(name=name, **kwargs)
         self.dense_proj = layers.Dense(intermediate_dim, activation="relu")
         self.dense_mean = layers.Dense(latent_dim)
@@ -622,9 +612,7 @@ class Encoder(layers.Layer):
 class Decoder(layers.Layer):
     """Converts z, the encoded digit vector, back into a readable digit."""
 
-    def __init__(
-        self, original_dim, intermediate_dim=64, name="decoder", **kwargs
-    ):
+    def __init__(self, original_dim, intermediate_dim=64, name="decoder", **kwargs):
         super().__init__(name=name, **kwargs)
         self.dense_proj = layers.Dense(intermediate_dim, activation="relu")
         self.dense_output = layers.Dense(original_dim, activation="sigmoid")
@@ -647,9 +635,7 @@ class VariationalAutoEncoder(keras.Model):
     ):
         super().__init__(name=name, **kwargs)
         self.original_dim = original_dim
-        self.encoder = Encoder(
-            latent_dim=latent_dim, intermediate_dim=intermediate_dim
-        )
+        self.encoder = Encoder(latent_dim=latent_dim, intermediate_dim=intermediate_dim)
         self.decoder = Decoder(original_dim, intermediate_dim=intermediate_dim)
 
     def call(self, inputs):

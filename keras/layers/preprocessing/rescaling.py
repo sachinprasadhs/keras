@@ -42,10 +42,7 @@ class Rescaling(TFDataLayer):
         scale = self.backend.cast(self.scale, dtype)
         offset = self.backend.cast(self.offset, dtype)
         scale_shape = self.backend.core.shape(scale)
-        if (
-            len(scale_shape) > 0
-            and backend.image_data_format() == "channels_first"
-        ):
+        if len(scale_shape) > 0 and backend.image_data_format() == "channels_first":
             scale = self.backend.numpy.reshape(
                 scale, scale_shape + (1,) * (3 - len(scale_shape))
             )

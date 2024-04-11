@@ -183,9 +183,7 @@ def affine_transform(
         ],
         indexing="ij",
     )
-    indices = torch.concatenate(
-        [torch.unsqueeze(x, dim=-1) for x in meshgrid], dim=-1
-    )
+    indices = torch.concatenate([torch.unsqueeze(x, dim=-1) for x in meshgrid], dim=-1)
     indices = torch.tile(indices, (batch_size, 1, 1, 1, 1))
 
     # swap the values
@@ -240,9 +238,7 @@ def _mirror_index_fixer(index, size):
 
 
 def _reflect_index_fixer(index, size):
-    return torch.floor_divide(
-        _mirror_index_fixer(2 * index + 1, 2 * size + 1) - 1, 2
-    )
+    return torch.floor_divide(_mirror_index_fixer(2 * index + 1, 2 * size + 1) - 1, 2)
 
 
 _INDEX_FIXERS = {
@@ -262,9 +258,7 @@ def _is_integer(a):
 
 
 def _nearest_indices_and_weights(coordinate):
-    coordinate = (
-        coordinate if _is_integer(coordinate) else torch.round(coordinate)
-    )
+    coordinate = coordinate if _is_integer(coordinate) else torch.round(coordinate)
     index = coordinate.to(torch.int32)
     return [(index, 1)]
 
@@ -277,9 +271,7 @@ def _linear_indices_and_weights(coordinate):
     return [(index, lower_weight), (index + 1, upper_weight)]
 
 
-def map_coordinates(
-    input, coordinates, order, fill_mode="constant", fill_value=0.0
-):
+def map_coordinates(input, coordinates, order, fill_mode="constant", fill_value=0.0):
     input_arr = convert_to_tensor(input)
     coordinate_arrs = [convert_to_tensor(c) for c in coordinates]
     # skip tensor creation as possible
@@ -334,9 +326,7 @@ def map_coordinates(
             contribution = input_arr[indices]
         else:
             all_valid = functools.reduce(operator.and_, validities)
-            contribution = torch.where(
-                all_valid, input_arr[indices], fill_value
-            )
+            contribution = torch.where(all_valid, input_arr[indices], fill_value)
         outputs.append(functools.reduce(operator.mul, weights) * contribution)
     result = functools.reduce(operator.add, outputs)
     if _is_integer(input_arr):

@@ -25,9 +25,7 @@ class _ConfusionMatrixConditionCount(Metric):
         dtype: (Optional) data type of the metric result.
     """
 
-    def __init__(
-        self, confusion_matrix_cond, thresholds=None, name=None, dtype=None
-    ):
+    def __init__(self, confusion_matrix_cond, thresholds=None, name=None, dtype=None):
         super().__init__(name=name, dtype=dtype)
         self._confusion_matrix_cond = confusion_matrix_cond
         self.init_thresholds = thresholds
@@ -562,9 +560,7 @@ class SensitivitySpecificityBase(Metric):
     [the following](https://en.wikipedia.org/wiki/Sensitivity_and_specificity).
     """
 
-    def __init__(
-        self, value, num_thresholds=200, class_id=None, name=None, dtype=None
-    ):
+    def __init__(self, value, num_thresholds=200, class_id=None, name=None, dtype=None):
         super().__init__(name=name, dtype=dtype)
         # Metric should be maximized during optimization.
         self._direction = "up"
@@ -583,8 +579,7 @@ class SensitivitySpecificityBase(Metric):
             self._thresholds_distributed_evenly = False
         else:
             thresholds = [
-                (i + 1) * 1.0 / (num_thresholds - 1)
-                for i in range(num_thresholds - 2)
+                (i + 1) * 1.0 / (num_thresholds - 1) for i in range(num_thresholds - 2)
             ]
             self.thresholds = [0.0] + thresholds + [1.0]
             self._thresholds_distributed_evenly = True
@@ -959,9 +954,7 @@ class PrecisionAtRecall(SensitivitySpecificityBase):
             self.true_positives,
             ops.add(self.true_positives, self.false_positives),
         )
-        return self._find_max_under_constraint(
-            recalls, precisions, ops.greater_equal
-        )
+        return self._find_max_under_constraint(recalls, precisions, ops.greater_equal)
 
     def get_config(self):
         config = {"num_thresholds": self.num_thresholds, "recall": self.recall}
@@ -1054,9 +1047,7 @@ class RecallAtPrecision(SensitivitySpecificityBase):
             self.true_positives,
             ops.add(self.true_positives, self.false_positives),
         )
-        return self._find_max_under_constraint(
-            precisions, recalls, ops.greater_equal
-        )
+        return self._find_max_under_constraint(precisions, recalls, ops.greater_equal)
 
     def get_config(self):
         config = {
@@ -1243,8 +1234,7 @@ class AUC(Metric):
             # (0, 1).
             self.num_thresholds = num_thresholds
             thresholds = [
-                (i + 1) * 1.0 / (num_thresholds - 1)
-                for i in range(num_thresholds - 2)
+                (i + 1) * 1.0 / (num_thresholds - 1) for i in range(num_thresholds - 2)
             ]
             self._thresholds_distributed_evenly = True
 
@@ -1452,9 +1442,7 @@ class AUC(Metric):
 
         safe_p_ratio = ops.where(
             ops.logical_and(p[: self.num_thresholds - 1] > 0, p[1:] > 0),
-            ops.divide_no_nan(
-                p[: self.num_thresholds - 1], ops.maximum(p[1:], 0)
-            ),
+            ops.divide_no_nan(p[: self.num_thresholds - 1], ops.maximum(p[1:], 0)),
             ops.ones_like(p[1:]),
         )
 
@@ -1463,9 +1451,7 @@ class AUC(Metric):
                 prec_slope,
                 (ops.add(dtp, ops.multiply(intercept, ops.log(safe_p_ratio)))),
             ),
-            ops.maximum(
-                ops.add(self.true_positives[1:], self.false_negatives[1:]), 0
-            ),
+            ops.maximum(ops.add(self.true_positives[1:], self.false_negatives[1:]), 0),
         )
 
         if self.multi_label:
@@ -1485,8 +1471,7 @@ class AUC(Metric):
     def result(self):
         if (
             self.curve == metrics_utils.AUCCurve.PR
-            and self.summation_method
-            == metrics_utils.AUCSummationMethod.INTERPOLATION
+            and self.summation_method == metrics_utils.AUCSummationMethod.INTERPOLATION
         ):
             # This use case is different and is handled separately.
             return self.interpolate_pr_auc()
@@ -1512,14 +1497,9 @@ class AUC(Metric):
             y = precision
 
         # Find the rectangle heights based on `summation_method`.
-        if (
-            self.summation_method
-            == metrics_utils.AUCSummationMethod.INTERPOLATION
-        ):
+        if self.summation_method == metrics_utils.AUCSummationMethod.INTERPOLATION:
             # Note: the case ('PR', 'interpolation') has been handled above.
-            heights = ops.divide(
-                ops.add(y[: self.num_thresholds - 1], y[1:]), 2.0
-            )
+            heights = ops.divide(ops.add(y[: self.num_thresholds - 1], y[1:]), 2.0)
         elif self.summation_method == metrics_utils.AUCSummationMethod.MINORING:
             heights = ops.minimum(y[: self.num_thresholds - 1], y[1:])
         # self.summation_method = metrics_utils.AUCSummationMethod.MAJORING:

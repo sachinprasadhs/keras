@@ -47,9 +47,7 @@ class EarlyStoppingTest(testing.TestCase):
         for mode, monitor, expected_mode in cases:
             patience = 0
             cbks = [
-                callbacks.EarlyStopping(
-                    patience=patience, monitor=monitor, mode=mode
-                )
+                callbacks.EarlyStopping(patience=patience, monitor=monitor, mode=mode)
             ]
             model.fit(
                 x_train,
@@ -67,9 +65,7 @@ class EarlyStoppingTest(testing.TestCase):
             self.assertEqual(cbks[0].monitor_op, monitor_op)
 
         with self.assertRaises(ValueError):
-            cbks = [
-                callbacks.EarlyStopping(patience=patience, monitor="unknown")
-            ]
+            cbks = [callbacks.EarlyStopping(patience=patience, monitor="unknown")]
             model.fit(
                 x_train,
                 y_train,
@@ -120,9 +116,7 @@ class EarlyStoppingTest(testing.TestCase):
         model.set_weights(weights)
 
         stopper = callbacks.EarlyStopping(monitor="mse", patience=patience)
-        hist = model.fit(
-            data, labels, callbacks=[stopper], verbose=0, epochs=20
-        )
+        hist = model.fit(data, labels, callbacks=[stopper], verbose=0, epochs=20)
         assert len(hist.epoch) >= patience
 
     @pytest.mark.requires_trainable_backend
@@ -142,9 +136,7 @@ class EarlyStoppingTest(testing.TestCase):
         stopper = callbacks.EarlyStopping(
             monitor="mse", patience=patience, baseline=baseline
         )
-        hist = model.fit(
-            x_train, y_train, callbacks=[stopper], verbose=0, epochs=20
-        )
+        hist = model.fit(x_train, y_train, callbacks=[stopper], verbose=0, epochs=20)
         assert len(hist.epoch) >= patience
 
     def test_early_stopping_final_weights_when_restoring_model_weights(self):
@@ -249,9 +241,7 @@ class EarlyStoppingTest(testing.TestCase):
             patience=patience,
             start_from_epoch=start_from_epoch,
         )
-        history = model.fit(
-            x_train, y_train, callbacks=[stopper], verbose=0, epochs=20
-        )
+        history = model.fit(x_train, y_train, callbacks=[stopper], verbose=0, epochs=20)
         # Test 'patience' argument functions correctly when used
         # in conjunction with 'start_from_epoch'.
         self.assertGreaterEqual(len(history.epoch), patience + start_from_epoch)
@@ -263,8 +253,6 @@ class EarlyStoppingTest(testing.TestCase):
             patience=patience,
             start_from_epoch=start_from_epoch,
         )
-        history = model.fit(
-            x_train, y_train, callbacks=[stopper], verbose=0, epochs=20
-        )
+        history = model.fit(x_train, y_train, callbacks=[stopper], verbose=0, epochs=20)
         # Test for boundary condition when 'patience' = 0.
         self.assertGreaterEqual(len(history.epoch), start_from_epoch)

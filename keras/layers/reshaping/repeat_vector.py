@@ -29,9 +29,7 @@ class RepeatVector(Layer):
         super().__init__(**kwargs)
         self.n = n
         if not isinstance(n, int):
-            raise TypeError(
-                f"Expected an integer value for `n`, got {type(n)}."
-            )
+            raise TypeError(f"Expected an integer value for `n`, got {type(n)}.")
         self.input_spec = InputSpec(ndim=2)
 
     def compute_output_shape(self, input_shape):

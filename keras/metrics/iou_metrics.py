@@ -111,9 +111,7 @@ class _IoUBase(Metric):
         sample_weight = ops.broadcast_to(sample_weight, ops.shape(y_true))
 
         if self.ignore_class is not None:
-            ignore_class = ops.convert_to_tensor(
-                self.ignore_class, y_true.dtype
-            )
+            ignore_class = ops.convert_to_tensor(self.ignore_class, y_true.dtype)
             valid_mask = ops.not_equal(y_true, ignore_class)
             y_true = y_true[valid_mask]
             y_pred = y_pred[valid_mask]
@@ -135,9 +133,7 @@ class _IoUBase(Metric):
         return self.total_cm.assign(self.total_cm + current_cm)
 
     def reset_state(self):
-        self.total_cm.assign(
-            ops.zeros(self.total_cm.shape, dtype=self.total_cm.dtype)
-        )
+        self.total_cm.assign(ops.zeros(self.total_cm.shape, dtype=self.total_cm.dtype))
 
 
 @keras_export("keras.metrics.IoU")
@@ -247,29 +243,19 @@ class IoU(_IoUBase):
 
     def result(self):
         """Compute the intersection-over-union via the confusion matrix."""
-        sum_over_row = ops.cast(
-            ops.sum(self.total_cm, axis=0), dtype=self.dtype
-        )
-        sum_over_col = ops.cast(
-            ops.sum(self.total_cm, axis=1), dtype=self.dtype
-        )
+        sum_over_row = ops.cast(ops.sum(self.total_cm, axis=0), dtype=self.dtype)
+        sum_over_col = ops.cast(ops.sum(self.total_cm, axis=1), dtype=self.dtype)
         true_positives = ops.cast(ops.diag(self.total_cm), dtype=self.dtype)
 
         # sum_over_row + sum_over_col =
         #     2 * true_positives + false_positives + false_negatives.
         denominator = sum_over_row + sum_over_col - true_positives
 
-        target_class_ids = ops.convert_to_tensor(
-            self.target_class_ids, dtype="int32"
-        )
+        target_class_ids = ops.convert_to_tensor(self.target_class_ids, dtype="int32")
 
         # Only keep the target classes
-        true_positives = ops.take_along_axis(
-            true_positives, target_class_ids, axis=-1
-        )
-        denominator = ops.take_along_axis(
-            denominator, target_class_ids, axis=-1
-        )
+        true_positives = ops.take_along_axis(true_positives, target_class_ids, axis=-1)
+        denominator = ops.take_along_axis(denominator, target_class_ids, axis=-1)
 
         # If the denominator is 0, we need to ignore the class.
         num_valid_entries = ops.sum(

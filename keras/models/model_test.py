@@ -637,7 +637,5 @@ class ModelTest(testing.TestCase, parameterized.TestCase):
         for weight in model.weights:
             if weight.name == "kernel":
                 kernel_count += 1
-                self.assertEqual(
-                    backend.standardize_dtype(weight.dtype), "int8"
-                )
+                self.assertEqual(backend.standardize_dtype(weight.dtype), "int8")
         self.assertEqual(kernel_count, 3)

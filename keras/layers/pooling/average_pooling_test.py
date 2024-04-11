@@ -253,9 +253,7 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool1d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool1d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -280,9 +278,7 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool1d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool1d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -298,9 +294,7 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool2d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool2d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -324,9 +318,7 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool2d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool2d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -345,9 +337,7 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool3d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool3d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)
 
     @parameterized.parameters(
@@ -372,7 +362,5 @@ class AveragePoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
             data_format=data_format,
         )
         outputs = layer(inputs)
-        expected = np_avgpool3d(
-            inputs, pool_size, strides, padding, data_format
-        )
+        expected = np_avgpool3d(inputs, pool_size, strides, padding, data_format)
         self.assertAllClose(outputs, expected)

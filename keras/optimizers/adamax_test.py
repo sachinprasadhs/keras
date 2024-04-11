@@ -49,9 +49,7 @@ class AdamaxTest(testing.TestCase):
         self.assertAlmostEqual(var3.numpy(), 2.0, decimal=6)
 
     def test_correctness_with_golden(self):
-        optimizer = Adamax(
-            learning_rate=0.2, beta_1=0.85, beta_2=0.95, epsilon=1e-6
-        )
+        optimizer = Adamax(learning_rate=0.2, beta_1=0.85, beta_2=0.95, epsilon=1e-6)
 
         x = backend.Variable(np.ones([10]))
         grads = ops.arange(0.1, 1.1, 0.1)

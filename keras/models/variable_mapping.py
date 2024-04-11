@@ -13,9 +13,7 @@ def map_trackable_variables(trackable, store, visited_trackables):
 
     variables = []
     if isinstance(trackable, Layer):
-        variables = (
-            trackable._trainable_variables + trackable._non_trainable_variables
-        )
+        variables = trackable._trainable_variables + trackable._non_trainable_variables
     elif isinstance(trackable, Optimizer):
         variables = trackable._variables
     elif isinstance(trackable, Metric):

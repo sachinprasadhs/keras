@@ -112,9 +112,7 @@ class BaseSeparableConv(Layer):
         self.filters = filters
         self.kernel_size = standardize_tuple(kernel_size, rank, "kernel_size")
         self.strides = standardize_tuple(strides, rank, "strides")
-        self.dilation_rate = standardize_tuple(
-            dilation_rate, rank, "dilation_rate"
-        )
+        self.dilation_rate = standardize_tuple(dilation_rate, rank, "dilation_rate")
         self.padding = standardize_padding(padding)
         self.data_format = standardize_data_format(data_format)
         self.activation = activations.get(activation)
@@ -268,18 +266,14 @@ class BaseSeparableConv(Layer):
                 "pointwise_initializer": initializers.serialize(
                     self.pointwise_initializer
                 ),
-                "bias_initializer": initializers.serialize(
-                    self.bias_initializer
-                ),
+                "bias_initializer": initializers.serialize(self.bias_initializer),
                 "depthwise_regularizer": regularizers.serialize(
                     self.depthwise_regularizer
                 ),
                 "pointwise_regularizer": regularizers.serialize(
                     self.pointwise_regularizer
                 ),
-                "bias_regularizer": regularizers.serialize(
-                    self.bias_regularizer
-                ),
+                "bias_regularizer": regularizers.serialize(self.bias_regularizer),
                 "activity_regularizer": regularizers.serialize(
                     self.activity_regularizer
                 ),

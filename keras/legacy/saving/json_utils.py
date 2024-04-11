@@ -47,9 +47,7 @@ def decode(json_string):
     return json.loads(json_string, object_hook=_decode_helper)
 
 
-def decode_and_deserialize(
-    json_string, module_objects=None, custom_objects=None
-):
+def decode_and_deserialize(json_string, module_objects=None, custom_objects=None):
     """Decodes the JSON and deserializes any Keras objects found in the dict."""
     return json.loads(
         json_string,
@@ -62,9 +60,7 @@ def decode_and_deserialize(
     )
 
 
-def _decode_helper(
-    obj, deserialize=False, module_objects=None, custom_objects=None
-):
+def _decode_helper(obj, deserialize=False, module_objects=None, custom_objects=None):
     """A decoding helper that is TF-object aware.
 
     Args:
@@ -94,9 +90,7 @@ def _decode_helper(
                 spec = obj["spec"]
                 tensors = []
                 for dtype, tensor in obj["tensors"]:
-                    tensors.append(
-                        tf.constant(tensor, dtype=tf.dtypes.as_dtype(dtype))
-                    )
+                    tensors.append(tf.constant(tensor, dtype=tf.dtypes.as_dtype(dtype)))
                 return tf.nest.pack_sequence_as(
                     _decode_helper(spec), tensors, expand_composites=True
                 )
@@ -109,9 +103,7 @@ def _decode_helper(
             # __passive_serialization__ is added by the JSON encoder when
             # encoding an object that has a `get_config()` method.
             try:
-                if (
-                    "module" not in obj
-                ):  # TODO(nkovela): Add TF SavedModel scope
+                if "module" not in obj:  # TODO(nkovela): Add TF SavedModel scope
                     return serialization.deserialize_keras_object(
                         obj,
                         module_objects=module_objects,

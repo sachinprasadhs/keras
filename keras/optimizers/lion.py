@@ -117,9 +117,7 @@ class Lion(optimizer.Optimizer):
         )
         self.assign(
             m,
-            ops.add(
-                ops.multiply(m, beta_2), ops.multiply(gradient, (1.0 - beta_2))
-            ),
+            ops.add(ops.multiply(m, beta_2), ops.multiply(gradient, (1.0 - beta_2))),
         )
 
     def get_config(self):

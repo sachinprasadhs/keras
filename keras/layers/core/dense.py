@@ -101,9 +101,7 @@ class Dense(Layer):
     def build(self, input_shape):
         input_dim = input_shape[-1]
         if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
-            self.quantized_build(
-                input_shape, mode=self.dtype_policy.quantization_mode
-            )
+            self.quantized_build(input_shape, mode=self.dtype_policy.quantization_mode)
         else:
             self._kernel = self.add_weight(
                 name="kernel",
@@ -130,13 +128,9 @@ class Dense(Layer):
     @property
     def kernel(self):
         if not self.built:
-            raise AttributeError(
-                "You must build the layer before accessing `kernel`."
-            )
+            raise AttributeError("You must build the layer before accessing `kernel`.")
         if self.lora_enabled:
-            return self._kernel + ops.matmul(
-                self.lora_kernel_a, self.lora_kernel_b
-            )
+            return self._kernel + ops.matmul(self.lora_kernel_a, self.lora_kernel_b)
         return self._kernel
 
     def call(self, inputs):
@@ -152,9 +146,7 @@ class Dense(Layer):
         output_shape[-1] = self.units
         return tuple(output_shape)
 
-    def enable_lora(
-        self, rank, a_initializer="he_uniform", b_initializer="zeros"
-    ):
+    def enable_lora(self, rank, a_initializer="he_uniform", b_initializer="zeros"):
         if self.kernel_constraint:
             raise ValueError(
                 "Lora is incompatible with kernel constraints. "
@@ -162,13 +154,10 @@ class Dense(Layer):
                 "`kernel_constraint` argument."
             )
         if not self.built:
-            raise ValueError(
-                "Cannot enable lora on a layer that isn't yet built."
-            )
+            raise ValueError("Cannot enable lora on a layer that isn't yet built.")
         if self.lora_enabled:
             raise ValueError(
-                "lora is already enabled. "
-                "This can only be done once per layer."
+                "lora is already enabled. " "This can only be done once per layer."
             )
         self._tracker.unlock()
         self.lora_kernel_a = self.add_weight(
@@ -224,13 +213,9 @@ class Dense(Layer):
             "units": self.units,
             "activation": activations.serialize(self.activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
@@ -370,14 +355,11 @@ class Dense(Layer):
             self._tracker.lock()
         else:
             NotImplementedError(
-                "Invalid quantization mode. Expected 'int8'. "
-                f"Received: mode={mode}"
+                "Invalid quantization mode. Expected 'int8'. " f"Received: mode={mode}"
             )
 
         # Set new dtype policy
-        if not isinstance(
-            self.dtype_policy, dtype_policies.QuantizedDTypePolicy
-        ):
+        if not isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
             quantized_dtype = f"{mode}_from_{self.dtype_policy.name}"
             self.dtype_policy = dtype_policies.get(quantized_dtype)
 

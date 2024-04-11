@@ -275,9 +275,7 @@ class Add(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(["keras.ops.add", "keras.ops.numpy.add"])
@@ -879,12 +877,8 @@ class Arctan2(Operation):
         x1_shape = getattr(x1, "shape", [])
         x2_shape = getattr(x2, "shape", [])
         outputs_shape = broadcast_shapes(x1_shape, x2_shape)
-        x1_dtype = backend.standardize_dtype(
-            getattr(x1, "dtype", backend.floatx())
-        )
-        x2_dtype = backend.standardize_dtype(
-            getattr(x2, "dtype", backend.floatx())
-        )
+        x1_dtype = backend.standardize_dtype(getattr(x1, "dtype", backend.floatx()))
+        x2_dtype = backend.standardize_dtype(getattr(x2, "dtype", backend.floatx()))
         dtype = dtypes.result_type(x1_dtype, x2_dtype, float)
         return KerasTensor(outputs_shape, dtype=dtype)
 
@@ -973,9 +967,7 @@ class Argmax(Operation):
     def compute_output_spec(self, x):
         if self.axis is None:
             return KerasTensor([], dtype="int32")
-        return KerasTensor(
-            reduce_shape(x.shape, axis=[self.axis]), dtype="int32"
-        )
+        return KerasTensor(reduce_shape(x.shape, axis=[self.axis]), dtype="int32")
 
 
 @keras_export(["keras.ops.argmax", "keras.ops.numpy.argmax"])
@@ -1019,9 +1011,7 @@ class Argmin(Operation):
     def compute_output_spec(self, x):
         if self.axis is None:
             return KerasTensor([], dtype="int32")
-        return KerasTensor(
-            reduce_shape(x.shape, axis=[self.axis]), dtype="int32"
-        )
+        return KerasTensor(reduce_shape(x.shape, axis=[self.axis]), dtype="int32")
 
 
 @keras_export(["keras.ops.argmin", "keras.ops.numpy.argmin"])
@@ -1168,9 +1158,7 @@ class Average(Operation):
                 )
 
         if weights is None or shape_match_on_axis or shape_match:
-            return KerasTensor(
-                reduce_shape(x.shape, axis=[self.axis]), dtype=dtype
-            )
+            return KerasTensor(reduce_shape(x.shape, axis=[self.axis]), dtype=dtype)
         else:
             # `weights` can either be a 1D array of length `x.shape[axis]` or
             # of the same shape as `x`.
@@ -1444,9 +1432,7 @@ class Concatenate(Operation):
         all_sparse = True
         dtypes_to_resolve = []
         for x in xs:
-            if not shape_equal(
-                x.shape, first_shape, axis=[self.axis], allow_none=True
-            ):
+            if not shape_equal(x.shape, first_shape, axis=[self.axis], allow_none=True):
                 raise ValueError(
                     "Every value in `xs` must have the same shape except on "
                     f"the `axis` dim. But found element of shape {x.shape}, "
@@ -1741,9 +1727,9 @@ def cross(x1, x2, axisa=-1, axisb=-1, axisc=-1, axis=None):
         Vector cross product(s).
     """
     if any_symbolic_tensors((x1, x2)):
-        return Cross(
-            axisa=axisa, axisb=axisb, axisc=axisc, axis=axis
-        ).symbolic_call(x1, x2)
+        return Cross(axisa=axisa, axisb=axisb, axisc=axisc, axis=axis).symbolic_call(
+            x1, x2
+        )
     return backend.numpy.cross(
         x1,
         x2,
@@ -1859,13 +1845,9 @@ class Diag(Operation):
                     remaining = x_shape[1] - self.k
                 else:
                     remaining = x_shape[0] + self.k
-                output_shape = [
-                    int(np.maximum(0, np.minimum(remaining, shorter_side)))
-                ]
+                output_shape = [int(np.maximum(0, np.minimum(remaining, shorter_side)))]
         else:
-            raise ValueError(
-                f"`x` must be 1-D or 2-D, but received shape {x.shape}."
-            )
+            raise ValueError(f"`x` must be 1-D or 2-D, but received shape {x.shape}.")
         return KerasTensor(output_shape, dtype=x.dtype)
 
 
@@ -1943,9 +1925,7 @@ class Diagonal(Operation):
                 remaining = shape_2d[1] - self.offset
             else:
                 remaining = shape_2d[0] + self.offset
-            diag_shape = [
-                int(np.maximum(0, np.minimum(remaining, shorter_side)))
-            ]
+            diag_shape = [int(np.maximum(0, np.minimum(remaining, shorter_side)))]
         output_shape = output_shape + diag_shape
         return KerasTensor(output_shape, dtype=x.dtype)
 
@@ -2126,11 +2106,7 @@ class Dot(Operation):
                 )
             return KerasTensor(x1_shape[:-1], dtype=dtype)
 
-        if (
-            x1_shape[-1] is None
-            or x2_shape[-2] is None
-            or x1_shape[-1] == x2_shape[-2]
-        ):
+        if x1_shape[-1] is None or x2_shape[-2] is None or x1_shape[-1] == x2_shape[-2]:
             del x1_shape[-1]
             del x2_shape[-2]
             return KerasTensor(x1_shape + x2_shape, dtype=dtype)
@@ -2313,9 +2289,7 @@ class Einsum(Operation):
                 # "...".
                 wildcard_shape_start_index = len(split_spec[0])
                 wildcard_shape_end_index = (
-                    len(x_shape)
-                    if len(split_spec[1]) == 0
-                    else -len(split_spec[1])
+                    len(x_shape) if len(split_spec[1]) == 0 else -len(split_spec[1])
                 )
                 wildcard_shape = x_shape[
                     wildcard_shape_start_index:wildcard_shape_end_index
@@ -2323,9 +2297,7 @@ class Einsum(Operation):
                 wildcard_shape_str = (
                     " ".join([str(size) for size in wildcard_shape]) + " "
                 )
-                expanded_shape = expanded_shape.replace(
-                    "...", wildcard_shape_str
-                )
+                expanded_shape = expanded_shape.replace("...", wildcard_shape_str)
             # Replace all letters not yet handled with "1" for broadcasting.
             expanded_shape = re.sub("[a-z]", "1 ", expanded_shape)
             expanded_shape = expanded_shape.split()
@@ -2715,14 +2687,10 @@ class GetItem(Operation):
         elif isinstance(key, list):
             remaining_key = key.copy()
         else:
-            raise ValueError(
-                f"Unsupported key type for array slice. Recieved: `{key}`"
-            )
+            raise ValueError(f"Unsupported key type for array slice. Recieved: `{key}`")
         num_ellipses = remaining_key.count(Ellipsis)
         if num_ellipses > 1:
-            raise ValueError(
-                f"Slice should only have one ellipsis. Recieved: `{key}`"
-            )
+            raise ValueError(f"Slice should only have one ellipsis. Recieved: `{key}`")
         elif num_ellipses == 0:
             # Add an implicit final ellipsis.
             remaining_key.append(Ellipsis)
@@ -3094,9 +3062,7 @@ def less_equal(x1, x2):
 
 
 class Linspace(Operation):
-    def __init__(
-        self, num=50, endpoint=True, retstep=False, dtype=float, axis=0
-    ):
+    def __init__(self, num=50, endpoint=True, retstep=False, dtype=float, axis=0):
         super().__init__()
         self.num = num
         self.endpoint = endpoint
@@ -3123,9 +3089,7 @@ class Linspace(Operation):
             output_shape = output_shape + [self.num]
         elif self.axis >= 0:
             output_shape = (
-                output_shape[: self.axis]
-                + [self.num]
-                + output_shape[self.axis :]
+                output_shape[: self.axis] + [self.num] + output_shape[self.axis :]
             )
         else:
             output_shape = (
@@ -3146,9 +3110,7 @@ class Linspace(Operation):
 
 
 @keras_export(["keras.ops.linspace", "keras.ops.numpy.linspace"])
-def linspace(
-    start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0
-):
+def linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0):
     """Return evenly spaced numbers over a specified interval.
 
     Returns `num` evenly spaced samples, calculated over the interval
@@ -3468,9 +3430,7 @@ class Logspace(Operation):
             output_shape = output_shape + [self.num]
         elif self.axis >= 0:
             output_shape = (
-                output_shape[: self.axis]
-                + [self.num]
-                + output_shape[self.axis :]
+                output_shape[: self.axis] + [self.num] + output_shape[self.axis :]
             )
         else:
             output_shape = (
@@ -3534,9 +3494,7 @@ class Matmul(Operation):
     def compute_output_spec(self, x1, x2):
         x1_shape = getattr(x1, "shape", [])
         x2_shape = getattr(x2, "shape", [])
-        output_shape = operation_utils.compute_matmul_output_shape(
-            x1_shape, x2_shape
-        )
+        output_shape = operation_utils.compute_matmul_output_shape(x1_shape, x2_shape)
         x1_sparse = getattr(x1, "sparse", True)
         x2_sparse = getattr(x2, "sparse", True)
         output_sparse = x1_sparse and x2_sparse
@@ -3612,9 +3570,7 @@ def max(x, axis=None, keepdims=False, initial=None):
         Maximum of `x`.
     """
     if any_symbolic_tensors((x,)):
-        return Max(axis=axis, keepdims=keepdims, initial=initial).symbolic_call(
-            x
-        )
+        return Max(axis=axis, keepdims=keepdims, initial=initial).symbolic_call(x)
     return backend.numpy.max(x, axis=axis, keepdims=keepdims, initial=initial)
 
 
@@ -3633,9 +3589,7 @@ class Maximum(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(["keras.ops.maximum", "keras.ops.numpy.maximum"])
@@ -3666,9 +3620,7 @@ class Median(Operation):
         return backend.numpy.median(x, axis=self.axis, keepdims=self.keepdims)
 
     def compute_output_spec(self, x):
-        output_shape = reduce_shape(
-            x.shape, axis=self.axis, keepdims=self.keepdims
-        )
+        output_shape = reduce_shape(x.shape, axis=self.axis, keepdims=self.keepdims)
         if backend.standardize_dtype(x.dtype) == "int64":
             dtype = backend.floatx()
         else:
@@ -3725,9 +3677,7 @@ class Meshgrid(Operation):
         tmp = output_shape[0]
         output_shape[0] = output_shape[1]
         output_shape[1] = tmp
-        return [
-            KerasTensor(output_shape, dtype=xi.dtype) for _ in range(len(x))
-        ]
+        return [KerasTensor(output_shape, dtype=xi.dtype) for _ in range(len(x))]
 
 
 @keras_export(["keras.ops.meshgrid", "keras.ops.numpy.meshgrid"])
@@ -3805,9 +3755,7 @@ def min(x, axis=None, keepdims=False, initial=None):
         Minimum of `x`.
     """
     if any_symbolic_tensors((x,)):
-        return Min(axis=axis, keepdims=keepdims, initial=initial).symbolic_call(
-            x
-        )
+        return Min(axis=axis, keepdims=keepdims, initial=initial).symbolic_call(x)
     return backend.numpy.min(x, axis=axis, keepdims=keepdims, initial=initial)
 
 
@@ -3826,9 +3774,7 @@ class Minimum(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(["keras.ops.minimum", "keras.ops.numpy.minimum"])
@@ -4153,9 +4099,7 @@ class Pad(Operation):
     def _process_pad_width(self, pad_width):
         if isinstance(pad_width, int):
             return ((pad_width, pad_width),)
-        if isinstance(pad_width, (tuple, list)) and isinstance(
-            pad_width[0], int
-        ):
+        if isinstance(pad_width, (tuple, list)) and isinstance(pad_width[0], int):
             return (pad_width,)
         first_len = len(pad_width[0])
         for i, pw in enumerate(pad_width):
@@ -4303,14 +4247,10 @@ class Quantile(Operation):
         self.keepdims = keepdims
 
     def call(self, x, q):
-        return backend.numpy.quantile(
-            x, q, axis=self.axis, keepdims=self.keepdims
-        )
+        return backend.numpy.quantile(x, q, axis=self.axis, keepdims=self.keepdims)
 
     def compute_output_spec(self, x, q):
-        output_shape = reduce_shape(
-            x.shape, axis=self.axis, keepdims=self.keepdims
-        )
+        output_shape = reduce_shape(x.shape, axis=self.axis, keepdims=self.keepdims)
         if hasattr(q, "shape"):
             if len(q.shape) > 0:
                 output_shape = (q.shape[0],) + output_shape
@@ -4352,12 +4292,8 @@ def quantile(x, q, axis=None, method="linear", keepdims=False):
         axes that remain after the reduction of `x`.
     """
     if any_symbolic_tensors((x, q)):
-        return Quantile(
-            axis=axis, method=method, keepdims=keepdims
-        ).symbolic_call(x, q)
-    return backend.numpy.quantile(
-        x, q, axis=axis, method=method, keepdims=keepdims
-    )
+        return Quantile(axis=axis, method=method, keepdims=keepdims).symbolic_call(x, q)
+    return backend.numpy.quantile(x, q, axis=axis, method=method, keepdims=keepdims)
 
 
 class Ravel(Operation):
@@ -5099,9 +5035,7 @@ class Tensordot(Operation):
         if not isinstance(self.axes, int):
             x1_select_shape = [x1_shape[ax] for ax in self.axes[0]]
             x2_select_shape = [x2_shape[ax] for ax in self.axes[1]]
-            if not shape_equal(
-                x1_select_shape, x2_select_shape, allow_none=True
-            ):
+            if not shape_equal(x1_select_shape, x2_select_shape, allow_none=True):
                 raise ValueError(
                     "Shape mismatch on `x1[axes[0]]` and `x2[axes[1]]`, "
                     f"received {x1_select_shape} and {x2_select_shape}."
@@ -5549,9 +5483,7 @@ class Divide(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and not x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(["keras.ops.divide", "keras.ops.numpy.divide"])
@@ -5588,9 +5520,7 @@ class DivideNoNan(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and not x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(["keras.ops.divide_no_nan", "keras.ops.numpy.divide_no_nan"])
@@ -5625,9 +5555,7 @@ class TrueDivide(Operation):
         x1_sparse = getattr(x1, "sparse", False)
         x2_sparse = getattr(x2, "sparse", False)
         output_sparse = x1_sparse and not x2_sparse
-        return KerasTensor(
-            output_shape, dtype=output_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=output_dtype, sparse=output_sparse)
 
 
 @keras_export(
@@ -5774,8 +5702,7 @@ class Squeeze(Operation):
             for a in axis:
                 if input_shape[a] != 1:
                     raise ValueError(
-                        f"Cannot squeeze axis {a}, because the dimension "
-                        "is not 1."
+                        f"Cannot squeeze axis {a}, because the dimension " "is not 1."
                     )
             axis = [canonicalize_axis(a, len(input_shape)) for a in axis]
             for a in sorted(axis, reverse=True):
@@ -6119,9 +6046,7 @@ class Correlate(Operation):
                 + f"shape {x2_shape}"
             )
         x1_len, x2_len = x1_shape[0], x2_shape[0]
-        output_shape = (
-            np.maximum(x1_len, x2_len) - np.minimum(x1_len, x2_len) + 1,
-        )
+        output_shape = (np.maximum(x1_len, x2_len) - np.minimum(x1_len, x2_len) + 1,)
         if self.mode == "same":
             output_shape = (np.maximum(x1_len, x2_len),)
         elif self.mode == "full":

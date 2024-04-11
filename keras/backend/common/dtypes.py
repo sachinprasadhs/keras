@@ -88,9 +88,7 @@ def _make_lattice_upper_bounds():
     upper_bounds = {node: {node} for node in lattice}
     for n in lattice:
         while True:
-            new_upper_bounds = set().union(
-                *(lattice[b] for b in upper_bounds[n])
-            )
+            new_upper_bounds = set().union(*(lattice[b] for b in upper_bounds[n]))
             if n in new_upper_bounds:
                 raise ValueError(
                     f"cycle detected in type promotion lattice for node {n}"
@@ -141,9 +139,7 @@ def _least_upper_bound(*nodes):
         bounds = [UB[n] for n in N]
     except KeyError:
         dtype = next(n for n in N if n not in UB)
-        raise ValueError(
-            f"{dtype=} is not a valid dtype for Keras type promotion."
-        )
+        raise ValueError(f"{dtype=} is not a valid dtype for Keras type promotion.")
     CUB = set.intersection(*bounds)
     LUB = (CUB & N) or {c for c in CUB if CUB.issubset(UB[c])}
     if len(LUB) == 1:
@@ -252,9 +248,7 @@ def _lattice_result_type(*args):
         # strongly-typed counterparts and apply the weak type at the end. This
         # avoids returning the incorrect result with non-canonical weak types
         # (e.g. weak int16).
-        out_dtype = _least_upper_bound(
-            *{_respect_weak_type(d, False) for d in dtypes}
-        )
+        out_dtype = _least_upper_bound(*{_respect_weak_type(d, False) for d in dtypes})
         out_weak_type = True
     else:
         out_dtype = _least_upper_bound(

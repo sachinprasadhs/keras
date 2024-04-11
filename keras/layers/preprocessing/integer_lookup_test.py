@@ -62,9 +62,7 @@ class IntegerLookupTest(testing.TestCase):
         layer.adapt(adapt_data)
         output = layer(single_sample_input_data)
         self.assertTrue(backend.is_tensor(output))
-        self.assertAllClose(
-            output, np.array([1.133732, 0.916291, 1.098612, 0.0])
-        )
+        self.assertAllClose(output, np.array([1.133732, 0.916291, 1.098612, 0.0]))
 
         # count mode
         layer = layers.IntegerLookup(

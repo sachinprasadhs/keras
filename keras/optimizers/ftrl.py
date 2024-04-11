@@ -141,9 +141,7 @@ class Ftrl(optimizer.Optimizer):
         self.initial_accumulator_value = initial_accumulator_value
         self.l1_regularization_strength = l1_regularization_strength
         self.l2_regularization_strength = l2_regularization_strength
-        self.l2_shrinkage_regularization_strength = (
-            l2_shrinkage_regularization_strength
-        )
+        self.l2_shrinkage_regularization_strength = l2_shrinkage_regularization_strength
         self.beta = beta
 
     def build(self, var_list):
@@ -169,9 +167,7 @@ class Ftrl(optimizer.Optimizer):
                 )
             )
             self._linears.append(
-                self.add_variable_from_reference(
-                    reference_variable=var, name="linear"
-                )
+                self.add_variable_from_reference(reference_variable=var, name="linear")
             )
 
     def update_step(self, gradient, variable, learning_rate):
@@ -189,9 +185,7 @@ class Ftrl(optimizer.Optimizer):
 
         grad_to_use = ops.add(
             gradient,
-            ops.multiply(
-                2 * self.l2_shrinkage_regularization_strength, variable
-            ),
+            ops.multiply(2 * self.l2_shrinkage_regularization_strength, variable),
         )
         new_accum = ops.add(accum, ops.square(gradient))
         self.assign_add(

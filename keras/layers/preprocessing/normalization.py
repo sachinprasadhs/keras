@@ -93,9 +93,7 @@ class Normalization(Layer):
     array([2., 10., 8.], dtype=float32)
     """
 
-    def __init__(
-        self, axis=-1, mean=None, variance=None, invert=False, **kwargs
-    ):
+    def __init__(self, axis=-1, mean=None, variance=None, invert=False, **kwargs):
         super().__init__(**kwargs)
         # Standardize `axis` to a tuple.
         if axis is None:
@@ -133,9 +131,7 @@ class Normalization(Layer):
 
         # Axes to be kept, replacing negative values with positive equivalents.
         # Sorted to avoid transposing axes.
-        self._keep_axis = tuple(
-            sorted([d if d >= 0 else d + ndim for d in self.axis])
-        )
+        self._keep_axis = tuple(sorted([d if d >= 0 else d + ndim for d in self.axis]))
         # All axes to be kept should have known shape.
         for d in self._keep_axis:
             if input_shape[d] is None:
@@ -146,13 +142,9 @@ class Normalization(Layer):
                     f"with unknown axis at index {d}"
                 )
         # Axes to be reduced.
-        self._reduce_axis = tuple(
-            d for d in range(ndim) if d not in self._keep_axis
-        )
+        self._reduce_axis = tuple(d for d in range(ndim) if d not in self._keep_axis)
         # 1 if an axis should be reduced, 0 otherwise.
-        self._reduce_axis_mask = [
-            0 if d in self._keep_axis else 1 for d in range(ndim)
-        ]
+        self._reduce_axis_mask = [0 if d in self._keep_axis else 1 for d in range(ndim)]
         # Broadcast any reduced axes.
         self._broadcast_shape = [
             input_shape[d] if d in self._keep_axis else 1 for d in range(ndim)
@@ -247,15 +239,11 @@ class Normalization(Layer):
             total_var = ops.zeros(self._mean_and_var_shape)
             total_count = 0
             for batch in data:
-                batch = backend.convert_to_tensor(
-                    batch, dtype=self.compute_dtype
-                )
+                batch = backend.convert_to_tensor(batch, dtype=self.compute_dtype)
                 batch_mean = ops.mean(batch, axis=self._reduce_axis)
                 batch_var = ops.var(batch, axis=self._reduce_axis)
                 if self._reduce_axis:
-                    batch_reduce_shape = (
-                        batch.shape[d] for d in self._reduce_axis
-                    )
+                    batch_reduce_shape = (batch.shape[d] for d in self._reduce_axis)
                     batch_count = math.prod(batch_reduce_shape)
                 else:
                     batch_count = 1

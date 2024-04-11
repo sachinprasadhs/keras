@@ -27,16 +27,12 @@ class TorchDataLoaderAdapter(DataAdapter):
         if hasattr(dataloader.dataset, "__len__"):
             self._num_batches = len(dataloader)
             if self._batch_size is not None:
-                self._partial_batch_size = (
-                    len(dataloader.dataset) % self._batch_size
-                )
+                self._partial_batch_size = len(dataloader.dataset) % self._batch_size
 
     def get_numpy_iterator(self):
         for batch in self._dataloader:
             # shared memory using `np.asarray`
-            yield tuple(
-                tree.map_structure(lambda x: np.asarray(x.cpu()), batch)
-            )
+            yield tuple(tree.map_structure(lambda x: np.asarray(x.cpu()), batch))
 
     def get_jax_iterator(self):
         # We use numpy as an intermediary because the conversion
@@ -53,9 +49,7 @@ class TorchDataLoaderAdapter(DataAdapter):
                     data_adapter_utils.NUM_BATCHES_FOR_TENSOR_SPEC,
                 )
             )
-            self._output_signature = tuple(
-                data_adapter_utils.get_tensor_spec(batches)
-            )
+            self._output_signature = tuple(data_adapter_utils.get_tensor_spec(batches))
         return tf.data.Dataset.from_generator(
             self.get_numpy_iterator,
             output_signature=self._output_signature,

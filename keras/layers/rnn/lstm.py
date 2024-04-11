@@ -164,15 +164,9 @@ class LSTMCell(Layer, DropoutRNNCell):
                 def bias_initializer(_, *args, **kwargs):
                     return ops.concatenate(
                         [
-                            self.bias_initializer(
-                                (self.units,), *args, **kwargs
-                            ),
-                            initializers.get("ones")(
-                                (self.units,), *args, **kwargs
-                            ),
-                            self.bias_initializer(
-                                (self.units * 2,), *args, **kwargs
-                            ),
+                            self.bias_initializer((self.units,), *args, **kwargs),
+                            initializers.get("ones")((self.units,), *args, **kwargs),
+                            self.bias_initializer((self.units * 2,), *args, **kwargs),
                         ]
                     )
 
@@ -198,9 +192,7 @@ class LSTMCell(Layer, DropoutRNNCell):
         )
         f = self.recurrent_activation(
             x_f
-            + ops.matmul(
-                h_tm1_f, self.recurrent_kernel[:, self.units : self.units * 2]
-            )
+            + ops.matmul(h_tm1_f, self.recurrent_kernel[:, self.units : self.units * 2])
         )
         c = f * c_tm1 + i * self.activation(
             x_c
@@ -210,8 +202,7 @@ class LSTMCell(Layer, DropoutRNNCell):
             )
         )
         o = self.recurrent_activation(
-            x_o
-            + ops.matmul(h_tm1_o, self.recurrent_kernel[:, self.units * 3 :])
+            x_o + ops.matmul(h_tm1_o, self.recurrent_kernel[:, self.units * 3 :])
         )
         return c, o
 
@@ -277,29 +268,17 @@ class LSTMCell(Layer, DropoutRNNCell):
         config = {
             "units": self.units,
             "activation": activations.serialize(self.activation),
-            "recurrent_activation": activations.serialize(
-                self.recurrent_activation
-            ),
+            "recurrent_activation": activations.serialize(self.recurrent_activation),
             "use_bias": self.use_bias,
             "unit_forget_bias": self.unit_forget_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,
@@ -629,32 +608,18 @@ class LSTM(RNN):
         config = {
             "units": self.units,
             "activation": activations.serialize(self.activation),
-            "recurrent_activation": activations.serialize(
-                self.recurrent_activation
-            ),
+            "recurrent_activation": activations.serialize(self.recurrent_activation),
             "use_bias": self.use_bias,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
-            "recurrent_initializer": initializers.serialize(
-                self.recurrent_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
+            "recurrent_initializer": initializers.serialize(self.recurrent_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
             "unit_forget_bias": self.unit_forget_bias,
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
-            "recurrent_regularizer": regularizers.serialize(
-                self.recurrent_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+            "recurrent_regularizer": regularizers.serialize(self.recurrent_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
-            "recurrent_constraint": constraints.serialize(
-                self.recurrent_constraint
-            ),
+            "recurrent_constraint": constraints.serialize(self.recurrent_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
             "dropout": self.dropout,
             "recurrent_dropout": self.recurrent_dropout,

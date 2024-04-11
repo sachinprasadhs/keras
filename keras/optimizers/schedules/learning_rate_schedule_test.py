@@ -17,11 +17,7 @@ class TestFitLRSchedulesFlow(testing.TestCase):
     @pytest.mark.requires_trainable_backend
     def test_fit_lr_correctness(self):
         model = Sequential(
-            [
-                layers.Dense(
-                    2, kernel_initializer="ones", bias_initializer="ones"
-                )
-            ]
+            [layers.Dense(2, kernel_initializer="ones", bias_initializer="ones")]
         )
         optimizer = optimizers.Adam(
             learning_rate=schedules.ExponentialDecay(
@@ -232,9 +228,7 @@ class SqrtDecayTest(testing.TestCase):
         lr = 0.05
         end_lr = 0.001
         power = 0.5
-        decayed_lr = schedules.PolynomialDecay(
-            lr, 10, end_lr, power=power, cycle=True
-        )
+        decayed_lr = schedules.PolynomialDecay(lr, 10, end_lr, power=power, cycle=True)
         expected = (lr - end_lr) * 0.25**power + end_lr
         self.assertAllClose(decayed_lr(step), expected, 1e-6)
 
@@ -329,9 +323,7 @@ class CosineDecayTest(testing.TestCase):
                 warmup_target=target_lr,
                 warmup_steps=warmup_steps,
             )
-            expected = self.linear_warmup(
-                step, warmup_steps, initial_lr, target_lr
-            )
+            expected = self.linear_warmup(step, warmup_steps, initial_lr, target_lr)
             self.assertAllClose(lr(step), expected)
 
     def test_alpha(self):
@@ -339,9 +331,7 @@ class CosineDecayTest(testing.TestCase):
         initial_lr = 1.0
         alpha = 0.1
         for step in range(0, 1500, 250):
-            decayed_lr = schedules.CosineDecay(
-                initial_lr, num_training_steps, alpha
-            )
+            decayed_lr = schedules.CosineDecay(initial_lr, num_training_steps, alpha)
             expected = self.np_cosine_decay(step, num_training_steps, alpha)
             self.assertAllClose(decayed_lr(step), expected, 1e-6)
 
@@ -366,9 +356,7 @@ class CosineDecayTest(testing.TestCase):
                 warmup_steps=warmup_steps,
             )
             if step < warmup_steps + 1:
-                expected = self.linear_warmup(
-                    step, warmup_steps, initial_lr, target_lr
-                )
+                expected = self.linear_warmup(step, warmup_steps, initial_lr, target_lr)
             else:
                 expected = target_lr * self.np_cosine_decay(
                     step - warmup_steps, decay_steps
@@ -406,9 +394,7 @@ class CosineDecayRestartsTest(testing.TestCase):
         num_training_steps = 1000
         initial_lr = 1.0
         for step in range(0, 1500, 250):
-            decayed_lr = schedules.CosineDecayRestarts(
-                initial_lr, num_training_steps
-            )
+            decayed_lr = schedules.CosineDecayRestarts(initial_lr, num_training_steps)
             expected = self.np_cosine_decay_restarts(step, num_training_steps)
             self.assertAllClose(decayed_lr(step), expected, 1e-6)
 
@@ -416,9 +402,7 @@ class CosineDecayRestartsTest(testing.TestCase):
         num_training_steps = 1000
         initial_lr = np.float64(1.0)
         for step in range(0, 1500, 250):
-            decayed_lr = schedules.CosineDecayRestarts(
-                initial_lr, num_training_steps
-            )
+            decayed_lr = schedules.CosineDecayRestarts(initial_lr, num_training_steps)
             expected = self.np_cosine_decay_restarts(step, num_training_steps)
             self.assertAllClose(decayed_lr(step), expected, 1e-6)
 

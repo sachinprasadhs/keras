@@ -92,9 +92,7 @@ class Merge(Layer):
                 shape = None
             else:
                 shape = input_shape[i][1:]
-            output_shape = self._compute_elemwise_op_output_shape(
-                output_shape, shape
-            )
+            output_shape = self._compute_elemwise_op_output_shape(output_shape, shape)
 
         # If the inputs have different ranks, we have to reshape them
         # to make them broadcastable.
@@ -199,9 +197,7 @@ class Merge(Layer):
                 shape = None
             else:
                 shape = input_shape[i][1:]
-            output_shape = self._compute_elemwise_op_output_shape(
-                output_shape, shape
-            )
+            output_shape = self._compute_elemwise_op_output_shape(output_shape, shape)
         batch_sizes = {s[0] for s in input_shape if s is not None} - {None}
         if len(batch_sizes) == 1:
             output_shape = (list(batch_sizes)[0],) + output_shape
@@ -212,9 +208,7 @@ class Merge(Layer):
     def compute_output_spec(self, inputs):
         output_shape = self.compute_output_shape([x.shape for x in inputs])
         output_sparse = all(x.sparse for x in inputs)
-        return KerasTensor(
-            output_shape, dtype=self.compute_dtype, sparse=output_sparse
-        )
+        return KerasTensor(output_shape, dtype=self.compute_dtype, sparse=output_sparse)
 
     def compute_mask(self, inputs, mask=None):
         if mask is None:
@@ -222,9 +216,7 @@ class Merge(Layer):
         if not isinstance(mask, (tuple, list)):
             raise ValueError(f"`mask` should be a list. Received: mask={mask}")
         if not isinstance(inputs, (tuple, list)):
-            raise ValueError(
-                f"`inputs` should be a list. Received: inputs={inputs}"
-            )
+            raise ValueError(f"`inputs` should be a list. Received: inputs={inputs}")
         if len(mask) != len(inputs):
             raise ValueError(
                 "The lists `inputs` and `mask` should have the same length. "

@@ -381,9 +381,7 @@ class Unstack(Operation):
                 "concrete shape in the `axis` dimension or "
                 "explicitly pass the `num` argument."
             )
-        output = [
-            KerasTensor(shape=output_shapes, dtype=x.dtype) for _ in range(num)
-        ]
+        output = [KerasTensor(shape=output_shapes, dtype=x.dtype) for _ in range(num)]
         return output
 
 

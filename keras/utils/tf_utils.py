@@ -83,13 +83,9 @@ def encode_categorical_inputs(
 
     binary_output = output_mode in ("multi_hot", "one_hot")
     if sparse:
-        bincounts = sparse_bincount(
-            inputs, depth, binary_output, dtype, count_weights
-        )
+        bincounts = sparse_bincount(inputs, depth, binary_output, dtype, count_weights)
     else:
-        bincounts = dense_bincount(
-            inputs, depth, binary_output, dtype, count_weights
-        )
+        bincounts = dense_bincount(inputs, depth, binary_output, dtype, count_weights)
 
     if output_mode != "tf_idf":
         return bincounts

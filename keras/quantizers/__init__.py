@@ -9,9 +9,7 @@ from keras.utils.naming import to_snake_case
 
 ALL_OBJECTS = {Quantizer, AbsMaxQuantizer}
 ALL_OBJECTS_DICT = {cls.__name__: cls for cls in ALL_OBJECTS}
-ALL_OBJECTS_DICT.update(
-    {to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS}
-)
+ALL_OBJECTS_DICT.update({to_snake_case(cls.__name__): cls for cls in ALL_OBJECTS})
 
 
 @keras_export("keras.quantizers.serialize")
@@ -46,6 +44,4 @@ def get(identifier, **kwargs):
             obj = obj(kwargs)
         return obj
     else:
-        raise ValueError(
-            f"Could not interpret quantizer identifier: {identifier}"
-        )
+        raise ValueError(f"Could not interpret quantizer identifier: {identifier}")

@@ -44,9 +44,7 @@ model.compile(
 )
 
 print("\nTrain model")
-history = model.fit(
-    x, y, batch_size=batch_size, epochs=epochs, validation_split=0.2
-)
+history = model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_split=0.2)
 print("\nHistory:")
 print(history.history)
 

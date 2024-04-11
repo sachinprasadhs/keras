@@ -61,9 +61,7 @@ class ModelCheckpointTest(testing.TestCase):
             num_classes=NUM_CLASSES,
         )
         y_test = numerical_utils.to_categorical(y_test, num_classes=NUM_CLASSES)
-        y_train = numerical_utils.to_categorical(
-            y_train, num_classes=NUM_CLASSES
-        )
+        y_train = numerical_utils.to_categorical(y_train, num_classes=NUM_CLASSES)
 
         # Case 1
         monitor = "val_loss"
@@ -159,9 +157,7 @@ class ModelCheckpointTest(testing.TestCase):
 
         # Case 5: metric not available.
         cbks = [
-            callbacks.ModelCheckpoint(
-                filepath, monitor="unknown", save_best_only=True
-            )
+            callbacks.ModelCheckpoint(filepath, monitor="unknown", save_best_only=True)
         ]
         model.fit(
             x_train,
@@ -227,9 +223,7 @@ class ModelCheckpointTest(testing.TestCase):
 
         # Case 8b: `ModelCheckpoint` with int `save_freq` & `save_weights_only`
         temp_dir = self.get_temp_dir()
-        filepath = os.path.join(
-            temp_dir, "checkpoint.epoch{epoch:02d}.weights.h5"
-        )
+        filepath = os.path.join(temp_dir, "checkpoint.epoch{epoch:02d}.weights.h5")
         cbks = [
             callbacks.ModelCheckpoint(
                 filepath, monitor=monitor, save_freq=15, save_weights_only=True
@@ -288,9 +282,7 @@ class ModelCheckpointTest(testing.TestCase):
         filepath = os.path.join(
             temp_dir, "checkpoint.epoch{epoch:02d}batch{batch:02d}.keras"
         )
-        cbks = [
-            callbacks.ModelCheckpoint(filepath, monitor=monitor, save_freq=1)
-        ]
+        cbks = [callbacks.ModelCheckpoint(filepath, monitor=monitor, save_freq=1)]
         model.fit(
             x_train,
             y_train,
@@ -474,9 +466,7 @@ class ModelCheckpointTest(testing.TestCase):
             num_classes=NUM_CLASSES,
         )
         y_test = numerical_utils.to_categorical(y_test, num_classes=NUM_CLASSES)
-        y_train = numerical_utils.to_categorical(
-            y_train, num_classes=NUM_CLASSES
-        )
+        y_train = numerical_utils.to_categorical(y_train, num_classes=NUM_CLASSES)
 
         # Model Checkpoint load model (default)
         model = get_model()

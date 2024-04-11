@@ -127,31 +127,22 @@ class ApplicationsTest(testing.TestCase, parameterized.TestCase):
     def tearDownClass(cls):
         backend.set_image_data_format(cls.original_image_data_format)
 
-    def skip_if_invalid_image_data_format_for_model(
-        self, app, image_data_format
-    ):
+    def skip_if_invalid_image_data_format_for_model(self, app, image_data_format):
         does_not_support_channels_first = any(
             [
                 unsupported_name.lower() in app.__name__.lower()
                 for unsupported_name in MODELS_UNSUPPORTED_CHANNELS_FIRST
             ]
         )
-        if (
-            image_data_format == "channels_first"
-            and does_not_support_channels_first
-        ):
-            self.skipTest(
-                "{} does not support channels first".format(app.__name__)
-            )
+        if image_data_format == "channels_first" and does_not_support_channels_first:
+            self.skipTest("{} does not support channels first".format(app.__name__))
 
     @parameterized.named_parameters(test_parameters)
     def test_application_notop_variable_input_channels(
         self, app, last_dim, _, image_data_format
     ):
         if app == nasnet.NASNetMobile and backend.backend() == "torch":
-            self.skipTest(
-                "NASNetMobile pretrained incorrect with torch backend."
-            )
+            self.skipTest("NASNetMobile pretrained incorrect with torch backend.")
         self.skip_if_invalid_image_data_format_for_model(app, image_data_format)
         backend.set_image_data_format(image_data_format)
 
@@ -182,9 +173,7 @@ class ApplicationsTest(testing.TestCase, parameterized.TestCase):
         import tensorflow as tf
 
         if app == nasnet.NASNetMobile and backend.backend() == "torch":
-            self.skipTest(
-                "NASNetMobile pretrained incorrect with torch backend."
-            )
+            self.skipTest("NASNetMobile pretrained incorrect with torch backend.")
         if (
             image_data_format == "channels_first"
             and len(tf.config.list_physical_devices("GPU")) == 0
@@ -223,9 +212,7 @@ class ApplicationsTest(testing.TestCase, parameterized.TestCase):
         self, app, last_dim, _, image_data_format
     ):
         if app == nasnet.NASNetMobile and backend.backend() == "torch":
-            self.skipTest(
-                "NASNetMobile pretrained incorrect with torch backend."
-            )
+            self.skipTest("NASNetMobile pretrained incorrect with torch backend.")
         self.skip_if_invalid_image_data_format_for_model(app, image_data_format)
         backend.set_image_data_format(image_data_format)
 
@@ -242,9 +229,7 @@ class ApplicationsTest(testing.TestCase, parameterized.TestCase):
     @parameterized.named_parameters(test_parameters)
     def test_application_pooling(self, app, last_dim, _, image_data_format):
         if app == nasnet.NASNetMobile and backend.backend() == "torch":
-            self.skipTest(
-                "NASNetMobile pretrained incorrect with torch backend."
-            )
+            self.skipTest("NASNetMobile pretrained incorrect with torch backend.")
         self.skip_if_invalid_image_data_format_for_model(app, image_data_format)
         backend.set_image_data_format(image_data_format)
 
@@ -255,12 +240,8 @@ class ApplicationsTest(testing.TestCase, parameterized.TestCase):
     @parameterized.named_parameters(test_parameters)
     def test_application_classifier_activation(self, app, *_):
         if app == nasnet.NASNetMobile and backend.backend() == "torch":
-            self.skipTest(
-                "NASNetMobile pretrained incorrect with torch backend."
-            )
+            self.skipTest("NASNetMobile pretrained incorrect with torch backend.")
 
-        model = app(
-            weights=None, include_top=True, classifier_activation="softmax"
-        )
+        model = app(weights=None, include_top=True, classifier_activation="softmax")
         last_layer_act = model.layers[-1].activation.__name__
         self.assertEqual(last_layer_act, "softmax")

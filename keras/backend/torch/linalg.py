@@ -56,9 +56,7 @@ def solve(a, b):
 def solve_triangular(a, b, lower=False):
     if b.ndim == a.ndim - 1:
         b = torch.unsqueeze(b, axis=-1)
-        return torch.linalg.solve_triangular(a, b, upper=not lower).squeeze(
-            axis=-1
-        )
+        return torch.linalg.solve_triangular(a, b, upper=not lower).squeeze(axis=-1)
     return torch.linalg.solve_triangular(a, b, upper=not lower)
 
 

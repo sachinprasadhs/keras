@@ -32,9 +32,7 @@ class RandomTranslationTest(testing.TestCase, parameterized.TestCase):
         ("exceed_range_single", -1.1, 0.0),
         ("exceed_range_tuple", (-1.1, 0.0), 0.0),
     )
-    def test_random_translation_with_bad_factor(
-        self, height_factor, width_factor
-    ):
+    def test_random_translation_with_bad_factor(self, height_factor, width_factor):
         with self.assertRaises(ValueError):
             self.run_layer_test(
                 layers.RandomTranslation,
@@ -167,9 +165,7 @@ class RandomTranslationTest(testing.TestCase, parameterized.TestCase):
         )
 
     @parameterized.parameters(["channels_first", "channels_last"])
-    def test_random_translation_asymmetric_size_numeric_reflect(
-        self, data_format
-    ):
+    def test_random_translation_asymmetric_size_numeric_reflect(self, data_format):
         input_image = np.arange(0, 16)
         # Shifting by .2 * 5 = 1 pixel.
         expected_output = np.asarray(

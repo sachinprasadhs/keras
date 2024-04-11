@@ -24,13 +24,9 @@ class CenterCropTest(testing.TestCase, parameterized.TestCase):
         h_start = (h - h_new) // 2
         w_start = (w - w_new) // 2
         if data_format == "channels_last":
-            return img[
-                ..., h_start : h_start + h_new, w_start : w_start + w_new, :
-            ]
+            return img[..., h_start : h_start + h_new, w_start : w_start + w_new, :]
         else:
-            return img[
-                ..., h_start : h_start + h_new, w_start : w_start + w_new
-            ]
+            return img[..., h_start : h_start + h_new, w_start : w_start + w_new]
 
     @pytest.mark.requires_trainable_backend
     def test_center_crop_basics(self):

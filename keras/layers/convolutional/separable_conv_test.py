@@ -170,9 +170,7 @@ class SeparableConvBasicTest(testing.TestCase, parameterized.TestCase):
             r"\d+ integers. Received kernel_size=\(1, 0\), including values"
             r" \{0\} that do not satisfy `value > 0`",
         ):
-            layers.SeparableConv2D(
-                depth_multiplier=2, filters=2, kernel_size=(1, 0)
-            )
+            layers.SeparableConv2D(depth_multiplier=2, filters=2, kernel_size=(1, 0))
 
         # `strides` has 0.
         with self.assertRaisesRegex(

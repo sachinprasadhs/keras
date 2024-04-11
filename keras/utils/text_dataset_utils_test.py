@@ -7,9 +7,7 @@ from keras.utils import text_dataset_utils
 
 
 class TextDatasetFromDirectoryTest(testing.TestCase):
-    def _prepare_directory(
-        self, num_classes=2, nested_dirs=False, count=16, length=20
-    ):
+    def _prepare_directory(self, num_classes=2, nested_dirs=False, count=16, length=20):
         # Get a unique temp directory
         temp_dir = self.get_temp_dir()
 
@@ -22,9 +20,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
                     class_directory,
                     os.path.join(class_directory, "subfolder_1"),
                     os.path.join(class_directory, "subfolder_2"),
-                    os.path.join(
-                        class_directory, "subfolder_1", "sub-subfolder"
-                    ),
+                    os.path.join(class_directory, "subfolder_1", "sub-subfolder"),
                 ]
             else:
                 class_paths = [class_directory]
@@ -36,9 +32,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
             path = paths[i % len(paths)]
             filename = os.path.join(path, f"text_{i}.txt")
             with open(os.path.join(temp_dir, filename), "w") as f:
-                text = "".join(
-                    [random.choice(string.printable) for _ in range(length)]
-                )
+                text = "".join([random.choice(string.printable) for _ in range(length)])
                 f.write(text)
         return temp_dir
 
@@ -49,9 +43,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
         for i in range(3):
             filename = f"text_{i}.txt"
             with open(os.path.join(directory, filename), "w") as f:
-                text = "".join(
-                    [random.choice(string.printable) for _ in range(20)]
-                )
+                text = "".join([random.choice(string.printable) for _ in range(20)])
                 f.write(text)
 
         dataset = text_dataset_utils.text_dataset_from_directory(
@@ -201,9 +193,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
         self.assertAllClose(batch[1], [0, 1])
 
     def test_text_dataset_from_directory_follow_links(self):
-        directory = self._prepare_directory(
-            num_classes=2, count=25, nested_dirs=True
-        )
+        directory = self._prepare_directory(num_classes=2, count=25, nested_dirs=True)
         dataset = text_dataset_utils.text_dataset_from_directory(
             directory, batch_size=8, label_mode=None, follow_links=True
         )
@@ -225,9 +215,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`label_mode` argument must be"
-        ):
+        with self.assertRaisesRegex(ValueError, "`label_mode` argument must be"):
             _ = text_dataset_utils.text_dataset_from_directory(
                 directory, label_mode="other"
             )
@@ -249,9 +237,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels=[0, 0, 1, 1]
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`class_names` passed did not match"
-        ):
+        with self.assertRaisesRegex(ValueError, "`class_names` passed did not match"):
             _ = text_dataset_utils.text_dataset_from_directory(
                 directory, class_names=["class_0", "wrong_class"]
             )
@@ -276,9 +262,7 @@ class TextDatasetFromDirectoryTest(testing.TestCase):
                 directory, validation_split=0.2, subset="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`validation_split` must be set"
-        ):
+        with self.assertRaisesRegex(ValueError, "`validation_split` must be set"):
             _ = text_dataset_utils.text_dataset_from_directory(
                 directory, validation_split=0.0, subset="training"
             )

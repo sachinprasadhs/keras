@@ -175,9 +175,7 @@ variables.
 """
 
 
-def compute_loss_and_updates(
-    trainable_variables, non_trainable_variables, x, y
-):
+def compute_loss_and_updates(trainable_variables, non_trainable_variables, x, y):
     y_pred, non_trainable_variables = model.stateless_call(
         trainable_variables, non_trainable_variables, x
     )
@@ -305,9 +303,7 @@ Just call `variable.assign(new_value)` on each model variable you want to update
 trainable_variables, non_trainable_variables, optimizer_variables = state
 for variable, value in zip(model.trainable_variables, trainable_variables):
     variable.assign(value)
-for variable, value in zip(
-    model.non_trainable_variables, non_trainable_variables
-):
+for variable, value in zip(model.non_trainable_variables, non_trainable_variables):
     variable.assign(value)
 
 """
@@ -435,9 +431,7 @@ for step, data in enumerate(train_dataset):
     if step % 100 == 0:
         print(f"Training loss (for 1 batch) at step {step}: {float(loss):.4f}")
         _, _, _, metric_variables = state
-        for variable, value in zip(
-            train_acc_metric.variables, metric_variables
-        ):
+        for variable, value in zip(train_acc_metric.variables, metric_variables):
             variable.assign(value)
         print(f"Training accuracy: {train_acc_metric.result()}")
         print(f"Seen so far: {(step + 1) * batch_size} samples")
@@ -457,9 +451,7 @@ for step, data in enumerate(val_dataset):
     loss, state = eval_step(state, data)
     # Log every 100 batches.
     if step % 100 == 0:
-        print(
-            f"Validation loss (for 1 batch) at step {step}: {float(loss):.4f}"
-        )
+        print(f"Validation loss (for 1 batch) at step {step}: {float(loss):.4f}")
         _, _, metric_variables = state
         for variable, value in zip(val_acc_metric.variables, metric_variables):
             variable.assign(value)

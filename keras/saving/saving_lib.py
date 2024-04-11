@@ -112,9 +112,7 @@ def _save_model_to_fileobj(model, fileobj, weights_format):
         if weights_format == "h5":
             weights_store = H5IOStore(_VARS_FNAME + ".h5", archive=zf, mode="w")
         elif weights_format == "npz":
-            weights_store = NpzIOStore(
-                _VARS_FNAME + ".npz", archive=zf, mode="w"
-            )
+            weights_store = NpzIOStore(_VARS_FNAME + ".npz", archive=zf, mode="w")
         else:
             raise ValueError(
                 "Unknown `weights_format` argument. "
@@ -138,9 +136,7 @@ def _save_model_to_fileobj(model, fileobj, weights_format):
 def load_model(filepath, custom_objects=None, compile=True, safe_mode=True):
     """Load a zip archive representing a Keras model."""
     if isinstance(filepath, io.IOBase):
-        return _load_model_from_fileobj(
-            filepath, custom_objects, compile, safe_mode
-        )
+        return _load_model_from_fileobj(filepath, custom_objects, compile, safe_mode)
     else:
         filepath = str(filepath)
         if not filepath.endswith(".keras"):
@@ -149,9 +145,7 @@ def load_model(filepath, custom_objects=None, compile=True, safe_mode=True):
                 f"Received: filepath={filepath}"
             )
         with open(filepath, "rb") as f:
-            return _load_model_from_fileobj(
-                f, custom_objects, compile, safe_mode
-            )
+            return _load_model_from_fileobj(f, custom_objects, compile, safe_mode)
 
 
 def _load_model_from_fileobj(fileobj, custom_objects, compile, safe_mode):
@@ -175,13 +169,9 @@ def _load_model_from_fileobj(fileobj, custom_objects, compile, safe_mode):
         if _VARS_FNAME + ".h5" in all_filenames:
             weights_store = H5IOStore(_VARS_FNAME + ".h5", archive=zf, mode="r")
         elif _VARS_FNAME + ".npz" in all_filenames:
-            weights_store = NpzIOStore(
-                _VARS_FNAME + ".npz", archive=zf, mode="r"
-            )
+            weights_store = NpzIOStore(_VARS_FNAME + ".npz", archive=zf, mode="r")
         else:
-            raise ValueError(
-                f"Expected a {_VARS_FNAME}.h5 or {_VARS_FNAME}.npz file."
-            )
+            raise ValueError(f"Expected a {_VARS_FNAME}.h5 or {_VARS_FNAME}.npz file.")
 
         if len(all_filenames) > 3:
             asset_store = DiskIOStore(_ASSETS_DIRNAME, archive=zf, mode="r")
@@ -236,9 +226,7 @@ def save_weights_only(model, filepath, objects_to_skip=None):
     weights_store.close()
 
 
-def load_weights_only(
-    model, filepath, skip_mismatch=False, objects_to_skip=None
-):
+def load_weights_only(model, filepath, skip_mismatch=False, objects_to_skip=None):
     """Load the weights of a model from a filepath (.keras or .weights.h5).
 
     Note: only supports h5 for now.
@@ -250,9 +238,7 @@ def load_weights_only(
         weights_store = H5IOStore(filepath, mode="r")
     elif filepath.endswith(".keras"):
         archive = zipfile.ZipFile(filepath, "r")
-        weights_store = H5IOStore(
-            _VARS_FNAME + ".h5", archive=archive, mode="r"
-        )
+        weights_store = H5IOStore(_VARS_FNAME + ".h5", archive=archive, mode="r")
 
     failed_trackables = set()
     if objects_to_skip is not None:
@@ -303,12 +289,8 @@ def _write_to_zip_recursively(zipfile_to_save, system_path, zip_path):
             system_file_path = file_utils.join(system_path, file_name).replace(
                 "\\", "/"
             )
-            zip_file_path = file_utils.join(zip_path, file_name).replace(
-                "\\", "/"
-            )
-            _write_to_zip_recursively(
-                zipfile_to_save, system_file_path, zip_file_path
-            )
+            zip_file_path = file_utils.join(zip_path, file_name).replace("\\", "/")
+            _write_to_zip_recursively(zipfile_to_save, system_file_path, zip_file_path)
 
 
 def _name_key(name):
@@ -380,9 +362,7 @@ def _save_state(
                 child_obj,
                 weights_store,
                 assets_store,
-                inner_path=file_utils.join(inner_path, child_attr).replace(
-                    "\\", "/"
-                ),
+                inner_path=file_utils.join(inner_path, child_attr).replace("\\", "/"),
                 visited_trackables=visited_trackables,
             )
         elif isinstance(child_obj, (list, dict, tuple, set)):
@@ -390,9 +370,7 @@ def _save_state(
                 child_obj,
                 weights_store,
                 assets_store,
-                inner_path=file_utils.join(inner_path, child_attr).replace(
-                    "\\", "/"
-                ),
+                inner_path=file_utils.join(inner_path, child_attr).replace("\\", "/"),
                 visited_trackables=visited_trackables,
             )
 
@@ -446,9 +424,7 @@ def _load_state(
                 child_obj,
                 weights_store,
                 assets_store,
-                inner_path=file_utils.join(inner_path, child_attr).replace(
-                    "\\", "/"
-                ),
+                inner_path=file_utils.join(inner_path, child_attr).replace("\\", "/"),
                 skip_mismatch=skip_mismatch,
                 visited_trackables=visited_trackables,
                 failed_trackables=failed_trackables,
@@ -459,9 +435,7 @@ def _load_state(
                 child_obj,
                 weights_store,
                 assets_store,
-                inner_path=file_utils.join(inner_path, child_attr).replace(
-                    "\\", "/"
-                ),
+                inner_path=file_utils.join(inner_path, child_attr).replace("\\", "/"),
                 skip_mismatch=skip_mismatch,
                 visited_trackables=visited_trackables,
                 failed_trackables=failed_trackables,
@@ -561,9 +535,9 @@ class DiskIOStore:
             self.tmp_dir = get_temp_dir()
             if self.mode == "r":
                 self.archive.extractall(path=self.tmp_dir)
-            self.working_dir = file_utils.join(
-                self.tmp_dir, self.root_path
-            ).replace("\\", "/")
+            self.working_dir = file_utils.join(self.tmp_dir, self.root_path).replace(
+                "\\", "/"
+            )
             if self.mode == "w":
                 file_utils.makedirs(self.working_dir)
         else:
@@ -594,9 +568,7 @@ class DiskIOStore:
 
     def close(self):
         if self.mode == "w" and self.archive:
-            _write_to_zip_recursively(
-                self.archive, self.working_dir, self.root_path
-            )
+            _write_to_zip_recursively(self.archive, self.working_dir, self.root_path)
         if self.tmp_dir and file_utils.exists(self.tmp_dir):
             file_utils.rmtree(self.tmp_dir)
 
@@ -651,9 +623,7 @@ class H5Entry:
             if not path:
                 self.group = self.h5_file.create_group("vars")
             else:
-                self.group = self.h5_file.create_group(self.path).create_group(
-                    "vars"
-                )
+                self.group = self.h5_file.create_group(self.path).create_group("vars")
         else:
             found = False
             if not path:
@@ -666,9 +636,7 @@ class H5Entry:
                 # No hit.
                 # Fix for 2.13 compatibility
                 if "_layer_checkpoint_dependencies" in self.h5_file:
-                    path = path.replace(
-                        "layers", "_layer_checkpoint_dependencies"
-                    )
+                    path = path.replace("layers", "_layer_checkpoint_dependencies")
                     self.path = path
                     if path in self.h5_file and "vars" in self.h5_file[path]:
                         self.group = self.h5_file[path]["vars"]
@@ -746,9 +714,7 @@ class NpzIOStore:
     def close(self):
         if self.mode == "w":
             if self.archive:
-                self.f = self.archive.open(
-                    self.root_path, mode="w", force_zip64=True
-                )
+                self.f = self.archive.open(self.root_path, mode="w", force_zip64=True)
             else:
                 self.f = open(self.root_path, mode="wb")
             np.savez(self.f, **self.contents)
@@ -794,9 +760,7 @@ def get_attr_skiplist(obj_type):
         skiplist += dir(ref_obj)
     else:
         raise ValueError(f"Invalid obj_type: {obj_type}")
-    global_state.set_global_attribute(
-        f"saving_attr_skiplist_{obj_type}", skiplist
-    )
+    global_state.set_global_attribute(f"saving_attr_skiplist_{obj_type}", skiplist)
     return skiplist
 
 

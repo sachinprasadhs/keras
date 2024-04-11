@@ -135,19 +135,11 @@ class DTypePolicy:
     def convert_input(self, x, autocast, dtype):
         dtype = backend.standardize_dtype(dtype)
         if backend.is_tensor(x):
-            if (
-                autocast
-                and backend.is_float_dtype(x.dtype)
-                and x.dtype != dtype
-            ):
+            if autocast and backend.is_float_dtype(x.dtype) and x.dtype != dtype:
                 x = backend.cast(x, dtype=dtype)
             return x
         elif backend.is_keras_tensor(x):
-            if (
-                autocast
-                and backend.is_float_dtype(x.dtype)
-                and x.dtype != dtype
-            ):
+            if autocast and backend.is_float_dtype(x.dtype) and x.dtype != dtype:
                 x.dtype = dtype
             return x
         elif hasattr(x, "__array__"):
@@ -162,9 +154,7 @@ class DTypePolicy:
         return cls(**config)
 
 
-@keras_export(
-    ["keras.FloatDTypePolicy", "keras.dtype_policies.FloatDTypePolicy"]
-)
+@keras_export(["keras.FloatDTypePolicy", "keras.dtype_policies.FloatDTypePolicy"])
 class FloatDTypePolicy(DTypePolicy):
     def __init__(self, name):
         super().__init__(name)

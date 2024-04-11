@@ -93,12 +93,8 @@ class BatchNormalizationTest(testing.TestCase, parameterized.TestCase):
         broadcast_shape = [1] * len(input_shape)
         broadcast_shape[axis] = input_shape[axis]
         out = backend.convert_to_numpy(out)
-        out = out - np.reshape(
-            backend.convert_to_numpy(layer.beta), broadcast_shape
-        )
-        out = out / np.reshape(
-            backend.convert_to_numpy(layer.gamma), broadcast_shape
-        )
+        out = out - np.reshape(backend.convert_to_numpy(layer.beta), broadcast_shape)
+        out = out / np.reshape(backend.convert_to_numpy(layer.gamma), broadcast_shape)
 
         reduction_axes = list(range(len(input_shape)))
         del reduction_axes[axis]
@@ -133,9 +129,7 @@ class BatchNormalizationTest(testing.TestCase, parameterized.TestCase):
         self.assertNotAllClose(unmasked_out, masked_out)
 
     @parameterized.product(
-        synchronized=(
-            (False, True) if backend.backend == "tensorflow" else (False,)
-        ),
+        synchronized=((False, True) if backend.backend == "tensorflow" else (False,)),
     )
     def test_input_fully_masked(self, synchronized):
         norm = layers.BatchNormalization(
@@ -176,9 +170,7 @@ class BatchNormalizationTest(testing.TestCase, parameterized.TestCase):
         )
         model.fit(x=padded_data, y=padded_data, batch_size=10, epochs=5)
         self.assertAllClose(model.layers[2].moving_mean.numpy(), [1.5, 5.0])
-        self.assertAllClose(
-            model.layers[2].moving_variance.numpy(), [0.25, 0.0]
-        )
+        self.assertAllClose(model.layers[2].moving_variance.numpy(), [0.25, 0.0])
 
     def test_trainable_behavior(self):
         layer = layers.BatchNormalization(axis=-1, momentum=0.8, epsilon=1e-7)
@@ -203,12 +195,8 @@ class BatchNormalizationTest(testing.TestCase, parameterized.TestCase):
             out = layer(x, training=True)
 
         out = backend.convert_to_numpy(out)
-        out = out - np.reshape(
-            backend.convert_to_numpy(layer.beta), (1, 1, 1, 3)
-        )
-        out = out / np.reshape(
-            backend.convert_to_numpy(layer.gamma), (1, 1, 1, 3)
-        )
+        out = out - np.reshape(backend.convert_to_numpy(layer.beta), (1, 1, 1, 3))
+        out = out / np.reshape(backend.convert_to_numpy(layer.gamma), (1, 1, 1, 3))
 
         self.assertAllClose(np.mean(out, axis=(0, 1, 2)), 0.0, atol=1e-3)
         self.assertAllClose(np.std(out, axis=(0, 1, 2)), 1.0, atol=1e-3)

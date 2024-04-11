@@ -31,8 +31,7 @@ def standardize_tuple(value, n, name, allow_zero=False):
                 int(single_value)
             except (ValueError, TypeError):
                 error_msg += (
-                    f"including element {single_value} of "
-                    f"type {type(single_value)}"
+                    f"including element {single_value} of " f"type {type(single_value)}"
                 )
                 raise ValueError(error_msg)
 

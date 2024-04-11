@@ -69,9 +69,7 @@ def hashing_trick(
             return int(hashlib.md5(w.encode()).hexdigest(), 16)
 
     if analyzer is None:
-        seq = text_to_word_sequence(
-            text, filters=filters, lower=lower, split=split
-        )
+        seq = text_to_word_sequence(text, filters=filters, lower=lower, split=split)
     else:
         seq = analyzer(text)
 
@@ -157,9 +155,7 @@ class Tokenizer(object):
         sorted_voc.extend(wc[0] for wc in wcounts)
 
         # note that index 0 is reserved, never assigned to an existing word
-        self.word_index = dict(
-            zip(sorted_voc, list(range(1, len(sorted_voc) + 1)))
-        )
+        self.word_index = dict(zip(sorted_voc, list(range(1, len(sorted_voc) + 1))))
 
         self.index_word = {c: w for w, c in self.word_index.items()}
 
@@ -248,9 +244,7 @@ class Tokenizer(object):
             num_words = self.num_words
 
         if mode == "tfidf" and not self.document_count:
-            raise ValueError(
-                "Fit the Tokenizer on some data before using tfidf mode."
-            )
+            raise ValueError("Fit the Tokenizer on some data before using tfidf mode.")
 
         x = np.zeros((len(sequences), num_words))
         for i, seq in enumerate(sequences):
@@ -273,8 +267,7 @@ class Tokenizer(object):
                     # https://en.wikipedia.org/wiki/Tf%E2%80%93idf
                     tf = 1 + np.log(c)
                     idf = np.log(
-                        1
-                        + self.document_count / (1 + self.index_docs.get(j, 0))
+                        1 + self.document_count / (1 + self.index_docs.get(j, 0))
                     )
                     x[i][j] = tf * idf
                 else:

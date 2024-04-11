@@ -175,17 +175,11 @@ class MultiHeadAttention(Layer):
             "use_bias": self._use_bias,
             "output_shape": self._output_shape,
             "attention_axes": self._attention_axes,
-            "kernel_initializer": initializers.serialize(
-                self._kernel_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self._kernel_initializer),
             "bias_initializer": initializers.serialize(self._bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self._kernel_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self._kernel_regularizer),
             "bias_regularizer": regularizers.serialize(self._bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self._activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self._activity_regularizer),
             "kernel_constraint": constraints.serialize(self._kernel_constraint),
             "bias_constraint": constraints.serialize(self._bias_constraint),
         }
@@ -352,14 +346,10 @@ class MultiHeadAttention(Layer):
             attn_scores_rank,
         ) = _build_attention_equation(rank, attn_axes=self._attention_axes)
         norm_axes = tuple(
-            range(
-                attn_scores_rank - len(self._attention_axes), attn_scores_rank
-            )
+            range(attn_scores_rank - len(self._attention_axes), attn_scores_rank)
         )
         self._softmax = Softmax(axis=norm_axes, dtype=self.dtype_policy)
-        self._dropout_layer = Dropout(
-            rate=self._dropout, dtype=self.dtype_policy
-        )
+        self._dropout_layer = Dropout(rate=self._dropout, dtype=self.dtype_policy)
         self._inverse_sqrt_key_dim = 1.0 / math.sqrt(float(self._key_dim))
 
     def _masked_softmax(self, attention_scores, attention_mask=None):
@@ -370,17 +360,13 @@ class MultiHeadAttention(Layer):
             # (<batch_dims>, num_heads, <query_attention_dims,
             # key_attention_dims>)
             mask_expansion_axis = -len(self._attention_axes) * 2 - 1
-            for _ in range(
-                len(attention_scores.shape) - len(attention_mask.shape)
-            ):
+            for _ in range(len(attention_scores.shape) - len(attention_mask.shape)):
                 attention_mask = ops.expand_dims(
                     attention_mask, axis=mask_expansion_axis
                 )
         return self._softmax(attention_scores, mask=attention_mask)
 
-    def _compute_attention(
-        self, query, key, value, attention_mask=None, training=None
-    ):
+    def _compute_attention(self, query, key, value, attention_mask=None, training=None):
         """Applies Dot-product attention with query, key, value tensors.
 
         This function defines the computation inside `call` with projected
@@ -405,31 +391,23 @@ class MultiHeadAttention(Layer):
         # Note: Applying scalar multiply at the smaller end of einsum improves
         # XLA performance, but may introduce slight numeric differences in
         # the Transformer attention head.
-        query = ops.multiply(
-            query, ops.cast(self._inverse_sqrt_key_dim, query.dtype)
-        )
+        query = ops.multiply(query, ops.cast(self._inverse_sqrt_key_dim, query.dtype))
 
         # Take the dot product between "query" and "key" to get the raw
         # attention scores.
         attention_scores = ops.einsum(self._dot_product_equation, key, query)
 
-        attention_scores = self._masked_softmax(
-            attention_scores, attention_mask
-        )
+        attention_scores = self._masked_softmax(attention_scores, attention_mask)
 
         # This is actually dropping out entire tokens to attend to, which might
         # seem a bit unusual, but is taken from the original Transformer paper.
         if self.dropout:
-            final_attn_scores = self._dropout_layer(
-                attention_scores, training=training
-            )
+            final_attn_scores = self._dropout_layer(attention_scores, training=training)
         else:
             final_attn_scores = attention_scores
 
         # `context_layer` = [B, T, N, H]
-        attention_output = ops.einsum(
-            self._combine_equation, final_attn_scores, value
-        )
+        attention_output = ops.einsum(self._combine_equation, final_attn_scores, value)
         return attention_output, attention_scores
 
     def call(

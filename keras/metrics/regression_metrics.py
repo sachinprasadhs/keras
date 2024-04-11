@@ -561,9 +561,7 @@ class R2Score(reduction_metrics.Metric):
             else:
                 n = ops.convert_to_tensor(self.num_samples, dtype="float32")
                 p = ops.convert_to_tensor(self.num_regressors, dtype="float32")
-                num = ops.multiply(
-                    ops.subtract(1.0, r2_score), ops.subtract(n, 1.0)
-                )
+                num = ops.multiply(ops.subtract(1.0, r2_score), ops.subtract(n, 1.0))
                 den = ops.subtract(ops.subtract(n, p), 1.0)
                 r2_score = ops.subtract(1.0, ops.divide(num, den))
         return r2_score

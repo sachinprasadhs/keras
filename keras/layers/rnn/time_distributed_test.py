@@ -43,9 +43,7 @@ class TimeDistributedTest(testing.TestCase):
         layer = layers.TimeDistributed(layer=layer)
         output = layer(sequence)
         self.assertAllClose(
-            np.array(
-                [[[0.06], [0.22]], [[0.38], [0.53999996]], [[0.7], [0.86]]]
-            ),
+            np.array([[[0.06], [0.22]], [[0.38], [0.53999996]], [[0.7], [0.86]]]),
             output,
         )
 

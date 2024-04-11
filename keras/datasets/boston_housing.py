@@ -43,9 +43,7 @@ def load_data(path="boston_housing.npz", test_split=0.2, seed=113):
         50 that represent the home prices in k$.
     """
     assert 0 <= test_split < 1
-    origin_folder = (
-        "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
-    )
+    origin_folder = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/"
     path = get_file(
         path,
         origin=origin_folder + "boston_housing.npz",

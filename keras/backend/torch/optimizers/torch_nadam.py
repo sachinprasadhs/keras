@@ -66,9 +66,7 @@ class Nadam(torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Nadam):
             variables,
             torch._foreach_div(
                 torch._foreach_mul(m_hat_list, lr),
-                torch._foreach_add(
-                    torch._foreach_sqrt(v_hat_list), self.epsilon
-                ),
+                torch._foreach_add(torch._foreach_sqrt(v_hat_list), self.epsilon),
             ),
             alpha=-1,
         )

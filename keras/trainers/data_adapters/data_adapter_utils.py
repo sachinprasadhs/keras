@@ -107,9 +107,7 @@ def check_data_cardinality(data):
             "Make sure all arrays contain the same number of samples."
         )
         for label, single_data in zip(["x", "y", "sample_weight"], data):
-            sizes = ", ".join(
-                str(i.shape[0]) for i in tree.flatten(single_data)
-            )
+            sizes = ", ".join(str(i.shape[0]) for i in tree.flatten(single_data))
             msg += f"'{label}' sizes: {sizes}\n"
         raise ValueError(msg)
 
@@ -163,11 +161,7 @@ def get_tensor_spec(batches):
         dtype = backend.standardize_dtype(x.dtype)
         if isinstance(x, tf.RaggedTensor):
             return tf.RaggedTensorSpec(shape=shape, dtype=dtype)
-        if (
-            isinstance(x, tf.SparseTensor)
-            or is_scipy_sparse(x)
-            or is_jax_sparse(x)
-        ):
+        if isinstance(x, tf.SparseTensor) or is_scipy_sparse(x) or is_jax_sparse(x):
             return tf.SparseTensorSpec(shape=shape, dtype=dtype)
         else:
             return tf.TensorSpec(shape=shape, dtype=dtype)
@@ -256,18 +250,14 @@ def is_jax_array(value):
 
 def is_jax_sparse(value):
     if hasattr(value, "__class__"):
-        return str(value.__class__.__module__).startswith(
-            "jax.experimental.sparse"
-        )
+        return str(value.__class__.__module__).startswith("jax.experimental.sparse")
     return False
 
 
 def is_torch_tensor(value):
     if hasattr(value, "__class__"):
         for parent in value.__class__.__mro__:
-            if parent.__name__ == "Tensor" and str(parent.__module__).endswith(
-                "torch"
-            ):
+            if parent.__name__ == "Tensor" and str(parent.__module__).endswith("torch"):
                 return True
     return False
 

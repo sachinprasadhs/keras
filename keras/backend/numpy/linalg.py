@@ -41,9 +41,7 @@ def norm(x, ord=None, axis=None, keepdims=False):
     dtype = standardize_dtype(x.dtype)
     if "int" in dtype or dtype == "bool":
         dtype = dtypes.result_type(x.dtype, "float32")
-    return np.linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims).astype(
-        dtype
-    )
+    return np.linalg.norm(x, ord=ord, axis=axis, keepdims=keepdims).astype(dtype)
 
 
 def qr(x, mode="reduced"):

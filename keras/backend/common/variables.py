@@ -385,27 +385,19 @@ class KerasVariable:
 
     def __truediv__(self, other):
         value = self.value
-        return value.__truediv__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__truediv__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __rtruediv__(self, other):
         value = self.value
-        return value.__rtruediv__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__rtruediv__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __floordiv__(self, other):
         value = self.value
-        return value.__floordiv__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__floordiv__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __rfloordiv__(self, other):
         value = self.value
-        return value.__rfloordiv__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__rfloordiv__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __mod__(self, other):
         value = self.value
@@ -425,15 +417,11 @@ class KerasVariable:
 
     def __matmul__(self, other):
         value = self.value
-        return value.__matmul__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__matmul__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __rmatmul__(self, other):
         value = self.value
-        return value.__rmatmul__(
-            self._convert_to_tensor(other, dtype=value.dtype)
-        )
+        return value.__rmatmul__(self._convert_to_tensor(other, dtype=value.dtype))
 
     def __and__(self, other):
         value = self.value
@@ -475,9 +463,7 @@ def initialize_all_variables():
     global_state.set_global_attribute("uninitialized_variables", [])
 
 
-@keras_export(
-    ["keras.utils.standardize_dtype", "keras.backend.standardize_dtype"]
-)
+@keras_export(["keras.utils.standardize_dtype", "keras.backend.standardize_dtype"])
 def standardize_dtype(dtype):
     if dtype is None:
         return config.floatx()

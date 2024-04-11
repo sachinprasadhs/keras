@@ -29,9 +29,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(int_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_array.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_array.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)
@@ -39,9 +37,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
     @parameterized.named_parameters(TEST_CASES)
     def test_count_weighted_output(self, sparse):
         input_array = np.array([[0, 1], [0, 0], [1, 2], [3, 1]])
-        count_weights = np.array(
-            [[0.1, 0.2], [0.1, 0.1], [0.2, 0.3], [0.4, 0.2]]
-        )
+        count_weights = np.array([[0.1, 0.2], [0.1, 0.1], [0.2, 0.3], [0.4, 0.2]])
         expected_output = np.array(
             [
                 [0.1, 0.2, 0.0, 0.0, 0.0, 0.0],
@@ -65,9 +61,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         # Test symbolic call.
         output = layer(
             layers.Input(batch_shape=input_array.shape, dtype="int32"),
-            count_weights=layers.Input(
-                batch_shape=input_array.shape, dtype="float32"
-            ),
+            count_weights=layers.Input(batch_shape=input_array.shape, dtype="float32"),
         )
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
@@ -90,9 +84,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(int_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_array.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_array.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)
@@ -114,9 +106,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(output_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_data.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_data.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)
@@ -138,9 +128,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(output_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_data.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_data.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)
@@ -179,9 +167,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(output_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_data.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_data.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)
@@ -236,9 +222,7 @@ class CategoryEncodingTest(testing.TestCase, parameterized.TestCase):
         self.assertSparse(output_data, sparse)
 
         # Test symbolic call.
-        output = layer(
-            layers.Input(batch_shape=input_data.shape, dtype="int32")
-        )
+        output = layer(layers.Input(batch_shape=input_data.shape, dtype="int32"))
         self.assertEqual(expected_output_shape, output.shape)
         self.assertEqual("float32", output.dtype)
         self.assertSparse(output, sparse)

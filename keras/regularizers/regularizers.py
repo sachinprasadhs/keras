@@ -323,15 +323,10 @@ class OrthogonalRegularizer(Regularizer):
             inputs = normalize(inputs, axis=0)
             product = ops.matmul(ops.transpose(inputs), inputs)
             size = inputs.shape[1]
-        product_no_diagonal = product * (
-            1.0 - ops.eye(size, dtype=inputs.dtype)
-        )
+        product_no_diagonal = product * (1.0 - ops.eye(size, dtype=inputs.dtype))
         num_pairs = size * (size - 1.0) / 2.0
         return (
-            self.factor
-            * 0.5
-            * ops.sum(ops.absolute(product_no_diagonal))
-            / num_pairs
+            self.factor * 0.5 * ops.sum(ops.absolute(product_no_diagonal)) / num_pairs
         )
 
     def get_config(self):

@@ -5,9 +5,7 @@ from keras import optimizers
 from keras.backend.torch.optimizers import torch_parallel_optimizer
 
 
-class RMSprop(
-    torch_parallel_optimizer.TorchParallelOptimizer, optimizers.RMSprop
-):
+class RMSprop(torch_parallel_optimizer.TorchParallelOptimizer, optimizers.RMSprop):
     def _parallel_update_step(
         self,
         grads,
@@ -28,16 +26,12 @@ class RMSprop(
         rho = self.rho
 
         torch._foreach_mul_(velocities, rho)
-        torch._foreach_add_(
-            velocities, torch._foreach_mul(grads, grads), alpha=1 - rho
-        )
+        torch._foreach_add_(velocities, torch._foreach_mul(grads, grads), alpha=1 - rho)
 
         denominators = torch._foreach_add(velocities, self.epsilon)
         if self.centered:
             average_grads = [
-                self._average_gradients[
-                    self._get_variable_index(variable)
-                ].value
+                self._average_gradients[self._get_variable_index(variable)].value
                 for variable in keras_variables
             ]
             torch._foreach_mul_(average_grads, rho)
@@ -48,9 +42,7 @@ class RMSprop(
                 alpha=-1,
             )
         torch._foreach_sqrt_(denominators)
-        increments = torch._foreach_div(
-            torch._foreach_mul(grads, lr), denominators
-        )
+        increments = torch._foreach_div(torch._foreach_mul(grads, lr), denominators)
 
         if self.momentum > 0:
             momentum_list = [

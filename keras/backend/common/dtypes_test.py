@@ -24,9 +24,7 @@ class DtypesTest(test_case.TestCase, parameterized.TestCase):
                     ALL_DTYPES.append(x)
         ALL_DTYPES += [None]
     else:
-        ALL_DTYPES = [x for x in dtypes.ALLOWED_DTYPES if x != "string"] + [
-            None
-        ]
+        ALL_DTYPES = [x for x in dtypes.ALLOWED_DTYPES if x != "string"] + [None]
     # Remove float8 dtypes for the following tests
     ALL_DTYPES = [x for x in ALL_DTYPES if x not in dtypes.FLOAT8_TYPES]
 
@@ -51,9 +49,7 @@ class DtypesTest(test_case.TestCase, parameterized.TestCase):
         expected = jnp.result_type(dtype1, dtype2).name
         self.assertEqual(out, expected)
 
-    @parameterized.named_parameters(
-        named_product(dtype1=ALL_DTYPES, dtype2=ALL_DTYPES)
-    )
+    @parameterized.named_parameters(named_product(dtype1=ALL_DTYPES, dtype2=ALL_DTYPES))
     def test_result_type_with_tensor(self, dtype1, dtype2):
         import jax.numpy as jnp
 
@@ -155,9 +151,7 @@ class DtypesTest(test_case.TestCase, parameterized.TestCase):
                 dtypes._least_upper_bound(dtype1, dtype2)
 
     def test_valid_dtype_leading_to_single_lub_element(self):
-        self.assertEqual(
-            dtypes._least_upper_bound("float32", "int32"), "float32"
-        )
+        self.assertEqual(dtypes._least_upper_bound("float32", "int32"), "float32")
 
     def test_valid_dtype_leading_to_keyerror_and_valueerror(self):
         invalid_dtype = "non_existent_dtype"
@@ -170,20 +164,12 @@ class DtypesTest(test_case.TestCase, parameterized.TestCase):
         self.assertEqual(dtypes._resolve_weak_type("bool"), "bool")
 
     def test_resolve_weak_type_int(self):
-        self.assertEqual(
-            dtypes._resolve_weak_type("int32", precision="32"), "int32"
-        )
-        self.assertEqual(
-            dtypes._resolve_weak_type("int64", precision="64"), "int64"
-        )
+        self.assertEqual(dtypes._resolve_weak_type("int32", precision="32"), "int32")
+        self.assertEqual(dtypes._resolve_weak_type("int64", precision="64"), "int64")
 
     def test_resolve_weak_type_uint(self):
-        self.assertEqual(
-            dtypes._resolve_weak_type("uint32", precision="32"), "uint32"
-        )
-        self.assertEqual(
-            dtypes._resolve_weak_type("uint64", precision="64"), "uint64"
-        )
+        self.assertEqual(dtypes._resolve_weak_type("uint32", precision="32"), "uint32")
+        self.assertEqual(dtypes._resolve_weak_type("uint64", precision="64"), "uint64")
 
     def test_resolve_weak_type_float(self):
         self.assertEqual(

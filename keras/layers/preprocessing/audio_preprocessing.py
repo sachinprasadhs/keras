@@ -158,9 +158,7 @@ class MelSpectrogram(TFDataLayer):
 
     def _dbscale(self, inputs):
         log_spec = 10.0 * (
-            self.backend.numpy.log10(
-                self.backend.numpy.maximum(inputs, self.min_power)
-            )
+            self.backend.numpy.log10(self.backend.numpy.maximum(inputs, self.min_power))
         )
         ref_value = self.backend.numpy.abs(
             self.backend.convert_to_tensor(self.ref_power)
@@ -329,8 +327,7 @@ class MelSpectrogram(TFDataLayer):
             output_shape = [
                 self.num_mel_bins,
                 (
-                    (input_shape[0] + self.sequence_stride + 1)
-                    // self.sequence_stride
+                    (input_shape[0] + self.sequence_stride + 1) // self.sequence_stride
                     if input_shape[0] is not None
                     else None
                 ),
@@ -340,8 +337,7 @@ class MelSpectrogram(TFDataLayer):
                 input_shape[0],
                 self.num_mel_bins,
                 (
-                    (input_shape[1] + self.sequence_stride + 1)
-                    // self.sequence_stride
+                    (input_shape[1] + self.sequence_stride + 1) // self.sequence_stride
                     if input_shape[1] is not None
                     else None
                 ),

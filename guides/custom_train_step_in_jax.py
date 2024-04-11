@@ -102,9 +102,7 @@ class CustomModel(keras.Model):
         x, y = data
 
         # Get the gradient function.
-        grad_fn = jax.value_and_grad(
-            self.compute_loss_and_updates, has_aux=True
-        )
+        grad_fn = jax.value_and_grad(self.compute_loss_and_updates, has_aux=True)
 
         # Compute the gradients.
         (loss, (y_pred, non_trainable_variables)), grads = grad_fn(
@@ -127,13 +125,10 @@ class CustomModel(keras.Model):
         new_metrics_vars = []
         for metric in self.metrics:
             this_metric_vars = metrics_variables[
-                len(new_metrics_vars) : len(new_metrics_vars)
-                + len(metric.variables)
+                len(new_metrics_vars) : len(new_metrics_vars) + len(metric.variables)
             ]
             if metric.name == "loss":
-                this_metric_vars = metric.stateless_update_state(
-                    this_metric_vars, loss
-                )
+                this_metric_vars = metric.stateless_update_state(this_metric_vars, loss)
             else:
                 this_metric_vars = metric.stateless_update_state(
                     this_metric_vars, y, y_pred
@@ -211,9 +206,7 @@ class CustomModel(keras.Model):
         x, y = data
 
         # Get the gradient function.
-        grad_fn = jax.value_and_grad(
-            self.compute_loss_and_updates, has_aux=True
-        )
+        grad_fn = jax.value_and_grad(self.compute_loss_and_updates, has_aux=True)
 
         # Compute the gradients.
         (loss, (y_pred, non_trainable_variables)), grads = grad_fn(
@@ -233,9 +226,7 @@ class CustomModel(keras.Model):
         )
 
         # Update metrics.
-        loss_tracker_vars = metrics_variables[
-            : len(self.loss_tracker.variables)
-        ]
+        loss_tracker_vars = metrics_variables[: len(self.loss_tracker.variables)]
         mae_metric_vars = metrics_variables[len(self.loss_tracker.variables) :]
 
         loss_tracker_vars = self.loss_tracker.stateless_update_state(
@@ -249,9 +240,7 @@ class CustomModel(keras.Model):
         logs[self.loss_tracker.name] = self.loss_tracker.stateless_result(
             loss_tracker_vars
         )
-        logs[self.mae_metric.name] = self.mae_metric.stateless_result(
-            mae_metric_vars
-        )
+        logs[self.mae_metric.name] = self.mae_metric.stateless_result(mae_metric_vars)
 
         new_metrics_vars = loss_tracker_vars + mae_metric_vars
 
@@ -317,13 +306,10 @@ class CustomModel(keras.Model):
         new_metrics_vars = []
         for metric in self.metrics:
             this_metric_vars = metrics_variables[
-                len(new_metrics_vars) : len(new_metrics_vars)
-                + len(metric.variables)
+                len(new_metrics_vars) : len(new_metrics_vars) + len(metric.variables)
             ]
             if metric.name == "loss":
-                this_metric_vars = metric.stateless_update_state(
-                    this_metric_vars, loss
-                )
+                this_metric_vars = metric.stateless_update_state(this_metric_vars, loss)
             else:
                 this_metric_vars = metric.stateless_update_state(
                     this_metric_vars, y, y_pred

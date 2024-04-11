@@ -311,14 +311,12 @@ class Layer(BackendLayer, Operation):
                     trainable_variables,
                 ),
                 "non_trainable_variables": (
-                    lambda x: isinstance(x, backend.Variable)
-                    and not x.trainable,
+                    lambda x: isinstance(x, backend.Variable) and not x.trainable,
                     non_trainable_variables,
                 ),
                 "metrics": (lambda x: isinstance(x, Metric), metrics),
                 "layers": (
-                    lambda x: isinstance(x, Layer)
-                    and not isinstance(x, Metric),
+                    lambda x: isinstance(x, Layer) and not isinstance(x, Metric),
                     layers,
                 ),
                 "seed_generators": (
@@ -330,9 +328,7 @@ class Layer(BackendLayer, Operation):
         )
         if backend.backend() == "tensorflow":
             # Remove attribute tracking for lists (TF-specific attribute)
-            _self_setattr_tracking = getattr(
-                self, "_self_setattr_tracking", True
-            )
+            _self_setattr_tracking = getattr(self, "_self_setattr_tracking", True)
             self._self_setattr_tracking = False
 
         self._trainable_variables = trainable_variables
@@ -709,9 +705,7 @@ class Layer(BackendLayer, Operation):
         #####################################
         # 1. Convert any array arguments to tensors of correct dtype.
         def maybe_convert(x):
-            return self.dtype_policy.convert_input(
-                x, self.autocast, self.input_dtype
-            )
+            return self.dtype_policy.convert_input(x, self.autocast, self.input_dtype)
 
         # Used to avoid expensive `tree` operations in the most common case.
         if (
@@ -727,9 +721,7 @@ class Layer(BackendLayer, Operation):
         # 2. Enforce that only tensors can be passed positionally.
         if not self._allow_non_tensor_positional_args:
             for arg in tree.flatten(args):
-                if not isinstance(arg, KerasTensor) and not backend.is_tensor(
-                    arg
-                ):
+                if not isinstance(arg, KerasTensor) and not backend.is_tensor(arg):
                     raise ValueError(
                         "Only input tensors may be passed as "
                         "positional arguments. The following argument value "
@@ -833,9 +825,7 @@ class Layer(BackendLayer, Operation):
                     current_layer_path += "/output"
                     layout = distribution.get_tensor_layout(current_layer_path)
                     if layout:
-                        outputs = distribution_lib.distribute_tensor(
-                            outputs, layout
-                        )
+                        outputs = distribution_lib.distribute_tensor(outputs, layout)
 
                 if not self.built:
                     self.built = True
@@ -850,9 +840,7 @@ class Layer(BackendLayer, Operation):
             # TODO: consider extending this to all args and kwargs.
             previous_mask = getattr(call_spec.first_arg, "_keras_mask", None)
             if self.supports_masking:
-                self._set_mask_metadata(
-                    call_spec.first_arg, outputs, previous_mask
-                )
+                self._set_mask_metadata(call_spec.first_arg, outputs, previous_mask)
             elif previous_mask is not None:
                 warnings.warn(
                     f"Layer '{self.name}' (of type {self.__class__.__name__}) "
@@ -967,9 +955,7 @@ class Layer(BackendLayer, Operation):
         with backend.StatelessScope(
             state_mapping=mapping, collect_losses=return_losses
         ) as scope:
-            if isinstance(
-                self.dtype_policy, dtype_policies.QuantizedDTypePolicy
-            ):
+            if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
                 outputs = self.quantized_call(*args, **kwargs)
             else:
                 outputs = self.call(*args, **kwargs)
@@ -1255,9 +1241,7 @@ class Layer(BackendLayer, Operation):
         # Otherwise, attempt to build the layer by calling it on symbolic input.
         if might_have_unbuilt_state(self):
             try:
-                backend.compute_output_spec(
-                    self.call, **call_spec.arguments_dict
-                )
+                backend.compute_output_spec(self.call, **call_spec.arguments_dict)
             except Exception as e:
                 if call_spec.eager:
                     # Will let the actual eager call do state-building
@@ -1309,10 +1293,7 @@ class Layer(BackendLayer, Operation):
             return False
 
     def __repr__(self):
-        return (
-            f"<{self.__class__.__name__} "
-            f"name={self.name}, built={self.built}>"
-        )
+        return f"<{self.__class__.__name__} " f"name={self.name}, built={self.built}>"
 
     def __str__(self):
         return self.__repr__()
@@ -1346,9 +1327,7 @@ class Layer(BackendLayer, Operation):
         if layer_call_ctx is None:
             # Enter new call context.
             layer_call_ctx = CallContext(entry_layer=self)
-            global_state.set_global_attribute(
-                "current_call_ctx", layer_call_ctx
-            )
+            global_state.set_global_attribute("current_call_ctx", layer_call_ctx)
             self._clear_losses()
         return layer_call_ctx
 
@@ -1434,9 +1413,7 @@ class CallSpec:
             bound_args = signature.bind(*args, **kwargs)
         else:
             bound_args = signature.bind(*args, **kwargs)
-        self.user_arguments_dict = {
-            k: v for k, v in bound_args.arguments.items()
-        }
+        self.user_arguments_dict = {k: v for k, v in bound_args.arguments.items()}
         bound_args.apply_defaults()
         arg_dict = {}
         arg_names = []
@@ -1471,9 +1448,7 @@ class CallSpec:
         self.tensor_arguments_names = tensor_arg_names
         self.nested_tensor_argument_names = nested_tensor_arg_names
         self.first_arg = arg_dict[arg_names[0]]
-        if all(
-            backend.is_tensor(x) for x in self.tensor_arguments_dict.values()
-        ):
+        if all(backend.is_tensor(x) for x in self.tensor_arguments_dict.values()):
             self.eager = True
         else:
             self.eager = False

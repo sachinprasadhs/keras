@@ -148,8 +148,7 @@ class ModelCheckpoint(Callback):
 
         if mode not in ["auto", "min", "max"]:
             warnings.warn(
-                f"ModelCheckpoint mode '{mode}' is unknown, "
-                "fallback to auto mode.",
+                f"ModelCheckpoint mode '{mode}' is unknown, " "fallback to auto mode.",
                 stacklevel=2,
             )
             mode = "auto"
@@ -248,8 +247,7 @@ class ModelCheckpoint(Callback):
                         stacklevel=2,
                     )
                 elif (
-                    isinstance(current, np.ndarray)
-                    or backend.is_tensor(current)
+                    isinstance(current, np.ndarray) or backend.is_tensor(current)
                 ) and len(current.shape) > 0:
                     warnings.warn(
                         "Can save best model only when `monitor` is "

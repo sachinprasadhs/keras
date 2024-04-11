@@ -144,8 +144,7 @@ def register_keras_serializable(package="Custom", name=None):
 
         if inspect.isclass(arg) and not hasattr(arg, "get_config"):
             raise ValueError(
-                "Cannot register a class that does not have a "
-                "get_config() method."
+                "Cannot register a class that does not have a " "get_config() method."
             )
 
         GLOBAL_CUSTOM_OBJECTS[registered_name] = arg

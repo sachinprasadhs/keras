@@ -70,8 +70,7 @@ def array_to_img(x, data_format=None, scale=True, dtype=None):
         dtype = backend.floatx()
     if pil_image is None:
         raise ImportError(
-            "Could not import PIL.Image. "
-            "The use of `array_to_img` requires PIL."
+            "Could not import PIL.Image. " "The use of `array_to_img` requires PIL."
         )
     x = np.asarray(x, dtype=dtype)
     if x.ndim != 3:
@@ -177,9 +176,7 @@ def save_img(path, x, data_format=None, file_format=None, scale=True, **kwargs):
     data_format = backend.standardize_data_format(data_format)
     img = array_to_img(x, data_format=data_format, scale=scale)
     if img.mode == "RGBA" and (file_format == "jpg" or file_format == "jpeg"):
-        warnings.warn(
-            "The JPG format does not support RGBA images, converting to RGB."
-        )
+        warnings.warn("The JPG format does not support RGBA images, converting to RGB.")
         img = img.convert("RGB")
     img.save(path, format=file_format, **kwargs)
 
@@ -235,9 +232,7 @@ def load_img(
         with open(path, "rb") as f:
             img = pil_image.open(io.BytesIO(f.read()))
     else:
-        raise TypeError(
-            f"path should be path-like or io.BytesIO, not {type(path)}"
-        )
+        raise TypeError(f"path should be path-like or io.BytesIO, not {type(path)}")
 
     if color_mode == "grayscale":
         # if image is not already an 8-bit, 16-bit or 32-bit grayscale image
@@ -395,15 +390,13 @@ def smart_resize(
         crop_box_wstart = int(float(width - crop_width) / 2)
     else:
         crop_height = backend_module.cast(
-            backend_module.cast(width * target_height, "float32")
-            / target_width,
+            backend_module.cast(width * target_height, "float32") / target_width,
             "int32",
         )
         crop_height = backend_module.numpy.minimum(height, crop_height)
         crop_height = backend_module.cast(crop_height, "int32")
         crop_width = backend_module.cast(
-            backend_module.cast(height * target_width, "float32")
-            / target_height,
+            backend_module.cast(height * target_width, "float32") / target_height,
             "int32",
         )
         crop_width = backend_module.numpy.minimum(width, crop_width)

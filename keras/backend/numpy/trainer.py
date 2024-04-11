@@ -28,12 +28,8 @@ class NumpyTrainer(base_trainer.Trainer):
             y_pred = self(x, training=False)
         else:
             y_pred = self(x)
-        loss = self.compute_loss(
-            x=x, y=y, y_pred=y_pred, sample_weight=sample_weight
-        )
-        self._loss_tracker.update_state(
-            loss, sample_weight=tree.flatten(x)[0].shape[0]
-        )
+        loss = self.compute_loss(x=x, y=y, y_pred=y_pred, sample_weight=sample_weight)
+        self._loss_tracker.update_state(loss, sample_weight=tree.flatten(x)[0].shape[0])
         return self.compute_metrics(x, y, y_pred, sample_weight=sample_weight)
 
     def predict_step(self, data):
@@ -94,8 +90,7 @@ class NumpyTrainer(base_trainer.Trainer):
     def _symbolic_build(self, data_batch):
         model_unbuilt = not all(layer.built for layer in self._flatten_layers())
         compile_metrics_unbuilt = (
-            self._compile_metrics is not None
-            and not self._compile_metrics.built
+            self._compile_metrics is not None and not self._compile_metrics.built
         )
         if model_unbuilt or compile_metrics_unbuilt:
             # Create symbolic tensors matching an input batch.
@@ -157,9 +152,7 @@ class NumpyTrainer(base_trainer.Trainer):
         raise NotImplementedError("fit not implemented for NumPy backend.")
 
     @traceback_utils.filter_traceback
-    def predict(
-        self, x, batch_size=None, verbose="auto", steps=None, callbacks=None
-    ):
+    def predict(self, x, batch_size=None, verbose="auto", steps=None, callbacks=None):
         # Create an iterator that yields batches of input data.
         epoch_iterator = EpochIterator(
             x=x,
@@ -287,9 +280,7 @@ class NumpyTrainer(base_trainer.Trainer):
         class_weight=None,
         return_dict=False,
     ):
-        raise NotImplementedError(
-            "train_on_batch not implemented for NumPy backend."
-        )
+        raise NotImplementedError("train_on_batch not implemented for NumPy backend.")
 
     def test_on_batch(
         self,
@@ -315,7 +306,5 @@ class NumpyTrainer(base_trainer.Trainer):
     def predict_on_batch(self, x):
         self.make_predict_function()
         batch_outputs = self.predict_function([(x,)])
-        batch_outputs = tree.map_structure(
-            backend.convert_to_numpy, batch_outputs
-        )
+        batch_outputs = tree.map_structure(backend.convert_to_numpy, batch_outputs)
         return batch_outputs

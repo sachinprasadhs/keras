@@ -159,12 +159,8 @@ class SavedModelTest(testing.TestCase):
             inputs_1=tf.convert_to_tensor(input_arr_2, dtype=tf.float32),
         )
 
-        self.assertAllClose(
-            input_arr_1, outputs["output_0"], rtol=1e-4, atol=1e-4
-        )
-        self.assertAllClose(
-            input_arr_2, outputs["output_1"], rtol=1e-4, atol=1e-4
-        )
+        self.assertAllClose(input_arr_1, outputs["output_0"], rtol=1e-4, atol=1e-4)
+        self.assertAllClose(input_arr_2, outputs["output_1"], rtol=1e-4, atol=1e-4)
 
     def test_multi_input_custom_model_and_layer(self):
         @object_registration.register_keras_serializable(package="my_package")
@@ -185,9 +181,7 @@ class SavedModelTest(testing.TestCase):
                 return self.layer(*inputs)
 
         model = CustomModel()
-        inp = [
-            tf.constant(i, shape=[1, 1], dtype=tf.float32) for i in range(1, 4)
-        ]
+        inp = [tf.constant(i, shape=[1, 1], dtype=tf.float32) for i in range(1, 4)]
         expected = model(*inp)
         path = os.path.join(self.get_temp_dir(), "my_keras_model")
         tf.saved_model.save(model, path)
@@ -266,9 +260,7 @@ class SavedModelTest(testing.TestCase):
     def test_fixed_signature_string_dtype(self):
         @object_registration.register_keras_serializable(package="my_package")
         class Adder(models.Model):
-            @tf.function(
-                input_signature=[tf.TensorSpec(shape=[], dtype=tf.string)]
-            )
+            @tf.function(input_signature=[tf.TensorSpec(shape=[], dtype=tf.string)])
             def concat(self, x):
                 return x + x
 
@@ -340,24 +332,18 @@ class SavedModelTest(testing.TestCase):
         model_with_signature_path = os.path.join(
             self.get_temp_dir(), "model_with_signature"
         )
-        call = model.__call__.get_concrete_function(
-            tf.TensorSpec(None, tf.float32)
-        )
+        call = model.__call__.get_concrete_function(tf.TensorSpec(None, tf.float32))
 
         tf.saved_model.save(model, model_with_signature_path, signatures=call)
         restored_model = tf.saved_model.load(model_with_signature_path)
-        self.assertEqual(
-            list(restored_model.signatures.keys()), ["serving_default"]
-        )
+        self.assertEqual(list(restored_model.signatures.keys()), ["serving_default"])
 
     def test_multiple_signatures_dict_path(self):
         model = CustomSignatureModel()
         model_multiple_signatures_path = os.path.join(
             self.get_temp_dir(), "model_with_multiple_signatures"
         )
-        call = model.__call__.get_concrete_function(
-            tf.TensorSpec(None, tf.float32)
-        )
+        call = model.__call__.get_concrete_function(tf.TensorSpec(None, tf.float32))
         signatures = {
             "serving_default": call,
             "array_input": model.__call__.get_concrete_function(

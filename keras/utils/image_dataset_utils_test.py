@@ -43,9 +43,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
                     class_directory,
                     os.path.join(class_directory, "subfolder_1"),
                     os.path.join(class_directory, "subfolder_2"),
-                    os.path.join(
-                        class_directory, "subfolder_1", "sub-subfolder"
-                    ),
+                    os.path.join(class_directory, "subfolder_1", "sub-subfolder"),
                 ]
             else:
                 class_paths = [class_directory]
@@ -223,9 +221,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
         self.assertEqual(batch[0].shape, output_shape)
         self.assertEqual(batch[0].dtype.name, "float32")
 
-        directory = self._prepare_directory(
-            num_classes=4, color_mode="grayscale"
-        )
+        directory = self._prepare_directory(num_classes=4, color_mode="grayscale")
         dataset = image_dataset_utils.image_dataset_from_directory(
             directory, batch_size=8, image_size=(18, 18), color_mode="grayscale"
         )
@@ -334,9 +330,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
         self.assertAllClose(batch[1], [0, 1, 0, 1, 1, 1])
 
     def test_image_dataset_from_directory_follow_links(self):
-        directory = self._prepare_directory(
-            num_classes=2, count=25, nested_dirs=True
-        )
+        directory = self._prepare_directory(num_classes=2, count=25, nested_dirs=True)
         dataset = image_dataset_utils.image_dataset_from_directory(
             directory,
             batch_size=8,
@@ -394,9 +388,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`label_mode` argument must be"
-        ):
+        with self.assertRaisesRegex(ValueError, "`label_mode` argument must be"):
             _ = image_dataset_utils.image_dataset_from_directory(
                 directory, label_mode="other"
             )
@@ -423,9 +415,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
                 directory, labels=[0, 0, 1, 1]
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`class_names` passed did not match"
-        ):
+        with self.assertRaisesRegex(ValueError, "`class_names` passed did not match"):
             _ = image_dataset_utils.image_dataset_from_directory(
                 directory, class_names=["class_0", "wrong_class"]
             )
@@ -450,9 +440,7 @@ class ImageDatasetFromDirectoryTest(testing.TestCase):
                 directory, validation_split=0.2, subset="other"
             )
 
-        with self.assertRaisesRegex(
-            ValueError, "`validation_split` must be set"
-        ):
+        with self.assertRaisesRegex(ValueError, "`validation_split` must be set"):
             _ = image_dataset_utils.image_dataset_from_directory(
                 directory, validation_split=0.0, subset="training"
             )

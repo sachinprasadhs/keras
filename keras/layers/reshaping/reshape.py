@@ -49,9 +49,7 @@ class Reshape(Layer):
 
     def compute_output_spec(self, inputs):
         output_shape = self.compute_output_shape(inputs.shape)
-        return KerasTensor(
-            shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse
-        )
+        return KerasTensor(shape=output_shape, dtype=inputs.dtype, sparse=inputs.sparse)
 
     def build(self, input_shape):
         sample_output_shape = operation_utils.compute_reshape_output_shape(

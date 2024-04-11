@@ -132,31 +132,17 @@ if flax is not None:
         def __call__(self, inputs, training=False):
             ura = not training
             x = inputs
-            x = flax.linen.Conv(
-                features=12, kernel_size=(3, 3), use_bias=False
-            )(x)
-            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(
-                x
-            )
+            x = flax.linen.Conv(features=12, kernel_size=(3, 3), use_bias=False)(x)
+            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(x)
             x = flax.linen.relu(x)
-            x = flax.linen.Conv(
-                features=24, kernel_size=(6, 6), strides=(2, 2)
-            )(x)
-            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(
-                x
-            )
+            x = flax.linen.Conv(features=24, kernel_size=(6, 6), strides=(2, 2))(x)
+            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(x)
             x = flax.linen.relu(x)
-            x = flax.linen.Conv(
-                features=32, kernel_size=(6, 6), strides=(2, 2)
-            )(x)
-            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(
-                x
-            )
+            x = flax.linen.Conv(features=32, kernel_size=(6, 6), strides=(2, 2))(x)
+            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(x)
             x = x.reshape((x.shape[0], -1))  # flatten
             x = flax.linen.Dense(features=200, use_bias=True)(x)
-            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(
-                x
-            )
+            x = flax.linen.BatchNorm(use_running_average=ura, use_scale=False)(x)
             x = flax.linen.Dropout(rate=0.3, deterministic=not training)(x)
             x = flax.linen.relu(x)
             x = flax.linen.Dense(features=10)(x)
@@ -213,9 +199,7 @@ class TestJaxLayer(testing.TestCase, parameterized.TestCase):
                 trainable_params,
                 _count_params(layer.trainable_weights),
             )
-            self.assertEqual(
-                non_trainable_weights, len(layer.non_trainable_weights)
-            )
+            self.assertEqual(non_trainable_weights, len(layer.non_trainable_weights))
             self.assertEqual(
                 non_trainable_params,
                 _count_params(layer.non_trainable_weights),
@@ -225,9 +209,7 @@ class TestJaxLayer(testing.TestCase, parameterized.TestCase):
         layer1 = layer_class(**layer_init_kwargs)
         inputs1 = layers.Input(shape=input_shape)
         outputs1 = layer1(inputs1)
-        model1 = models.Model(
-            inputs=inputs1, outputs=outputs1, name=model_name + "1"
-        )
+        model1 = models.Model(inputs=inputs1, outputs=outputs1, name=model_name + "1")
         model1.summary()
 
         verify_weights_and_params(layer1)

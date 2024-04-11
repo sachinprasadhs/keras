@@ -32,9 +32,7 @@ class MultiProcessInitializeTest(testing.TestCase):
         num_processes = 2
         current_process_id = 0
 
-        distribution_lib.initialize(
-            job_addresses, num_processes, current_process_id
-        )
+        distribution_lib.initialize(job_addresses, num_processes, current_process_id)
 
         mock_backend_initialize.assert_called_once_with(
             job_addresses, num_processes, current_process_id
@@ -72,9 +70,7 @@ class DeviceMeshTest(testing.TestCase):
 
     def test_input_validation(self):
         devices = [f"cpu:{i}" for i in range(4)]
-        with self.assertRaisesRegex(
-            ValueError, "Shape and axis_names cannot be empty"
-        ):
+        with self.assertRaisesRegex(ValueError, "Shape and axis_names cannot be empty"):
             distribution_lib.DeviceMesh((4,), "", devices)
 
         with self.assertRaisesRegex(
@@ -103,9 +99,7 @@ class TensorLayoutTest(testing.TestCase):
 
     def test_tensor_layout_validation(self):
         axes = ("data", "unknown", None)
-        with self.assertRaisesRegex(
-            ValueError, "Invalid axis names for Layout"
-        ):
+        with self.assertRaisesRegex(ValueError, "Invalid axis names for Layout"):
             distribution_lib.TensorLayout(axes, self.mesh)
 
     def test_lazy_device_mesh_injection(self):
@@ -127,9 +121,7 @@ class TensorLayoutTest(testing.TestCase):
         self.assertIsNone(layout.device_mesh)
         self.assertEqual(layout.axes, axes)
 
-        with self.assertRaisesRegex(
-            ValueError, "Invalid axis names for Layout"
-        ):
+        with self.assertRaisesRegex(ValueError, "Invalid axis names for Layout"):
             layout.device_mesh = self.mesh
 
 
@@ -140,9 +132,7 @@ class DistributionTest(testing.TestCase):
         shape = (4, 2)
         axis_names = ["batch", "model"]
 
-        self.device_mesh = distribution_lib.DeviceMesh(
-            shape, axis_names, devices
-        )
+        self.device_mesh = distribution_lib.DeviceMesh(shape, axis_names, devices)
 
     def test_init_with_device_mesh(self):
         distribution = distribution_lib.Distribution(self.device_mesh)
@@ -174,14 +164,10 @@ class DataParallelDistributionTest(testing.TestCase):
         shape = (8,)
         axis_names = ["data"]
 
-        self.device_mesh = distribution_lib.DeviceMesh(
-            shape, axis_names, self.devices
-        )
+        self.device_mesh = distribution_lib.DeviceMesh(shape, axis_names, self.devices)
 
     def test_create_with_device_mesh(self):
-        distribution = distribution_lib.DataParallel(
-            device_mesh=self.device_mesh
-        )
+        distribution = distribution_lib.DataParallel(device_mesh=self.device_mesh)
 
         device_mesh = distribution.device_mesh
         self.assertEqual(len(device_mesh.devices), 8)
@@ -214,9 +200,7 @@ class DataParallelDistributionTest(testing.TestCase):
         self.assertEqual(distribution._batch_dim_name, "batch")
 
     def test_get_data_layout(self):
-        distribution = distribution_lib.DataParallel(
-            device_mesh=self.device_mesh
-        )
+        distribution = distribution_lib.DataParallel(device_mesh=self.device_mesh)
 
         data = np.arange(16).reshape((4, 2, 2))
         data_layout = distribution.get_data_layout(data.shape)
@@ -224,9 +208,7 @@ class DataParallelDistributionTest(testing.TestCase):
         self.assertEqual(data_layout.axes, ("data", None, None))
 
     def test_get_variable_layout(self):
-        distribution = distribution_lib.DataParallel(
-            device_mesh=self.device_mesh
-        )
+        distribution = distribution_lib.DataParallel(device_mesh=self.device_mesh)
 
         variable = backend.Variable(initializer=[1, 2, 3])
         variable_layout = distribution.get_variable_layout(variable)
@@ -234,9 +216,7 @@ class DataParallelDistributionTest(testing.TestCase):
         self.assertEqual(variable_layout.axes, (None,))
 
     def test_get_tensor_layout(self):
-        distribution = distribution_lib.DataParallel(
-            device_mesh=self.device_mesh
-        )
+        distribution = distribution_lib.DataParallel(device_mesh=self.device_mesh)
 
         path = "path/to/tensor"
         tensor_layout = distribution.get_tensor_layout(path)
@@ -245,9 +225,7 @@ class DataParallelDistributionTest(testing.TestCase):
     def test_distribute_dataset(self):
         # We can only verify the single worker/process case in OSS for now.
         dataset = tf.data.Dataset.range(8)
-        distribution = distribution_lib.DataParallel(
-            device_mesh=self.device_mesh
-        )
+        distribution = distribution_lib.DataParallel(device_mesh=self.device_mesh)
         distributed_dataset = distribution.distribute_dataset(dataset)
         self.assertIs(dataset, distributed_dataset)
 
@@ -263,9 +241,7 @@ class ModelParallelDistributionTest(testing.TestCase):
         shape = (2, 4)
         axis_names = ["data", "model"]
 
-        self.device_mesh = distribution_lib.DeviceMesh(
-            shape, axis_names, self.devices
-        )
+        self.device_mesh = distribution_lib.DeviceMesh(shape, axis_names, self.devices)
 
     def test_distribute_weights(self):
         layout_map = distribution_lib.LayoutMap(self.device_mesh)
@@ -335,9 +311,7 @@ class LayoutMapTest(testing.TestCase):
         shape = (4, 2)
         axis_names = ["data", "model"]
 
-        self.device_mesh = distribution_lib.DeviceMesh(
-            shape, axis_names, self.devices
-        )
+        self.device_mesh = distribution_lib.DeviceMesh(shape, axis_names, self.devices)
         self.sharded_2d = distribution_lib.TensorLayout([None, "model"])
         self.sharded_1d = distribution_lib.TensorLayout(["model"])
 
@@ -429,9 +403,7 @@ class LayoutMapTest(testing.TestCase):
         layout_map["dense/bias"] = self.sharded_1d
 
         # Make sure the items are ordered based on the insertion order.
-        self.assertEqual(
-            list(layout_map.keys()), ["dense/kernel", "dense/bias"]
-        )
+        self.assertEqual(list(layout_map.keys()), ["dense/kernel", "dense/bias"])
 
         keys = []
         values = []

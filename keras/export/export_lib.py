@@ -168,9 +168,7 @@ class ExportArchive:
             if backend.backend() == "jax":
 
                 trainable_variables = tree.flatten(resource.trainable_variables)
-                non_trainable_variables = tree.flatten(
-                    resource.non_trainable_variables
-                )
+                non_trainable_variables = tree.flatten(resource.non_trainable_variables)
                 self._backend_trainable_variables += trainable_variables
                 self._backend_non_trainable_variables += non_trainable_variables
                 self._backend_variables = (
@@ -190,9 +188,7 @@ class ExportArchive:
                 )
             else:
                 self._tf_trackable.variables += resource.variables
-                self._tf_trackable.trainable_variables += (
-                    resource.trainable_variables
-                )
+                self._tf_trackable.trainable_variables += resource.trainable_variables
                 self._tf_trackable.non_trainable_variables += (
                     resource.non_trainable_variables
                 )
@@ -438,9 +434,7 @@ class ExportArchive:
             )
         # Ensure that all variables added are either tf.Variables
         # or Variables created by Keras 3 with the TF or JAX backends.
-        if not all(
-            isinstance(v, (tf.Variable, backend.Variable)) for v in variables
-        ):
+        if not all(isinstance(v, (tf.Variable, backend.Variable)) for v in variables):
             raise ValueError(
                 "Expected all elements in `variables` to be "
                 "`tf.Variable` instances. Found instead the following types: "
@@ -467,9 +461,7 @@ class ExportArchive:
         since TF-Serving requires this endpoint to be set.
         """
         if not self._endpoint_names:
-            raise ValueError(
-                "No endpoints have been set yet. Call add_endpoint()."
-            )
+            raise ValueError("No endpoints have been set yet. Call add_endpoint().")
         if backend.backend() == "tensorflow":
             self._filter_and_track_resources()
 
@@ -545,9 +537,7 @@ class ExportArchive:
             jax2tf_kwargs = {}
 
         if "native_serialization" not in jax2tf_kwargs:
-            jax2tf_kwargs["native_serialization"] = (
-                self._check_device_compatible()
-            )
+            jax2tf_kwargs["native_serialization"] = self._check_device_compatible()
 
         variables_shapes = self._to_polymorphic_shape(
             self._backend_variables, allow_none=False
@@ -592,10 +582,7 @@ class ExportArchive:
     def _check_device_compatible(self):
         from jax import default_backend as jax_device
 
-        if (
-            jax_device() == "gpu"
-            and len(tf.config.list_physical_devices("GPU")) == 0
-        ):
+        if jax_device() == "gpu" and len(tf.config.list_physical_devices("GPU")) == 0:
             logging.warning(
                 "JAX backend is using GPU for export, but installed "
                 "TF package cannot access GPU, so reloading the model with "

@@ -114,9 +114,7 @@ class BaseOptimizer:
         self.iterations = iterations
 
         # Create learning rate (schedule or variable)
-        if isinstance(
-            learning_rate, learning_rate_schedule.LearningRateSchedule
-        ):
+        if isinstance(learning_rate, learning_rate_schedule.LearningRateSchedule):
             self._learning_rate = learning_rate
         elif callable(learning_rate):
             self._learning_rate = learning_rate
@@ -212,9 +210,7 @@ class BaseOptimizer:
             name = reference_variable.path.replace("/", "_") + "_" + name
         else:
             name = (
-                str(reference_variable.name)
-                .replace("/", "_")
-                .replace(":", "_")
+                str(reference_variable.name).replace("/", "_").replace(":", "_")
                 + "_"
                 + name
             )
@@ -393,14 +389,10 @@ class BaseOptimizer:
             )
         else:
             # Run udpate step.
-            self._backend_update_step(
-                grads, trainable_variables, self.learning_rate
-            )
+            self._backend_update_step(grads, trainable_variables, self.learning_rate)
 
         if self.use_ema:
-            self._update_model_variables_moving_average(
-                self._trainable_variables
-            )
+            self._update_model_variables_moving_average(self._trainable_variables)
             if self.ema_overwrite_frequency:
                 # Only when self.ema_overwrite_frequency is not None, we
                 # overwrite the model variables.
@@ -432,8 +424,7 @@ class BaseOptimizer:
 
     def _backend_increment_gradient_accumulators(self, grads):
         new_g_accs = [
-            (grads[i] + self._accumulated_gradients[i])
-            for i in range(len(grads))
+            (grads[i] + self._accumulated_gradients[i]) for i in range(len(grads))
         ]
         for n_g_acc, g_acc in zip(new_g_accs, self._accumulated_gradients):
             g_acc.assign(n_g_acc)
@@ -465,9 +456,9 @@ class BaseOptimizer:
             )
 
         # Gather variable mapping
-        mapping = list(
-            zip(self._trainable_variables, trainable_variables)
-        ) + list(zip(self.variables, optimizer_variables))
+        mapping = list(zip(self._trainable_variables, trainable_variables)) + list(
+            zip(self.variables, optimizer_variables)
+        )
 
         # Call in stateless scope
         with backend.StatelessScope(state_mapping=mapping) as scope:
@@ -511,9 +502,7 @@ class BaseOptimizer:
             prev_lr_var = self._learning_rate
         else:
             prev_lr_var = None
-        if isinstance(
-            learning_rate, learning_rate_schedule.LearningRateSchedule
-        ):
+        if isinstance(learning_rate, learning_rate_schedule.LearningRateSchedule):
             self._learning_rate = learning_rate
         elif callable(learning_rate):
             self._learning_rate = learning_rate
@@ -577,9 +566,7 @@ class BaseOptimizer:
             variable.assign(store[str(i)])
 
     def _get_current_learning_rate(self):
-        if isinstance(
-            self._learning_rate, learning_rate_schedule.LearningRateSchedule
-        ):
+        if isinstance(self._learning_rate, learning_rate_schedule.LearningRateSchedule):
             return self._learning_rate(self.iterations)
         elif callable(self._learning_rate):
             return self._learning_rate()
@@ -610,9 +597,7 @@ class BaseOptimizer:
 
     def _clip_gradients(self, grads):
         if self.clipnorm and self.clipnorm > 0:
-            return [
-                self._clip_by_norm(g) if g is not None else g for g in grads
-            ]
+            return [self._clip_by_norm(g) if g is not None else g for g in grads]
         elif self.global_clipnorm and self.global_clipnorm > 0:
             return clip_by_global_norm(grads, self.global_clipnorm)
         elif self.clipvalue and self.clipvalue > 0:
@@ -671,9 +656,7 @@ class BaseOptimizer:
             return self._exclude_from_weight_decay_cache[variable_id]
 
         # Determine whether the variable should apply weight decay or not
-        exclude_from_weight_decay = getattr(
-            self, "_exclude_from_weight_decay", set()
-        )
+        exclude_from_weight_decay = getattr(self, "_exclude_from_weight_decay", set())
         exclude_from_weight_decay_pattern = getattr(
             self, "_exclude_from_weight_decay_pattern", None
         )
@@ -681,10 +664,7 @@ class BaseOptimizer:
             self._exclude_from_weight_decay_cache[variable_id] = False
             return False
         if exclude_from_weight_decay_pattern is not None:
-            if (
-                re.search(exclude_from_weight_decay_pattern, variable.name)
-                is not None
-            ):
+            if re.search(exclude_from_weight_decay_pattern, variable.name) is not None:
                 self._exclude_from_weight_decay_cache[variable_id] = False
                 return False
         self._exclude_from_weight_decay_cache[variable_id] = True
@@ -715,18 +695,12 @@ class BaseOptimizer:
                 trainable_variables, self._model_variables_moving_average
             ):
                 not_first_step = ops.not_equal(self.iterations, 0)
-                momentum = (
-                    ops.cast(not_first_step, var.dtype) * self.ema_momentum
-                )
+                momentum = ops.cast(not_first_step, var.dtype) * self.ema_momentum
                 average.assign(momentum * average + (1 - momentum) * var)
 
-    def _overwrite_model_variables_with_average_value(
-        self, trainable_variables
-    ):
+    def _overwrite_model_variables_with_average_value(self, trainable_variables):
         """Overwrite model variables with its moving average."""
-        if len(trainable_variables) != len(
-            self._model_variables_moving_average
-        ):
+        if len(trainable_variables) != len(self._model_variables_moving_average):
             raise ValueError(
                 f"The length of model variables ({len(trainable_variables)}) "
                 "to override does not match the length of model variables "
@@ -769,12 +743,8 @@ class BaseOptimizer:
             Python dictionary.
         """
 
-        if isinstance(
-            self._learning_rate, learning_rate_schedule.LearningRateSchedule
-        ):
-            learning_rate = learning_rate_schedule.serialize(
-                self._learning_rate
-            )
+        if isinstance(self._learning_rate, learning_rate_schedule.LearningRateSchedule):
+            learning_rate = learning_rate_schedule.serialize(self._learning_rate)
         elif isinstance(self._learning_rate, backend.Variable):
             learning_rate = float(self._learning_rate.numpy())
         elif ops.is_tensor(self._learning_rate):
@@ -816,10 +786,8 @@ class BaseOptimizer:
         """
         if "learning_rate" in config:
             if isinstance(config["learning_rate"], dict):
-                config["learning_rate"] = (
-                    serialization_lib.deserialize_keras_object(
-                        config["learning_rate"], custom_objects=custom_objects
-                    )
+                config["learning_rate"] = serialization_lib.deserialize_keras_object(
+                    config["learning_rate"], custom_objects=custom_objects
                 )
         return cls(**config)
 
@@ -906,9 +874,7 @@ base_optimizer_keyword_args = """name: String. The name to use
 
 def global_norm(value_list):
     """Computes the global norm of multiple tensors."""
-    squared_norms = [
-        ops.sum(ops.square(v)) for v in value_list if v is not None
-    ]
+    squared_norms = [ops.sum(ops.square(v)) for v in value_list if v is not None]
     squared_norm = ops.sum(ops.stack(squared_norms))
     return ops.sqrt(squared_norm)
 

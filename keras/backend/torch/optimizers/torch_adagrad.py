@@ -5,9 +5,7 @@ from keras import optimizers
 from keras.backend.torch.optimizers import torch_parallel_optimizer
 
 
-class Adagrad(
-    torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adagrad
-):
+class Adagrad(torch_parallel_optimizer.TorchParallelOptimizer, optimizers.Adagrad):
     def _parallel_update_step(
         self,
         grads,
@@ -29,9 +27,7 @@ class Adagrad(
             variables,
             torch._foreach_div(
                 torch._foreach_mul(grads, lr),
-                torch._foreach_sqrt(
-                    torch._foreach_add(accumulators, self.epsilon)
-                ),
+                torch._foreach_sqrt(torch._foreach_add(accumulators, self.epsilon)),
             ),
             alpha=-1,
         )

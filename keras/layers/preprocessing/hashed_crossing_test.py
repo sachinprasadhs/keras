@@ -89,26 +89,18 @@ class HashedCrossingTest(testing.TestCase):
         input_1, input_2 = np.array([1]), np.array([1])
 
         layer = layers.HashedCrossing(num_bins=2)
-        output_dtype = backend.standardize_dtype(
-            layer((input_1, input_2)).dtype
-        )
+        output_dtype = backend.standardize_dtype(layer((input_1, input_2)).dtype)
         self.assertEqual(output_dtype, "int64")
         layer = layers.HashedCrossing(num_bins=2, dtype="int32")
-        output_dtype = backend.standardize_dtype(
-            layer((input_1, input_2)).dtype
-        )
+        output_dtype = backend.standardize_dtype(layer((input_1, input_2)).dtype)
         self.assertEqual(output_dtype, "int32")
         layer = layers.HashedCrossing(num_bins=2, output_mode="one_hot")
-        output_dtype = backend.standardize_dtype(
-            layer((input_1, input_2)).dtype
-        )
+        output_dtype = backend.standardize_dtype(layer((input_1, input_2)).dtype)
         self.assertEqual(output_dtype, "float32")
         layer = layers.HashedCrossing(
             num_bins=2, output_mode="one_hot", dtype="float64"
         )
-        output_dtype = backend.standardize_dtype(
-            layer((input_1, input_2)).dtype
-        )
+        output_dtype = backend.standardize_dtype(layer((input_1, input_2)).dtype)
         self.assertEqual(output_dtype, "float64")
 
     def test_non_list_input_fails(self):
@@ -124,19 +116,13 @@ class HashedCrossingTest(testing.TestCase):
         reason="Need sparse tensor support.",
     )
     def test_sparse_input_fails(self):
-        with self.assertRaisesRegex(
-            ValueError, "inputs should be dense tensors"
-        ):
+        with self.assertRaisesRegex(ValueError, "inputs should be dense tensors"):
             sparse_in = tf.sparse.from_dense(np.array([1]))
             layers.HashedCrossing(num_bins=10)((sparse_in, sparse_in))
 
     def test_float_input_fails(self):
-        with self.assertRaisesRegex(
-            ValueError, "should have an integer or string"
-        ):
-            layers.HashedCrossing(num_bins=10)(
-                (np.array([1.0]), np.array([1.0]))
-            )
+        with self.assertRaisesRegex(ValueError, "should have an integer or string"):
+            layers.HashedCrossing(num_bins=10)((np.array([1.0]), np.array([1.0])))
 
     @pytest.mark.skipif(
         backend.backend() != "tensorflow",
@@ -170,9 +156,7 @@ class HashedCrossingTest(testing.TestCase):
         feat2 = tf.constant([101, 101, 101, 102, 102])
         self.assertAllClose(tf.constant([1, 4, 1, 1, 3]), layer((feat1, feat2)))
 
-        layer = layers.HashedCrossing(
-            num_bins=5, output_mode="one_hot", sparse=True
-        )
+        layer = layers.HashedCrossing(num_bins=5, output_mode="one_hot", sparse=True)
         cloned_layer = layers.HashedCrossing.from_config(layer.get_config())
         feat1 = tf.constant([["A"], ["B"], ["A"], ["B"], ["A"]])
         feat2 = tf.constant([[101], [101], [101], [102], [102]])

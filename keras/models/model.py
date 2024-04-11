@@ -207,9 +207,7 @@ class Model(Trainer, base_trainer.Trainer, Layer):
                 f"No such layer: {name}. Existing layers are: "
                 f"{list(layer.name for layer in self.layers)}."
             )
-        raise ValueError(
-            "Provide either a layer name or layer index at `get_layer`."
-        )
+        raise ValueError("Provide either a layer name or layer index at `get_layer`.")
 
     @traceback_utils.filter_traceback
     def summary(
@@ -342,9 +340,7 @@ class Model(Trainer, base_trainer.Trainer, Layer):
                 there is a mismatch in the number of weights, or a mismatch in
                 the shape of the weights.
         """
-        saving_api.load_weights(
-            self, filepath, skip_mismatch=skip_mismatch, **kwargs
-        )
+        saving_api.load_weights(self, filepath, skip_mismatch=skip_mismatch, **kwargs)
 
     def quantize(self, mode):
         """Quantize the weights of the model.
@@ -363,8 +359,7 @@ class Model(Trainer, base_trainer.Trainer, Layer):
             )
         if mode not in ("int8",):
             raise ValueError(
-                "Invalid quantization mode. Expected 'int8'. "
-                f"Received: mode={mode}"
+                "Invalid quantization mode. Expected 'int8'. " f"Received: mode={mode}"
             )
         mode_changed = False
         for layer in self._flatten_layers():
@@ -388,9 +383,7 @@ class Model(Trainer, base_trainer.Trainer, Layer):
         if "input_shape" in config:
             # Case: all inputs are in the first arg (possibly nested).
             if utils.is_default(self.build):
-                status = self._build_by_run_for_single_pos_arg(
-                    config["input_shape"]
-                )
+                status = self._build_by_run_for_single_pos_arg(config["input_shape"])
             else:
                 try:
                     self.build(config["input_shape"])
@@ -493,13 +486,9 @@ class Model(Trainer, base_trainer.Trainer, Layer):
             "input_layers",
             "output_layers",
         ]
-        is_functional_config = all(
-            key in config for key in functional_config_keys
-        )
+        is_functional_config = all(key in config for key in functional_config_keys)
         argspec = inspect.getfullargspec(cls.__init__)
-        functional_init_args = inspect.getfullargspec(Functional.__init__).args[
-            1:
-        ]
+        functional_init_args = inspect.getfullargspec(Functional.__init__).args[1:]
         revivable_as_functional = (
             cls in {Functional, Model}
             or argspec.args[1:] == functional_init_args
@@ -510,9 +499,7 @@ class Model(Trainer, base_trainer.Trainer, Layer):
             # (but not Functional subclasses with a custom __init__)
             from keras.models.functional import functional_from_config
 
-            return functional_from_config(
-                cls, config, custom_objects=custom_objects
-            )
+            return functional_from_config(cls, config, custom_objects=custom_objects)
 
         # Either the model has a custom __init__, or the config
         # does not contain all the information necessary to
@@ -592,9 +579,7 @@ def inject_functional_model_class(cls):
     if cls == object:
         return object
 
-    cls.__bases__ = tuple(
-        inject_functional_model_class(base) for base in cls.__bases__
-    )
+    cls.__bases__ = tuple(inject_functional_model_class(base) for base in cls.__bases__)
     # Trigger any `__new__` class swapping that needed to happen on `Functional`
     # but did not because functional was not in the class hierarchy.
     cls.__new__(cls)

@@ -129,11 +129,7 @@ def NASNet(
             "as true, `classes` should be 1000"
         )
 
-    if (
-        isinstance(input_shape, tuple)
-        and None in input_shape
-        and weights == "imagenet"
-    ):
+    if isinstance(input_shape, tuple) and None in input_shape and weights == "imagenet":
         raise ValueError(
             "When specifying the input shape of a NASNet"
             " and loading `ImageNet` weights, "
@@ -201,12 +197,8 @@ def NASNet(
     )(x)
 
     p = None
-    x, p = _reduction_a_cell(
-        x, p, filters // (filter_multiplier**2), block_id="stem_1"
-    )
-    x, p = _reduction_a_cell(
-        x, p, filters // filter_multiplier, block_id="stem_2"
-    )
+    x, p = _reduction_a_cell(x, p, filters // (filter_multiplier**2), block_id="stem_1")
+    x, p = _reduction_a_cell(x, p, filters // filter_multiplier, block_id="stem_2")
 
     for i in range(num_blocks):
         x, p = _normal_a_cell(x, p, filters, block_id="%d" % (i))
@@ -247,9 +239,9 @@ def NASNet(
     if include_top:
         x = layers.GlobalAveragePooling2D()(x)
         imagenet_utils.validate_activation(classifier_activation, weights)
-        x = layers.Dense(
-            classes, activation=classifier_activation, name="predictions"
-        )(x)
+        x = layers.Dense(classes, activation=classifier_activation, name="predictions")(
+            x
+        )
     else:
         if pooling == "avg":
             x = layers.GlobalAveragePooling2D()(x)
@@ -569,9 +561,7 @@ def _adjust_block(p, ip, filters, block_id=None):
 
         elif p.shape[img_dim] != ip.shape[img_dim]:
             with backend.name_scope(f"adjust_reduction_block_{block_id}"):
-                p = layers.Activation("relu", name=f"adjust_relu_1_{block_id}")(
-                    p
-                )
+                p = layers.Activation("relu", name=f"adjust_relu_1_{block_id}")(p)
                 p1 = layers.AveragePooling2D(
                     (1, 1),
                     strides=(2, 2),
@@ -713,9 +703,7 @@ def _normal_a_cell(ip, p, filters, block_id=None):
             x4 = layers.add([x4_1, x4_2], name=f"normal_add_4_{block_id}")
 
         with backend.name_scope("block_5"):
-            x5 = _separable_conv_block(
-                h, filters, block_id=f"normal_left5_{block_id}"
-            )
+            x5 = _separable_conv_block(h, filters, block_id=f"normal_left5_{block_id}")
             x5 = layers.add([x5, h], name=f"normal_add_5_{block_id}")
 
         x = layers.concatenate(
@@ -844,9 +832,7 @@ def _reduction_a_cell(ip, p, filters, block_id=None):
 
 @keras_export("keras.applications.nasnet.preprocess_input")
 def preprocess_input(x, data_format=None):
-    return imagenet_utils.preprocess_input(
-        x, data_format=data_format, mode="tf"
-    )
+    return imagenet_utils.preprocess_input(x, data_format=data_format, mode="tf")
 
 
 @keras_export("keras.applications.nasnet.decode_predictions")

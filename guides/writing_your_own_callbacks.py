@@ -135,9 +135,7 @@ class CustomCallback(keras.callbacks.Callback):
 
     def on_epoch_begin(self, epoch, logs=None):
         keys = list(logs.keys())
-        print(
-            "Start epoch {} of training; got log keys: {}".format(epoch, keys)
-        )
+        print("Start epoch {} of training; got log keys: {}".format(epoch, keys))
 
     def on_epoch_end(self, epoch, logs=None):
         keys = list(logs.keys())
@@ -161,49 +159,27 @@ class CustomCallback(keras.callbacks.Callback):
 
     def on_train_batch_begin(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Training: start of batch {}; got log keys: {}".format(
-                batch, keys
-            )
-        )
+        print("...Training: start of batch {}; got log keys: {}".format(batch, keys))
 
     def on_train_batch_end(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Training: end of batch {}; got log keys: {}".format(batch, keys)
-        )
+        print("...Training: end of batch {}; got log keys: {}".format(batch, keys))
 
     def on_test_batch_begin(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Evaluating: start of batch {}; got log keys: {}".format(
-                batch, keys
-            )
-        )
+        print("...Evaluating: start of batch {}; got log keys: {}".format(batch, keys))
 
     def on_test_batch_end(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Evaluating: end of batch {}; got log keys: {}".format(
-                batch, keys
-            )
-        )
+        print("...Evaluating: end of batch {}; got log keys: {}".format(batch, keys))
 
     def on_predict_batch_begin(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Predicting: start of batch {}; got log keys: {}".format(
-                batch, keys
-            )
-        )
+        print("...Predicting: start of batch {}; got log keys: {}".format(batch, keys))
 
     def on_predict_batch_end(self, batch, logs=None):
         keys = list(logs.keys())
-        print(
-            "...Predicting: end of batch {}; got log keys: {}".format(
-                batch, keys
-            )
-        )
+        print("...Predicting: end of batch {}; got log keys: {}".format(batch, keys))
 
 
 """
@@ -238,16 +214,12 @@ epoch. Example includes the loss and mean absolute error.
 class LossAndErrorPrintingCallback(keras.callbacks.Callback):
     def on_train_batch_end(self, batch, logs=None):
         print(
-            "Up to batch {}, the average loss is {:7.2f}.".format(
-                batch, logs["loss"]
-            )
+            "Up to batch {}, the average loss is {:7.2f}.".format(batch, logs["loss"])
         )
 
     def on_test_batch_end(self, batch, logs=None):
         print(
-            "Up to batch {}, the average loss is {:7.2f}.".format(
-                batch, logs["loss"]
-            )
+            "Up to batch {}, the average loss is {:7.2f}.".format(batch, logs["loss"])
         )
 
     def on_epoch_end(self, epoch, logs=None):
@@ -397,9 +369,7 @@ class CustomLearningRateScheduler(keras.callbacks.Callback):
         scheduled_lr = self.schedule(epoch, lr)
         # Set the value back to the optimizer before this epoch starts
         self.model.optimizer.learning_rate = scheduled_lr
-        print(
-            f"\nEpoch {epoch}: Learning rate is {float(np.array(scheduled_lr))}."
-        )
+        print(f"\nEpoch {epoch}: Learning rate is {float(np.array(scheduled_lr))}.")
 
 
 LR_SCHEDULE = [

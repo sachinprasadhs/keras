@@ -139,8 +139,7 @@ class RandomZoom(TFDataLayer):
         if isinstance(factor, (tuple, list)):
             if len(factor) != 2:
                 raise ValueError(
-                    self._FACTOR_VALIDATION_ERROR
-                    + f"Received: {factor_name}={factor}"
+                    self._FACTOR_VALIDATION_ERROR + f"Received: {factor_name}={factor}"
                 )
             self._check_factor_range(factor[0])
             self._check_factor_range(factor[1])
@@ -151,16 +150,14 @@ class RandomZoom(TFDataLayer):
             lower, upper = [-factor, factor]
         else:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: {factor_name}={factor}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: {factor_name}={factor}"
             )
         return lower, upper
 
     def _check_factor_range(self, input_number):
         if input_number > 1.0 or input_number < -1.0:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: input_number={input_number}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: input_number={input_number}"
             )
 
     def call(self, inputs, training=True):
@@ -230,9 +227,9 @@ class RandomZoom(TFDataLayer):
         x_offset = ((self.backend.cast(image_width, "float32") - 1.0) / 2.0) * (
             1.0 - zooms[:, 0:1]
         )
-        y_offset = (
-            (self.backend.cast(image_height, "float32") - 1.0) / 2.0
-        ) * (1.0 - zooms[:, 1:])
+        y_offset = ((self.backend.cast(image_height, "float32") - 1.0) / 2.0) * (
+            1.0 - zooms[:, 1:]
+        )
         return self.backend.numpy.concatenate(
             [
                 zooms[:, 0:1],

@@ -66,9 +66,7 @@ def load_data():
         return resizing(image), label
 
     train_dataset = (
-        train_dataset.map(
-            preprocess_inputs, num_parallel_calls=tf.data.AUTOTUNE
-        )
+        train_dataset.map(preprocess_inputs, num_parallel_calls=tf.data.AUTOTUNE)
         .batch(FLAGS.batch_size)
         .prefetch(tf.data.AUTOTUNE)
     )

@@ -30,9 +30,7 @@ class TFOptimizer(KerasAutoTrackable, base_optimizer.BaseOptimizer):
         else:
             colocate_var = reference_variable
 
-        with self._distribution_strategy.extended.colocate_vars_with(
-            colocate_var
-        ):
+        with self._distribution_strategy.extended.colocate_vars_with(colocate_var):
             return super().add_variable_from_reference(
                 reference_variable, name=name, initializer=initializer
             )
@@ -101,9 +99,7 @@ class TFOptimizer(KerasAutoTrackable, base_optimizer.BaseOptimizer):
             for variable in variables:
                 if isinstance(variable, backend.Variable):
                     variable = variable.value  # Convert to tf.Variable
-                distribution.extended.update(
-                    variable, weight_decay_fn, group=False
-                )
+                distribution.extended.update(variable, weight_decay_fn, group=False)
 
         tf.__internal__.distribute.interim.maybe_merge_call(
             distributed_apply_weight_decay,
@@ -123,9 +119,7 @@ class TFOptimizer(KerasAutoTrackable, base_optimizer.BaseOptimizer):
             learning_rate,
         )
 
-    def _distributed_tf_update_step(
-        self, distribution, grads_and_vars, learning_rate
-    ):
+    def _distributed_tf_update_step(self, distribution, grads_and_vars, learning_rate):
         grads_and_vars = self._all_reduce_sum_gradients(grads_and_vars)
 
         def apply_grad_to_update_var(var, grad, learning_rate):
@@ -174,9 +168,7 @@ class TFOptimizer(KerasAutoTrackable, base_optimizer.BaseOptimizer):
         assert reduced_pos == len(reduced), "Failed to add all gradients"
         return reduced_with_nones
 
-    def _overwrite_model_variables_with_average_value(
-        self, trainable_variables
-    ):
+    def _overwrite_model_variables_with_average_value(self, trainable_variables):
         """Overwrite model variables with their moving average values.
 
         This function overwrites variables on each device.
@@ -202,9 +194,7 @@ class TFOptimizer(KerasAutoTrackable, base_optimizer.BaseOptimizer):
 
         accumulators = [v.value for v in self._accumulated_gradients]
 
-        def _distributed_tf_increment_grad_acc(
-            distribution, grads, accumulators
-        ):
+        def _distributed_tf_increment_grad_acc(distribution, grads, accumulators):
             for grad, var in zip(grads, accumulators):
                 distribution.extended.update(
                     var, update_accumulator, args=(grad,), group=False

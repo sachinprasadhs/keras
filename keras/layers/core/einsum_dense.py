@@ -156,9 +156,7 @@ class EinsumDense(Layer):
         # `quantized_build` needs `self.input_spec`
         self.input_spec = InputSpec(ndim=len(input_shape))
         if isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
-            self.quantized_build(
-                input_shape, mode=self.dtype_policy.quantization_mode
-            )
+            self.quantized_build(input_shape, mode=self.dtype_policy.quantization_mode)
         else:
             self._kernel = self.add_weight(
                 name="kernel",
@@ -188,13 +186,9 @@ class EinsumDense(Layer):
     @property
     def kernel(self):
         if not self.built:
-            raise AttributeError(
-                "You must build the layer before accessing `kernel`."
-            )
+            raise AttributeError("You must build the layer before accessing `kernel`.")
         if self.lora_enabled:
-            return self._kernel + ops.matmul(
-                self.lora_kernel_a, self.lora_kernel_b
-            )
+            return self._kernel + ops.matmul(self.lora_kernel_a, self.lora_kernel_b)
         return self._kernel
 
     def compute_output_shape(self, _):
@@ -208,9 +202,7 @@ class EinsumDense(Layer):
             x = self.activation(x)
         return x
 
-    def enable_lora(
-        self, rank, a_initializer="he_uniform", b_initializer="zeros"
-    ):
+    def enable_lora(self, rank, a_initializer="he_uniform", b_initializer="zeros"):
         if self.kernel_constraint:
             raise ValueError(
                 "Lora is incompatible with kernel constraints. "
@@ -218,13 +210,10 @@ class EinsumDense(Layer):
                 "`kernel_constraint` argument."
             )
         if not self.built:
-            raise ValueError(
-                "Cannot enable lora on a layer that isn't yet built."
-            )
+            raise ValueError("Cannot enable lora on a layer that isn't yet built.")
         if self.lora_enabled:
             raise ValueError(
-                "lora is already enabled. "
-                "This can only be done once per layer."
+                "lora is already enabled. " "This can only be done once per layer."
             )
         self._tracker.unlock()
         self.lora_kernel_a = self.add_weight(
@@ -281,17 +270,11 @@ class EinsumDense(Layer):
             "equation": self.equation,
             "activation": activations.serialize(self.activation),
             "bias_axes": self.bias_axes,
-            "kernel_initializer": initializers.serialize(
-                self.kernel_initializer
-            ),
+            "kernel_initializer": initializers.serialize(self.kernel_initializer),
             "bias_initializer": initializers.serialize(self.bias_initializer),
-            "kernel_regularizer": regularizers.serialize(
-                self.kernel_regularizer
-            ),
+            "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
             "bias_regularizer": regularizers.serialize(self.bias_regularizer),
-            "activity_regularizer": regularizers.serialize(
-                self.activity_regularizer
-            ),
+            "activity_regularizer": regularizers.serialize(self.activity_regularizer),
             "kernel_constraint": constraints.serialize(self.kernel_constraint),
             "bias_constraint": constraints.serialize(self.bias_constraint),
         }
@@ -411,17 +394,13 @@ class EinsumDense(Layer):
             inputs, inputs_scale = self.inputs_quantizer(inputs)
             x = ops.einsum(self.equation, inputs, kernel)
             # Deal with `inputs_scale`
-            inputs_scale = ops.transpose(
-                inputs_scale, self._input_transpose_axes
-            )
+            inputs_scale = ops.transpose(inputs_scale, self._input_transpose_axes)
             if self._input_expand_axes:
                 inputs_scale = ops.expand_dims(
                     inputs_scale, axis=self._input_expand_axes
                 )
             if self._input_squeeze_axes:
-                inputs_scale = ops.squeeze(
-                    inputs_scale, axis=self._input_squeeze_axes
-                )
+                inputs_scale = ops.squeeze(inputs_scale, axis=self._input_squeeze_axes)
             # De-scale outputs
             x = ops.cast(x, self.compute_dtype)
             x = ops.divide(x, ops.multiply(inputs_scale, kernel_scale))
@@ -475,17 +454,13 @@ class EinsumDense(Layer):
             kernel_value, kernel_scale = quantizers.abs_max_quantize(
                 self._kernel, axis=self._kernel_reduced_axes
             )
-            kernel_scale = ops.transpose(
-                kernel_scale, self._kernel_transpose_axes
-            )
+            kernel_scale = ops.transpose(kernel_scale, self._kernel_transpose_axes)
             if self._kernel_expand_axes:
                 kernel_scale = ops.expand_dims(
                     kernel_scale, axis=self._kernel_expand_axes
                 )
             if self._kernel_squeeze_axes:
-                kernel_scale = ops.squeeze(
-                    kernel_scale, axis=self._kernel_squeeze_axes
-                )
+                kernel_scale = ops.squeeze(kernel_scale, axis=self._kernel_squeeze_axes)
             self._tracker.unlock()
             self._untrack_variable(self._kernel)
             kernel_shape = self._kernel.shape
@@ -510,9 +485,7 @@ class EinsumDense(Layer):
             NotImplementedError()
 
         # Set new dtype policy
-        if not isinstance(
-            self.dtype_policy, dtype_policies.QuantizedDTypePolicy
-        ):
+        if not isinstance(self.dtype_policy, dtype_policies.QuantizedDTypePolicy):
             quantized_dtype = f"{mode}_from_{self.dtype_policy.name}"
             self.dtype_policy = dtype_policies.get(quantized_dtype)
 
@@ -534,9 +507,7 @@ class EinsumDense(Layer):
                 kernel_value, kernel_scale = quantizers.abs_max_quantize(
                     kernel_value, axis=self._kernel_reduced_axes
                 )
-                kernel_scale = ops.transpose(
-                    kernel_scale, self._kernel_transpose_axes
-                )
+                kernel_scale = ops.transpose(kernel_scale, self._kernel_transpose_axes)
                 if self._kernel_expand_axes:
                     kernel_scale = ops.expand_dims(
                         kernel_scale, axis=self._kernel_expand_axes
@@ -557,13 +528,9 @@ def _analyze_einsum_string(equation, bias_axes, input_shape, output_shape):
     dot_replaced_string = re.sub(r"\.\.\.", "0", equation)
 
     # This is the case where no ellipses are present in the string.
-    split_string = re.match(
-        "([a-zA-Z]+),([a-zA-Z]+)->([a-zA-Z]+)", dot_replaced_string
-    )
+    split_string = re.match("([a-zA-Z]+),([a-zA-Z]+)->([a-zA-Z]+)", dot_replaced_string)
     if split_string:
-        return _analyze_split_string(
-            split_string, bias_axes, input_shape, output_shape
-        )
+        return _analyze_split_string(split_string, bias_axes, input_shape, output_shape)
 
     # This is the case where ellipses are present on the left.
     split_string = re.match(
@@ -579,9 +546,7 @@ def _analyze_einsum_string(equation, bias_axes, input_shape, output_shape):
         "([a-zA-Z]{2,})0,([a-zA-Z]+)->([a-zA-Z]+)0", dot_replaced_string
     )
     if split_string:
-        return _analyze_split_string(
-            split_string, bias_axes, input_shape, output_shape
-        )
+        return _analyze_split_string(split_string, bias_axes, input_shape, output_shape)
 
     raise ValueError(
         f"Invalid einsum equation '{equation}'. Equations must be in the form "
@@ -618,14 +583,11 @@ def _analyze_split_string(
         # If we have beginning dimensions elided, we need to use negative
         # indexing to determine where in the input dimension our values are.
         input_dim_map = {
-            dim: (i + elided) - len(input_shape)
-            for i, dim in enumerate(input_spec)
+            dim: (i + elided) - len(input_shape) for i, dim in enumerate(input_spec)
         }
         # Because we've constructed the full output shape already, we don't need
         # to do negative indexing.
-        output_dim_map = {
-            dim: (i + elided) for i, dim in enumerate(output_spec)
-        }
+        output_dim_map = {dim: (i + elided) for i, dim in enumerate(output_spec)}
     else:
         input_dim_map = {dim: i for i, dim in enumerate(input_spec)}
         output_dim_map = {dim: i for i, dim in enumerate(output_spec)}
@@ -681,14 +643,11 @@ def _analyze_split_string(
                     f"of the output spec '{output_spec}'"
                 )
 
-        first_bias_location = min(
-            [output_spec.find(char) for char in bias_axes]
-        )
+        first_bias_location = min([output_spec.find(char) for char in bias_axes])
         bias_output_spec = output_spec[first_bias_location:]
 
         bias_shape = [
-            idx_map[char] if char in bias_axes else 1
-            for char in bias_output_spec
+            idx_map[char] if char in bias_axes else 1 for char in bias_output_spec
         ]
 
         if not left_elided:
@@ -818,10 +777,7 @@ def _analyze_quantization_info(equation, input_shape):
     # Prepare equation for `einsum_with_inputs_gradient`
     custom_gradient_equation = f"{output_spec},{weight_spec}->{input_spec}"
     weight_reverse_transpose_axes = [
-        i
-        for (_, i) in sorted(
-            (v, i) for (i, v) in enumerate(weight_transpose_axes)
-        )
+        i for (_, i) in sorted((v, i) for (i, v) in enumerate(weight_transpose_axes))
     ]
     return (
         input_reduced_axes,

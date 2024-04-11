@@ -206,16 +206,13 @@ class HashedCrossing(Layer):
                 "All `HashedCrossing` inputs should have equal shape. "
                 f"Received: inputs={inputs}"
             )
-        if any(
-            isinstance(x, (tf.RaggedTensor, tf.SparseTensor)) for x in inputs
-        ):
+        if any(isinstance(x, (tf.RaggedTensor, tf.SparseTensor)) for x in inputs):
             raise ValueError(
                 "All `HashedCrossing` inputs should be dense tensors. "
                 f"Received: inputs={inputs}"
             )
         if not all(
-            tf.as_dtype(x.dtype).is_integer or x.dtype == tf.string
-            for x in inputs
+            tf.as_dtype(x.dtype).is_integer or x.dtype == tf.string for x in inputs
         ):
             raise ValueError(
                 "All `HashedCrossing` inputs should have an integer or "

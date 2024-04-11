@@ -254,9 +254,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
         ]
     )
     @pytest.mark.requires_trainable_backend
-    def test_fit_with_val_split(
-        self, run_eagerly, jit_compile, use_steps_per_epoch
-    ):
+    def test_fit_with_val_split(self, run_eagerly, jit_compile, use_steps_per_epoch):
         if not run_eagerly and not jit_compile and use_steps_per_epoch:
             if backend.backend() == "tensorflow":
                 self.skipTest(
@@ -307,9 +305,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
         self.assertIn("val_loss", history)
 
     @parameterized.named_parameters(
-        named_product(
-            generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"]
-        )
+        named_product(generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"])
     )
     @pytest.mark.skipif(
         not backend.SUPPORTS_SPARSE_TENSORS,
@@ -374,9 +370,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(output["mean_squared_error"], 16.0)
 
     @parameterized.named_parameters(
-        named_product(
-            generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"]
-        )
+        named_product(generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"])
     )
     @pytest.mark.skipif(
         not backend.SUPPORTS_SPARSE_TENSORS,
@@ -437,9 +431,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(outputs["y_two"], 4 * np.ones((100, 3)))
 
     @parameterized.named_parameters(
-        named_product(
-            generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"]
-        )
+        named_product(generator_type=["tf", "jax", "scipy"], mode=["eager", "graph"])
     )
     @pytest.mark.skipif(
         not backend.SUPPORTS_SPARSE_TENSORS,
@@ -803,9 +795,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
     @pytest.mark.requires_trainable_backend
     def test_for_eval_epoch_iterator(self):
         model = ExampleModel(units=3)
-        model.compile(
-            optimizer="adam", loss="mse", metrics=["mean_absolute_error"]
-        )
+        model.compile(optimizer="adam", loss="mse", metrics=["mean_absolute_error"])
         x = np.ones((16, 4))
         y = np.zeros((16, 3))
         x_test = np.ones((16, 4))
@@ -913,9 +903,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
                 assert keys == ["outputs"]
 
         model = ExampleModel(units=3)
-        model.compile(
-            optimizer="adam", loss="mse", metrics=["mean_absolute_error"]
-        )
+        model.compile(optimizer="adam", loss="mse", metrics=["mean_absolute_error"])
         x = np.ones((16, 4))
         y = np.zeros((16, 3))
         x_test = np.ones((16, 4))
@@ -1039,23 +1027,13 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
     @pytest.mark.requires_trainable_backend
     def test_recompile(self):
         model = ExampleModel(units=3)
-        model.compile(
-            optimizer="sgd", loss="mse", metrics=["mean_squared_error"]
-        )
+        model.compile(optimizer="sgd", loss="mse", metrics=["mean_squared_error"])
         history_1 = model.fit(np.ones((3, 2)), np.ones((3, 3))).history
-        eval_out_1 = model.evaluate(
-            np.ones((3, 2)), np.ones((3, 3)), return_dict=True
-        )
-        model.compile(
-            optimizer="sgd", loss="mse", metrics=["mean_absolute_error"]
-        )
+        eval_out_1 = model.evaluate(np.ones((3, 2)), np.ones((3, 3)), return_dict=True)
+        model.compile(optimizer="sgd", loss="mse", metrics=["mean_absolute_error"])
         history_2 = model.fit(np.ones((3, 2)), np.ones((3, 3))).history
-        eval_out_2 = model.evaluate(
-            np.ones((3, 2)), np.ones((3, 3)), return_dict=True
-        )
-        self.assertEqual(
-            sorted(list(history_1.keys())), ["loss", "mean_squared_error"]
-        )
+        eval_out_2 = model.evaluate(np.ones((3, 2)), np.ones((3, 3)), return_dict=True)
+        self.assertEqual(sorted(list(history_1.keys())), ["loss", "mean_squared_error"])
         self.assertEqual(
             sorted(list(eval_out_1.keys())), ["loss", "mean_squared_error"]
         )
@@ -1074,16 +1052,12 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
             return 1.0
 
         model = ExampleModel(units=3)
-        model.compile(
-            optimizer="sgd", loss="mse", metrics=[metrics_zero, metrics_one]
-        )
+        model.compile(optimizer="sgd", loss="mse", metrics=[metrics_zero, metrics_one])
         eval_out = model.evaluate(np.ones((3, 2)), np.ones((3, 3)))
         self.assertEqual(eval_out[1], 0.0)
         self.assertEqual(eval_out[2], 1.0)
 
-        model.compile(
-            optimizer="sgd", loss="mse", metrics=[metrics_one, metrics_zero]
-        )
+        model.compile(optimizer="sgd", loss="mse", metrics=[metrics_one, metrics_zero])
         eval_out = model.evaluate(np.ones((3, 2)), np.ones((3, 3)))
         self.assertEqual(eval_out[1], 1.0)
         self.assertEqual(eval_out[2], 0.0)
@@ -1094,17 +1068,13 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
         out = model([np.ones((3, 2)), np.ones((3, 3))])
         self.assertEqual(tuple(out.shape), (3, 2))
         model.compile(optimizer="sgd", loss="mse", metrics=["mse"])
-        history = model.fit(
-            [np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2))
-        ).history
+        history = model.fit([np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2))).history
         self.assertAllClose(history["loss"], 16.0)
         train_out = model.train_on_batch(
             [np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2))
         )
         self.assertAllClose(train_out[0], 15.2200)
-        eval_out = model.evaluate(
-            [np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2))
-        )
+        eval_out = model.evaluate([np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2)))
         self.assertAllClose(eval_out[0], 13.0321)
         eval_out = model.test_on_batch(
             [np.ones((3, 2)), np.ones((3, 3))], np.ones((3, 2))
@@ -1192,9 +1162,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
 
     @pytest.mark.requires_trainable_backend
     def test_constraints_are_applied(self):
-        model = models.Sequential(
-            [layers.Dense(2, kernel_constraint="non_neg")]
-        )
+        model = models.Sequential([layers.Dense(2, kernel_constraint="non_neg")])
         x = np.ones((2, 3))
         y = np.ones((2, 2))
         model.compile(optimizer="rmsprop", loss="mse")
@@ -1211,9 +1179,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
                 self.random_generator = keras.random.SeedGenerator()
 
             def call(self, x):
-                return keras.random.dropout(
-                    x, rate=0.5, seed=self.random_generator
-                )
+                return keras.random.dropout(x, rate=0.5, seed=self.random_generator)
 
         inputs = layers.Input((20,))
         outputs = TestTimeDropout()(inputs)
@@ -1267,9 +1233,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
                 self.eager_call_counter_predict += 1
 
         model = CounterModel()
-        model.compile(
-            optimizer="sgd", loss="mse", metrics=["mse"], run_eagerly=True
-        )
+        model.compile(optimizer="sgd", loss="mse", metrics=["mse"], run_eagerly=True)
         cbk = CounterCallback()
         model.fit(
             np.ones((4, 3)),
@@ -1304,9 +1268,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
             def call(self, x):
                 return self.dense(x)
 
-            def compute_loss(
-                self, x=None, y=None, y_pred=None, sample_weight=None
-            ):
+            def compute_loss(self, x=None, y=None, y_pred=None, sample_weight=None):
                 loss = super().compute_loss(x, y, y_pred, sample_weight)
                 self.custom_metric.update_state(loss * 4)
                 return loss
@@ -1332,9 +1294,7 @@ class TestTrainer(testing.TestCase, parameterized.TestCase):
             def call(self, x):
                 return self.dense(x)
 
-            def compute_loss(
-                self, x=None, y=None, y_pred=None, sample_weight=None
-            ):
+            def compute_loss(self, x=None, y=None, y_pred=None, sample_weight=None):
                 loss = super().compute_loss(x, y, y_pred, sample_weight)
                 self.custom_metric.update_state(sum(self.losses))
                 return loss

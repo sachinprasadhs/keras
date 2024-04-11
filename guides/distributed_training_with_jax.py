@@ -59,9 +59,9 @@ def get_model():
     # Make a simple convnet with batch normalization and dropout.
     inputs = keras.Input(shape=(28, 28, 1))
     x = keras.layers.Rescaling(1.0 / 255.0)(inputs)
-    x = keras.layers.Conv2D(
-        filters=12, kernel_size=3, padding="same", use_bias=False
-    )(x)
+    x = keras.layers.Conv2D(filters=12, kernel_size=3, padding="same", use_bias=False)(
+        x
+    )
     x = keras.layers.BatchNormalization(scale=False, center=True)(x)
     x = keras.layers.ReLU()(x)
     x = keras.layers.Conv2D(
@@ -216,9 +216,7 @@ def get_replicated_train_state(devices):
     var_replication = NamedSharding(var_mesh, P())
 
     # Apply the distribution settings to the model variables
-    trainable_variables = jax.device_put(
-        model.trainable_variables, var_replication
-    )
+    trainable_variables = jax.device_put(model.trainable_variables, var_replication)
     non_trainable_variables = jax.device_put(
         model.non_trainable_variables, var_replication
     )
@@ -262,9 +260,7 @@ for epoch in range(num_epochs):
 trainable_variables, non_trainable_variables, optimizer_variables = train_state
 for variable, value in zip(model.trainable_variables, trainable_variables):
     variable.assign(value)
-for variable, value in zip(
-    model.non_trainable_variables, non_trainable_variables
-):
+for variable, value in zip(model.non_trainable_variables, non_trainable_variables):
     variable.assign(value)
 
 """

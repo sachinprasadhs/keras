@@ -66,9 +66,7 @@ class JAXTrainer(base_trainer.Trainer):
         )
         if losses:
             self._losses_override.clear()
-        (trainable_variables, non_trainable_variables, metrics_variables) = (
-            variables
-        )
+        (trainable_variables, non_trainable_variables, metrics_variables) = variables
 
         # Handle loss scaling
         unscaled_loss = loss
@@ -92,9 +90,7 @@ class JAXTrainer(base_trainer.Trainer):
             metrics_variables,
         ) = state
         x, y, sample_weight = data_adapter_utils.unpack_x_y_sample_weight(data)
-        grad_fn = jax.value_and_grad(
-            self.compute_loss_and_updates, has_aux=True
-        )
+        grad_fn = jax.value_and_grad(self.compute_loss_and_updates, has_aux=True)
         (loss, aux), grads = grad_fn(
             trainable_variables,
             non_trainable_variables,
@@ -105,9 +101,7 @@ class JAXTrainer(base_trainer.Trainer):
             training=True,
             optimizer_variables=optimizer_variables,
         )
-        (unscaled_loss, y_pred, non_trainable_variables, metrics_variables) = (
-            aux
-        )
+        (unscaled_loss, y_pred, non_trainable_variables, metrics_variables) = aux
 
         (
             trainable_variables,
@@ -159,9 +153,7 @@ class JAXTrainer(base_trainer.Trainer):
             sample_weight,
             training=False,
         )
-        (unscaled_loss, y_pred, non_trainable_variables, metrics_variables) = (
-            aux
-        )
+        (unscaled_loss, y_pred, non_trainable_variables, metrics_variables) = aux
 
         with backend.StatelessScope(
             state_mapping=[
@@ -478,9 +470,7 @@ class JAXTrainer(base_trainer.Trainer):
                     return_dict=True,
                     _use_cached_eval_dataset=True,
                 )
-                val_logs = {
-                    "val_" + name: val for name, val in val_logs.items()
-                }
+                val_logs = {"val_" + name: val for name, val in val_logs.items()}
                 epoch_logs.update(val_logs)
 
             callbacks.on_epoch_end(epoch, epoch_logs)
@@ -488,10 +478,7 @@ class JAXTrainer(base_trainer.Trainer):
             if self.stop_training:
                 break
 
-        if (
-            isinstance(self.optimizer, optimizers_module.Optimizer)
-            and epochs > 0
-        ):
+        if isinstance(self.optimizer, optimizers_module.Optimizer) and epochs > 0:
             self.optimizer.finalize_variable_values(self.trainable_weights)
 
         # If _eval_epoch_iterator exists, delete it after all epochs are done.
@@ -604,9 +591,7 @@ class JAXTrainer(base_trainer.Trainer):
         return self._flatten_metrics_in_order(logs)
 
     @traceback_utils.filter_traceback
-    def predict(
-        self, x, batch_size=None, verbose="auto", steps=None, callbacks=None
-    ):
+    def predict(self, x, batch_size=None, verbose="auto", steps=None, callbacks=None):
         # Create an iterator that yields batches of input data.
         epoch_iterator = JAXEpochIterator(
             x=x,
@@ -672,9 +657,7 @@ class JAXTrainer(base_trainer.Trainer):
                 self._jax_state_synced = False
             else:
                 state = (state[0], non_trainable_variables)
-            batch_outputs, non_trainable_variables = self.predict_function(
-                state, x
-            )
+            batch_outputs, non_trainable_variables = self.predict_function(state, x)
             outputs = append_to_outputs(batch_outputs, outputs)
             callbacks.on_predict_batch_end(step, {"outputs": batch_outputs})
             if self.stop_predicting:
@@ -806,9 +789,7 @@ class JAXTrainer(base_trainer.Trainer):
             purge_model_variables=False,
         )
         self._jax_state_synced = False
-        batch_outputs, non_trainable_variables = self.predict_function(
-            state, [(x,)]
-        )
+        batch_outputs, non_trainable_variables = self.predict_function(state, [(x,)])
         self._jax_state = {
             "non_trainable_variables": non_trainable_variables,
         }
@@ -821,18 +802,14 @@ class JAXTrainer(base_trainer.Trainer):
             return
 
         trainable_variables = self._jax_state.get("trainable_variables", None)
-        non_trainable_variables = self._jax_state.get(
-            "non_trainable_variables", None
-        )
+        non_trainable_variables = self._jax_state.get("non_trainable_variables", None)
         optimizer_variables = self._jax_state.get("optimizer_variables", None)
         metrics_variables = self._jax_state.get("metrics_variables", None)
         if trainable_variables:
             for ref_v, v in zip(self.trainable_variables, trainable_variables):
                 ref_v.assign(v)
         if non_trainable_variables:
-            for ref_v, v in zip(
-                self.non_trainable_variables, non_trainable_variables
-            ):
+            for ref_v, v in zip(self.non_trainable_variables, non_trainable_variables):
                 ref_v.assign(v)
         if optimizer_variables:
             for ref_v, v in zip(self.optimizer.variables, optimizer_variables):
@@ -979,9 +956,7 @@ def _distribute_data(data):
 
 class JAXEpochIterator(EpochIterator):
     def _get_iterator(self):
-        return self._prefetch_numpy_iterator(
-            self.data_adapter.get_jax_iterator()
-        )
+        return self._prefetch_numpy_iterator(self.data_adapter.get_jax_iterator())
 
     def _prefetch_numpy_iterator(self, numpy_iterator):
         """Shard and prefetch batches on device.

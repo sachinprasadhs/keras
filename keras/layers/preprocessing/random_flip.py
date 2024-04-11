@@ -76,9 +76,7 @@ class RandomFlip(TFDataLayer):
                 flipped_outputs,
             )
         if unbatched:
-            flipped_outputs = self.backend.numpy.squeeze(
-                flipped_outputs, axis=0
-            )
+            flipped_outputs = self.backend.numpy.squeeze(flipped_outputs, axis=0)
         return flipped_outputs
 
     def call(self, inputs, training=True):

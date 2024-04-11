@@ -308,23 +308,18 @@ def serialize_keras_object(instance):
             # dict for serialization (e.g. custom functions, custom classes)
             try:
                 serialized_item = serialize_keras_object(item)
-                if isinstance(serialized_item, dict) and not isinstance(
-                    item, dict
-                ):
+                if isinstance(serialized_item, dict) and not isinstance(item, dict):
                     serialized_item["__passive_serialization__"] = True
                 serialization_config[key] = serialized_item
             except ValueError:
                 serialization_config[key] = item
 
         name = object_registration.get_registered_name(instance.__class__)
-        return serialize_keras_class_and_config(
-            name, serialization_config, instance
-        )
+        return serialize_keras_class_and_config(name, serialization_config, instance)
     if hasattr(instance, "__name__"):
         return object_registration.get_registered_name(instance)
     raise ValueError(
-        f"Cannot serialize {instance} because it doesn't implement "
-        "`get_config()`."
+        f"Cannot serialize {instance} because it doesn't implement " "`get_config()`."
     )
 
 
@@ -397,8 +392,8 @@ def class_and_config_for_serialized_keras_object(
             # rare case.  This issue does not occur if a string field has a
             # naming conflict with a custom object, since the config of an
             # object will always be a dict.
-            deserialized_objects[key] = (
-                object_registration.get_registered_object(item, custom_objects)
+            deserialized_objects[key] = object_registration.get_registered_object(
+                item, custom_objects
             )
     for key, item in deserialized_objects.items():
         cls_config[key] = deserialized_objects[key]
@@ -487,9 +482,7 @@ def deserialize_keras_object(
 
             # TODO(nkovela): Swap find and replace args during Keras 3.0 release
             # Replace keras refs with keras
-            cls_config = _find_replace_nested_dict(
-                cls_config, "keras.", "keras."
-            )
+            cls_config = _find_replace_nested_dict(cls_config, "keras.", "keras.")
 
             if "custom_objects" in arg_spec.args:
                 deserialized_obj = cls.from_config(
@@ -519,13 +512,8 @@ def deserialize_keras_object(
         object_name = identifier
         if custom_objects and object_name in custom_objects:
             obj = custom_objects.get(object_name)
-        elif (
-            object_name
-            in object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
-        ):
-            obj = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__[
-                object_name
-            ]
+        elif object_name in object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__:
+            obj = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__[object_name]
         elif object_name in object_registration._GLOBAL_CUSTOM_OBJECTS:
             obj = object_registration._GLOBAL_CUSTOM_OBJECTS[object_name]
         else:
@@ -550,16 +538,13 @@ def deserialize_keras_object(
         return identifier
     else:
         raise ValueError(
-            "Could not interpret serialized "
-            f"{printable_module_name}: {identifier}"
+            "Could not interpret serialized " f"{printable_module_name}: {identifier}"
         )
 
 
 def validate_config(config):
     """Determines whether config appears to be a valid layer config."""
-    return (
-        isinstance(config, dict) and _LAYER_UNDEFINED_CONFIG_KEY not in config
-    )
+    return isinstance(config, dict) and _LAYER_UNDEFINED_CONFIG_KEY not in config
 
 
 def is_default(method):

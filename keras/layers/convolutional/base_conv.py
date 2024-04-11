@@ -107,9 +107,7 @@ class BaseConv(Layer):
         self.groups = groups
         self.kernel_size = standardize_tuple(kernel_size, rank, "kernel_size")
         self.strides = standardize_tuple(strides, rank, "strides")
-        self.dilation_rate = standardize_tuple(
-            dilation_rate, rank, "dilation_rate"
-        )
+        self.dilation_rate = standardize_tuple(dilation_rate, rank, "dilation_rate")
         self.padding = standardize_padding(padding, allow_causal=rank == 1)
         self.data_format = standardize_data_format(data_format)
         self.activation = activations.get(activation)
@@ -261,24 +259,14 @@ class BaseConv(Layer):
                 "groups": self.groups,
                 "activation": activations.serialize(self.activation),
                 "use_bias": self.use_bias,
-                "kernel_initializer": initializers.serialize(
-                    self.kernel_initializer
-                ),
-                "bias_initializer": initializers.serialize(
-                    self.bias_initializer
-                ),
-                "kernel_regularizer": regularizers.serialize(
-                    self.kernel_regularizer
-                ),
-                "bias_regularizer": regularizers.serialize(
-                    self.bias_regularizer
-                ),
+                "kernel_initializer": initializers.serialize(self.kernel_initializer),
+                "bias_initializer": initializers.serialize(self.bias_initializer),
+                "kernel_regularizer": regularizers.serialize(self.kernel_regularizer),
+                "bias_regularizer": regularizers.serialize(self.bias_regularizer),
                 "activity_regularizer": regularizers.serialize(
                     self.activity_regularizer
                 ),
-                "kernel_constraint": constraints.serialize(
-                    self.kernel_constraint
-                ),
+                "kernel_constraint": constraints.serialize(self.kernel_constraint),
                 "bias_constraint": constraints.serialize(self.bias_constraint),
             }
         )

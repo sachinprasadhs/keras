@@ -67,9 +67,7 @@ class RemoteMonitor(Callback):
                 send[k] = v
         try:
             if self.send_as_json:
-                requests.post(
-                    self.root + self.path, json=send, headers=self.headers
-                )
+                requests.post(self.root + self.path, json=send, headers=self.headers)
             else:
                 requests.post(
                     self.root + self.path,

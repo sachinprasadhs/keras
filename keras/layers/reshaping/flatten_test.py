@@ -39,9 +39,7 @@ class FlattenTest(testing.TestCase, parameterized.TestCase):
 
                 dense_to_sparse = jax_sparse.BCOO.fromdense
             else:
-                self.fail(
-                    f"Sparse is unsupported with backend {backend.backend()}"
-                )
+                self.fail(f"Sparse is unsupported with backend {backend.backend()}")
             inputs = dense_to_sparse(inputs)
             expected_output_channels_last = dense_to_sparse(
                 expected_output_channels_last

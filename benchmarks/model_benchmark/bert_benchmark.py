@@ -122,9 +122,7 @@ def main(_):
         end_learning_rate=0.0,
     )
     optimizer = keras.optimizers.AdamW(lr, weight_decay=0.01)
-    optimizer.exclude_from_weight_decay(
-        var_names=["LayerNorm", "layer_norm", "bias"]
-    )
+    optimizer.exclude_from_weight_decay(var_names=["LayerNorm", "layer_norm", "bias"])
 
     model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 

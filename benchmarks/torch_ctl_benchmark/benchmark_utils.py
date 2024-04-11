@@ -28,9 +28,7 @@ def train_loop(model, train_loader, num_epochs, optimizer, loss_fn, framework):
             running_loss += loss.item()
 
         end = time.time()
-        average_batch_time_per_epoch.append(
-            (end - start) / (len(train_loader) - 1)
-        )
+        average_batch_time_per_epoch.append((end - start) / (len(train_loader) - 1))
     average_time = np.mean(average_batch_time_per_epoch)
 
     print(f"Time per batch in {framework}: {average_time:.2f}")

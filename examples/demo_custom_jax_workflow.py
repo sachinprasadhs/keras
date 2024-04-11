@@ -71,9 +71,7 @@ optimizer.build(model.trainable_variables)
 ######### Custom JAX workflow ###############
 
 
-def compute_loss_and_updates(
-    trainable_variables, non_trainable_variables, x, y
-):
+def compute_loss_and_updates(trainable_variables, non_trainable_variables, x, y):
     y_pred, non_trainable_variables = model.stateless_call(
         trainable_variables, non_trainable_variables, x
     )
@@ -115,7 +113,5 @@ for data in dataset:
 trainable_variables, non_trainable_variables, optimizer_variables = state
 for variable, value in zip(model.trainable_variables, trainable_variables):
     variable.assign(value)
-for variable, value in zip(
-    model.non_trainable_variables, non_trainable_variables
-):
+for variable, value in zip(model.non_trainable_variables, non_trainable_variables):
     variable.assign(value)

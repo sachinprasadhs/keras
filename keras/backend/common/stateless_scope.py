@@ -83,9 +83,7 @@ class StatelessScope:
         return self.state_mapping.get(id(variable), None)
 
     def __exit__(self, *args, **kwargs):
-        global_state.set_global_attribute(
-            "stateless_scope", self.original_scope
-        )
+        global_state.set_global_attribute("stateless_scope", self.original_scope)
         if self.original_scope is None and self.initialize_variables:
             # We're back in eager scope;
             # if any variables were created within the stateless

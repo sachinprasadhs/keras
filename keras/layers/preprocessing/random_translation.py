@@ -132,8 +132,7 @@ class RandomTranslation(TFDataLayer):
         if isinstance(factor, (tuple, list)):
             if len(factor) != 2:
                 raise ValueError(
-                    self._FACTOR_VALIDATION_ERROR
-                    + f"Received: {factor_name}={factor}"
+                    self._FACTOR_VALIDATION_ERROR + f"Received: {factor_name}={factor}"
                 )
             self._check_factor_range(factor[0])
             self._check_factor_range(factor[1])
@@ -144,16 +143,14 @@ class RandomTranslation(TFDataLayer):
             lower, upper = [-factor, factor]
         else:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: {factor_name}={factor}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: {factor_name}={factor}"
             )
         return lower, upper
 
     def _check_factor_range(self, input_number):
         if input_number > 1.0 or input_number < -1.0:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: input_number={input_number}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: input_number={input_number}"
             )
 
     def call(self, inputs, training=True):
@@ -194,9 +191,7 @@ class RandomTranslation(TFDataLayer):
         )
         width_translate = self.backend.numpy.multiply(width_translate, width)
         translations = self.backend.cast(
-            self.backend.numpy.concatenate(
-                [width_translate, height_translate], axis=1
-            ),
+            self.backend.numpy.concatenate([width_translate, height_translate], axis=1),
             dtype="float32",
         )
 

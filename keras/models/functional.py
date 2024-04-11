@@ -127,8 +127,7 @@ class Functional(Function, Model):
                     )
         elif not isinstance(inputs, backend.KerasTensor):
             raise ValueError(
-                f"Unrecognized type for `inputs`: {inputs} "
-                f"(of type {type(inputs)})"
+                f"Unrecognized type for `inputs`: {inputs} " f"(of type {type(inputs)})"
             )
         if isinstance(outputs, dict):
             for k, v in outputs.items():
@@ -330,9 +329,7 @@ class Functional(Function, Model):
             names = sorted(self._inputs_struct.keys())
             return [
                 InputSpec(
-                    shape=shape_with_no_batch_size(
-                        self._inputs_struct[name].shape
-                    ),
+                    shape=shape_with_no_batch_size(self._inputs_struct[name].shape),
                     allow_last_axis_squeeze=True,
                     name=name,
                 )
@@ -376,9 +373,7 @@ class Functional(Function, Model):
                 kept_nodes = 1
             else:
                 kept_nodes = 0
-            for original_node_index, node in enumerate(
-                operation._inbound_nodes
-            ):
+            for original_node_index, node in enumerate(operation._inbound_nodes):
                 node_key = make_node_key(operation, original_node_index)
                 if node_key in self._nodes:
                     # i.e. we mark it to be saved
@@ -389,9 +384,7 @@ class Functional(Function, Model):
         layer_configs = []
         for operation in self.operations:  # From the earliest layers on.
             filtered_inbound_nodes = []
-            for original_node_index, node in enumerate(
-                operation._inbound_nodes
-            ):
+            for original_node_index, node in enumerate(operation._inbound_nodes):
                 node_key = make_node_key(operation, original_node_index)
                 if node_key in self._nodes:
                     # The node is relevant to the model:
@@ -652,9 +645,7 @@ def deserialize_node(node_data, created_layers):
             elif len(input_data) == 4:
                 kwargs = input_data[3]
             else:
-                raise ValueError(
-                    "Cannot deserialize the model (invalid config data?)"
-                )
+                raise ValueError("Cannot deserialize the model (invalid config data?)")
             inbound_layer = created_layers[inbound_layer_name]
 
             # Raise an error if the corresponding layer node
@@ -668,9 +659,7 @@ def deserialize_node(node_data, created_layers):
                     f"inbound_node_index = {inbound_node_index}"
                 )
             inbound_node = inbound_layer._inbound_nodes[inbound_node_index]
-            input_tensors.append(
-                inbound_node.output_tensors[inbound_tensor_index]
-            )
+            input_tensors.append(inbound_node.output_tensors[inbound_tensor_index])
         return [unpack_singleton(input_tensors)], kwargs
 
     args = serialization_lib.deserialize_keras_object(node_data["args"])
@@ -781,9 +770,9 @@ def clone_graph_nodes(inputs, outputs):
             )
             cloned_inputs.append(cloned_input)
             kt_id_mapping[id(kt_input)] = cloned_input
-            op_id_mapping[id(kt_input._keras_history[0])] = (
-                cloned_input._keras_history[0]
-            )
+            op_id_mapping[id(kt_input._keras_history[0])] = cloned_input._keras_history[
+                0
+            ]
     cloned_inputs = tree.pack_sequence_as(inputs, cloned_inputs)
 
     for kt_output in tree.flatten(outputs):
@@ -803,12 +792,8 @@ def clone_graph_nodes(inputs, outputs):
         # Or reuse an existing Keras tensor if it has already been cloned.
         output_copy = clone_keras_tensors(node.output_tensors, kt_id_mapping)
         if not isinstance(operation, InputLayer):
-            call_args_copy = clone_keras_tensors(
-                node.arguments.args, kt_id_mapping
-            )
-            call_kwargs_copy = clone_keras_tensors(
-                node.arguments.kwargs, kt_id_mapping
-            )
+            call_args_copy = clone_keras_tensors(node.arguments.args, kt_id_mapping)
+            call_kwargs_copy = clone_keras_tensors(node.arguments.kwargs, kt_id_mapping)
         else:
             call_args_copy = ()
             call_kwargs_copy = {}

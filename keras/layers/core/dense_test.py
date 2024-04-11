@@ -131,9 +131,7 @@ class DenseTest(testing.TestCase):
 
         # Verify the computation is the same as if it had been a dense tensor
         expected_outputs = ops.add(
-            ops.matmul(
-                backend.convert_to_tensor(inputs, sparse=False), layer.kernel
-            ),
+            ops.matmul(backend.convert_to_tensor(inputs, sparse=False), layer.kernel),
             layer.bias,
         )
         self.assertAllClose(outputs, expected_outputs)
@@ -145,9 +143,7 @@ class DenseTest(testing.TestCase):
             with tf.GradientTape() as g:
                 outputs = layer(inputs)
 
-            self.assertIsInstance(
-                g.gradient(outputs, layer.kernel), tf.IndexedSlices
-            )
+            self.assertIsInstance(g.gradient(outputs, layer.kernel), tf.IndexedSlices)
 
     def test_dense_no_activation(self):
         layer = layers.Dense(units=2, use_bias=False, activation=None)
@@ -228,12 +224,8 @@ class DenseTest(testing.TestCase):
 
         final_lora_a_kernel_value = layer.lora_kernel_a.numpy()
         final_lora_b_kernel_value = layer.lora_kernel_b.numpy()
-        diff_a = np.max(
-            np.abs(init_lora_a_kernel_value - final_lora_a_kernel_value)
-        )
-        diff_b = np.max(
-            np.abs(init_lora_b_kernel_value - final_lora_b_kernel_value)
-        )
+        diff_a = np.max(np.abs(init_lora_a_kernel_value - final_lora_a_kernel_value))
+        diff_b = np.max(np.abs(init_lora_b_kernel_value - final_lora_b_kernel_value))
         self.assertGreater(diff_a, 0.0)
         self.assertGreater(diff_b, 0.0)
 
@@ -246,9 +238,7 @@ class DenseTest(testing.TestCase):
         self.assertAllClose(model.predict(x), new_model.predict(x))
 
         # Try saving and reloading the model's weights only
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "lora_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "lora_model.weights.h5")
         model.save_weights(temp_filepath)
 
         # Load the file into a fresh, non-lora model
@@ -283,9 +273,7 @@ class DenseTest(testing.TestCase):
         model = MyModel()
         model.build((None, 8))
         model.dense.enable_lora(4)
-        self.assertEqual(
-            model.dense.lora_kernel_a.path, "mymodel/dense/lora_kernel_a"
-        )
+        self.assertEqual(model.dense.lora_kernel_a.path, "mymodel/dense/lora_kernel_a")
 
     @pytest.mark.requires_trainable_backend
     def test_lora_rank_argument(self):
@@ -308,9 +296,7 @@ class DenseTest(testing.TestCase):
 
     def test_enable_lora_with_kernel_constraint(self):
         layer = layers.Dense(units=2, kernel_constraint="max_norm")
-        with self.assertRaisesRegex(
-            ValueError, "incompatible with kernel constraints"
-        ):
+        with self.assertRaisesRegex(ValueError, "incompatible with kernel constraints"):
             layer.enable_lora(rank=2)
 
     def test_enable_lora_on_unbuilt_layer(self):
@@ -352,17 +338,13 @@ class DenseTest(testing.TestCase):
 
         # Try saving and reloading the model
         model = models.Sequential([layer])
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_model.keras"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_model.keras")
         model.save(temp_filepath)
         new_model = saving.load_model(temp_filepath)
         self.assertAllClose(model.predict(x), new_model.predict(x))
 
         # Try saving and reloading the model's weights only
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_model.weights.h5"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_model.weights.h5")
         model.save_weights(temp_filepath)
 
         # Try lora
@@ -377,9 +359,7 @@ class DenseTest(testing.TestCase):
         layer = layers.Dense(units=16, dtype="int8_from_mixed_bfloat16")
         layer.build((None, 8))
         self.assertEqual(backend.standardize_dtype(layer._kernel.dtype), "int8")
-        self.assertEqual(
-            backend.standardize_dtype(layer.kernel_scale.dtype), "float32"
-        )
+        self.assertEqual(backend.standardize_dtype(layer.kernel_scale.dtype), "float32")
 
     @pytest.mark.requires_trainable_backend
     def test_quantize_dtype_argument(self):
@@ -446,19 +426,13 @@ class DenseTest(testing.TestCase):
 
         final_lora_a_kernel_value = layer.lora_kernel_a.numpy()
         final_lora_b_kernel_value = layer.lora_kernel_b.numpy()
-        diff_a = np.max(
-            np.abs(init_lora_a_kernel_value - final_lora_a_kernel_value)
-        )
-        diff_b = np.max(
-            np.abs(init_lora_b_kernel_value - final_lora_b_kernel_value)
-        )
+        diff_a = np.max(np.abs(init_lora_a_kernel_value - final_lora_a_kernel_value))
+        diff_b = np.max(np.abs(init_lora_b_kernel_value - final_lora_b_kernel_value))
         self.assertGreater(diff_a, 0.0)
         self.assertGreater(diff_b, 0.0)
 
         # Try saving and reloading the model
-        temp_filepath = os.path.join(
-            self.get_temp_dir(), "quantized_lora_model.keras"
-        )
+        temp_filepath = os.path.join(self.get_temp_dir(), "quantized_lora_model.keras")
         model.save(temp_filepath)
         new_model = saving.load_model(temp_filepath)
         self.assertTrue(new_model.layers[0].lora_enabled)
@@ -490,9 +464,7 @@ class DenseTest(testing.TestCase):
             ref_output = model(ref_input)
             export_lib.export_model(model, temp_filepath)
             reloaded_layer = export_lib.TFSMLayer(temp_filepath)
-            self.assertAllClose(
-                reloaded_layer(ref_input), ref_output, atol=1e-7
-            )
+            self.assertAllClose(reloaded_layer(ref_input), ref_output, atol=1e-7)
             self.assertLen(reloaded_layer.weights, len(model.weights))
             self.assertLen(
                 reloaded_layer.trainable_weights, len(model.trainable_weights)

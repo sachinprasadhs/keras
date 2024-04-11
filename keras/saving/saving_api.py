@@ -53,9 +53,7 @@ def save_model(model, filepath, overwrite=True, **kwargs):
     include_optimizer = kwargs.pop("include_optimizer", True)
     save_format = kwargs.pop("save_format", False)
     if save_format:
-        if str(filepath).endswith((".h5", ".hdf5")) or str(filepath).endswith(
-            ".keras"
-        ):
+        if str(filepath).endswith((".h5", ".hdf5")) or str(filepath).endswith(".keras"):
             logging.warning(
                 "The `save_format` argument is deprecated in Keras 3. "
                 "We recommend removing this argument as it can be inferred "
@@ -71,8 +69,7 @@ def save_model(model, filepath, overwrite=True, **kwargs):
             )
     if kwargs:
         raise ValueError(
-            "The following argument(s) are not supported: "
-            f"{list(kwargs.keys())}"
+            "The following argument(s) are not supported: " f"{list(kwargs.keys())}"
         )
 
     # Deprecation warnings
@@ -150,9 +147,7 @@ def load_model(filepath, custom_objects=None, compile=True, safe_mode=True):
     It is recommended that you use layer attributes to
     access specific variables, e.g. `model.get_layer("dense_1").kernel`.
     """
-    is_keras_zip = str(filepath).endswith(".keras") and zipfile.is_zipfile(
-        filepath
-    )
+    is_keras_zip = str(filepath).endswith(".keras") and zipfile.is_zipfile(filepath)
 
     # Support for remote zip files
     if (
@@ -160,9 +155,7 @@ def load_model(filepath, custom_objects=None, compile=True, safe_mode=True):
         and not file_utils.isdir(filepath)
         and not is_keras_zip
     ):
-        local_path = os.path.join(
-            saving_lib.get_temp_dir(), os.path.basename(filepath)
-        )
+        local_path = os.path.join(saving_lib.get_temp_dir(), os.path.basename(filepath))
 
         # Copy from remote to temporary local directory
         file_utils.copy(filepath, local_path)
@@ -207,8 +200,7 @@ def load_model(filepath, custom_objects=None, compile=True, safe_mode=True):
 def save_weights(model, filepath, overwrite=True, **kwargs):
     if not str(filepath).endswith(".weights.h5"):
         raise ValueError(
-            "The filename must end in `.weights.h5`. "
-            f"Received: filepath={filepath}"
+            "The filename must end in `.weights.h5`. " f"Received: filepath={filepath}"
         )
     try:
         exists = os.path.exists(filepath)
@@ -226,9 +218,7 @@ def load_weights(model, filepath, skip_mismatch=False, **kwargs):
     if str(filepath).endswith(".keras"):
         if kwargs:
             raise ValueError(f"Invalid keyword arguments: {kwargs}")
-        saving_lib.load_weights_only(
-            model, filepath, skip_mismatch=skip_mismatch
-        )
+        saving_lib.load_weights_only(model, filepath, skip_mismatch=skip_mismatch)
     elif str(filepath).endswith(".weights.h5"):
         objects_to_skip = kwargs.pop("objects_to_skip", None)
         if kwargs:
@@ -244,9 +234,7 @@ def load_weights(model, filepath, skip_mismatch=False, **kwargs):
         if kwargs:
             raise ValueError(f"Invalid keyword arguments: {kwargs}")
         if not h5py:
-            raise ImportError(
-                "Loading a H5 file requires `h5py` to be installed."
-            )
+            raise ImportError("Loading a H5 file requires `h5py` to be installed.")
         with h5py.File(filepath, "r") as f:
             if "layer_names" not in f.attrs and "model_weights" in f:
                 f = f["model_weights"]

@@ -86,9 +86,7 @@ class Variable(
         self.value._copy_trackable_to_cpu(object_map)
         object_map[self] = tf.Variable(object_map[self.value])
 
-    def _export_to_saved_model_graph(
-        self, object_map, tensor_map, options, **kwargs
-    ):
+    def _export_to_saved_model_graph(self, object_map, tensor_map, options, **kwargs):
         resource_list = self.value._export_to_saved_model_graph(
             object_map, tensor_map, options, **kwargs
         )
@@ -181,9 +179,7 @@ def compute_output_spec(fn, *args, **kwargs):
                             shape=x.shape, dtype=x.dtype
                         )
                     else:
-                        return tf.compat.v1.placeholder(
-                            shape=x.shape, dtype=x.dtype
-                        )
+                        return tf.compat.v1.placeholder(shape=x.shape, dtype=x.dtype)
                 return x
 
             args, kwargs = tree.map_structure(

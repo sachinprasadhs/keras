@@ -17,9 +17,7 @@ class TestCompileMetrics(testing.TestCase):
             weighted_metrics=[metrics_module.MeanSquaredError()],
         )
         # Test symbolic build
-        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor(
-            (3, 4)
-        )
+        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor((3, 4))
         compile_metrics.build(y_true, y_pred)
         # Test eager build
         y_true = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])
@@ -28,13 +26,9 @@ class TestCompileMetrics(testing.TestCase):
         compile_metrics.build(y_true, y_pred)
 
         # Test update / result / reset flow
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         y_pred = np.array([[0.3, 0.2], [0.1, 0.4], [0.2, 0.3]])
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         result = compile_metrics.result()
         self.assertIsInstance(result, dict)
         self.assertEqual(len(result), 2)
@@ -91,16 +85,12 @@ class TestCompileMetrics(testing.TestCase):
         self.assertEqual(len(compile_metrics.metrics), 8)
 
         # Test update / result / reset flow
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         y_pred = [
             np.array([[0.3, 0.2], [0.1, 0.4], [0.2, 0.3]]),
             np.array([[0.3, 0.2], [0.1, 0.4], [0.2, 0.3]]),
         ]
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         result = compile_metrics.result()
         self.assertIsInstance(result, dict)
         self.assertEqual(len(result), 8)
@@ -160,16 +150,12 @@ class TestCompileMetrics(testing.TestCase):
         compile_metrics.build(y_true, y_pred)
 
         # Test update / result / reset flow
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         y_pred = {
             "output_1": np.array([[0.3, 0.2], [0.1, 0.4], [0.2, 0.3]]),
             "output_2": np.array([[0.3, 0.2], [0.1, 0.4], [0.2, 0.3]]),
         }
-        compile_metrics.update_state(
-            y_true, y_pred, sample_weight=sample_weight
-        )
+        compile_metrics.update_state(y_true, y_pred, sample_weight=sample_weight)
         result = compile_metrics.result()
         self.assertIsInstance(result, dict)
         self.assertEqual(len(result), 8)
@@ -182,12 +168,8 @@ class TestCompileMetrics(testing.TestCase):
         self.assertAllClose(result["output_2_mean_squared_error"], 0.055833336)
         self.assertAllClose(result["output_1_mse"], 0.055833336)
         self.assertAllClose(result["output_2_mse"], 0.055833336)
-        self.assertAllClose(
-            result["output_1_weighted_mean_squared_error"], 0.0725
-        )
-        self.assertAllClose(
-            result["output_2_weighted_mean_squared_error"], 0.0725
-        )
+        self.assertAllClose(result["output_1_weighted_mean_squared_error"], 0.0725)
+        self.assertAllClose(result["output_2_weighted_mean_squared_error"], 0.0725)
         self.assertAllClose(result["output_1_weighted_mse"], 0.0725)
         self.assertAllClose(result["output_2_weighted_mse"], 0.0725)
 
@@ -240,9 +222,7 @@ class TestCompileLoss(testing.TestCase, parameterized.TestCase):
             loss=losses_module.MeanSquaredError(),
         )
         # Test symbolic build
-        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor(
-            (3, 4)
-        )
+        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor((3, 4))
         compile_loss.build(y_true, y_pred)
         # Test eager build
         y_true = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])
@@ -255,9 +235,7 @@ class TestCompileLoss(testing.TestCase, parameterized.TestCase):
         compile_loss = CompileLoss(loss="crossentropy")
 
         # Test symbolic build
-        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor(
-            (3, 4)
-        )
+        y_true, y_pred = backend.KerasTensor((3, 4)), backend.KerasTensor((3, 4))
         compile_loss.build(y_true, y_pred)
         # Test eager build
         y_true = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])

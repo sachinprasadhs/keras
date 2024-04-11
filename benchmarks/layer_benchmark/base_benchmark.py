@@ -11,8 +11,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string(
     "benchmark_name",
     None,
-    "The name of benchmark to run. If None, all benchmarks in the file will be "
-    "run.",
+    "The name of benchmark to run. If None, all benchmarks in the file will be " "run.",
 )
 
 flags.DEFINE_integer(
@@ -130,16 +129,10 @@ class LayerBenchmark:
             self._tf_keras_layer = tf_keras_layer
 
         self.input_shape = input_shape
-        self._keras_model = self._build_keras_model(
-            input_shape, flat_call_inputs
-        )
-        self._tf_keras_model = self._build_tf_keras_model(
-            input_shape, flat_call_inputs
-        )
+        self._keras_model = self._build_keras_model(input_shape, flat_call_inputs)
+        self._tf_keras_model = self._build_tf_keras_model(input_shape, flat_call_inputs)
 
-        self._keras_model.compile(
-            loss="mse", optimizer="sgd", jit_compile=jit_compile
-        )
+        self._keras_model.compile(loss="mse", optimizer="sgd", jit_compile=jit_compile)
         self._tf_keras_model.compile(
             loss="mse", optimizer="sgd", jit_compile=jit_compile
         )
@@ -191,9 +184,7 @@ class LayerBenchmark:
 
         num_iterations = num_samples // batch_size - 1
         callback = KerasCoreBenchmarkMetricsCallback(stop_batch=num_iterations)
-        tf_keras_callback = TFKerasBenchmarkMetricsCallback(
-            stop_batch=num_iterations
-        )
+        tf_keras_callback = TFKerasBenchmarkMetricsCallback(stop_batch=num_iterations)
 
         self._keras_model.predict(
             data,
@@ -237,21 +228,13 @@ class LayerBenchmark:
             # Generate default label if not provided.
             if self.flat_call_inputs:
                 # Scale by a small factor to avoid zero gradients.
-                label = (
-                    keras.backend.convert_to_numpy(self._keras_layer(*data))
-                    * 1.001
-                )
+                label = keras.backend.convert_to_numpy(self._keras_layer(*data)) * 1.001
             else:
-                label = (
-                    keras.backend.convert_to_numpy(self._keras_layer(data))
-                    * 1.001
-                )
+                label = keras.backend.convert_to_numpy(self._keras_layer(data)) * 1.001
 
         num_iterations = num_samples // batch_size - 1
         callback = KerasCoreBenchmarkMetricsCallback(stop_batch=num_iterations)
-        tf_keras_callback = TFKerasBenchmarkMetricsCallback(
-            stop_batch=num_iterations
-        )
+        tf_keras_callback = TFKerasBenchmarkMetricsCallback(stop_batch=num_iterations)
 
         self._keras_model.fit(
             data,

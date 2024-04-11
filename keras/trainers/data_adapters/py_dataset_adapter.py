@@ -268,8 +268,7 @@ class PyDatasetAdapter(DataAdapter):
                 len(self.py_dataset),
             )
             batches = [
-                self._standardize_batch(self.py_dataset[i])
-                for i in range(num_samples)
+                self._standardize_batch(self.py_dataset[i]) for i in range(num_samples)
             ]
             self._output_signature = data_adapter_utils.get_tensor_spec(batches)
 

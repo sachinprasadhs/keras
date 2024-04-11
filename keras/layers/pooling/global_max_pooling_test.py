@@ -142,9 +142,7 @@ class GlobalMaxPoolingCorrectnessTest(testing.TestCase, parameterized.TestCase):
     )
     def test_global_max_pooling3d(self, data_format, keepdims):
         def np_global_max_pool3d(x, data_format, keepdims):
-            steps_axis = (
-                [1, 2, 3] if data_format == "channels_last" else [2, 3, 4]
-            )
+            steps_axis = [1, 2, 3] if data_format == "channels_last" else [2, 3, 4]
             res = np.apply_over_axes(np.max, x, steps_axis)
             if not keepdims:
                 res = res.squeeze()

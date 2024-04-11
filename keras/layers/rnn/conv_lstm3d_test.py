@@ -14,9 +14,7 @@ class ConvLSTM1DTest(testing.TestCase):
         self.run_layer_test(
             layers.ConvLSTM3D,
             init_kwargs={"filters": 5, "kernel_size": 3, "padding": "same"},
-            input_shape=(
-                (3, 2, 4, 4, 4, 3) if channels_last else (3, 2, 3, 4, 4, 4)
-            ),
+            input_shape=((3, 2, 4, 4, 4, 3) if channels_last else (3, 2, 3, 4, 4, 4)),
             expected_output_shape=(
                 (3, 4, 4, 4, 5) if channels_last else (3, 5, 4, 4, 4)
             ),
@@ -32,9 +30,7 @@ class ConvLSTM1DTest(testing.TestCase):
                 "padding": "valid",
                 "recurrent_dropout": 0.5,
             },
-            input_shape=(
-                (3, 2, 8, 8, 8, 3) if channels_last else (3, 2, 3, 8, 8, 8)
-            ),
+            input_shape=((3, 2, 8, 8, 8, 3) if channels_last else (3, 2, 3, 8, 8, 8)),
             call_kwargs={"training": True},
             expected_output_shape=(
                 (3, 6, 6, 6, 5) if channels_last else (3, 5, 6, 6, 6)
@@ -51,9 +47,7 @@ class ConvLSTM1DTest(testing.TestCase):
                 "padding": "valid",
                 "return_sequences": True,
             },
-            input_shape=(
-                (3, 2, 8, 8, 8, 3) if channels_last else (3, 2, 3, 8, 8, 8)
-            ),
+            input_shape=((3, 2, 8, 8, 8, 3) if channels_last else (3, 2, 3, 8, 8, 8)),
             expected_output_shape=(
                 (3, 2, 6, 6, 6, 5) if channels_last else (3, 2, 5, 6, 6, 6)
             ),
@@ -63,9 +57,7 @@ class ConvLSTM1DTest(testing.TestCase):
         )
 
     def test_correctness(self):
-        sequence = (
-            np.arange(1920).reshape((2, 3, 4, 4, 4, 5)).astype("float32") / 100
-        )
+        sequence = np.arange(1920).reshape((2, 3, 4, 4, 4, 5)).astype("float32") / 100
         expected_output = np.array(
             [
                 [

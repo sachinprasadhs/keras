@@ -80,9 +80,7 @@ class LearningRateSchedulerTest(testing.TestCase):
             callbacks=[lr_scheduler],
             epochs=2,
         )
-        self.assertEqual(
-            self.model.optimizer.learning_rate.value, initial_lr / 4.0
-        )
+        self.assertEqual(self.model.optimizer.learning_rate.value, initial_lr / 4.0)
 
     @pytest.mark.requires_trainable_backend
     def test_throws_when_optimizer_has_schedule(self):

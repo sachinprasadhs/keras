@@ -201,9 +201,7 @@ class MergingLayersTest(testing.TestCase, parameterized.TestCase):
         with self.assertRaisesRegex(ValueError, "`inputs` should be a list."):
             layer.compute_mask(input_1, [None, None])
 
-        with self.assertRaisesRegex(
-            ValueError, " should have the same length."
-        ):
+        with self.assertRaisesRegex(ValueError, " should have the same length."):
             layer.compute_mask([input_1, input_2], [None])
 
     def test_subtract_layer_inputs_length_errors(self):

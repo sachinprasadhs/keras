@@ -214,17 +214,13 @@ class ActivationsTest(testing.TestCase):
         x_large_positive = np.random.uniform(10, 100, (2, 5))
         result_large_positive = activations.softplus(x_large_positive)
         expected_large_positive = np.vectorize(_ref_softplus)(x_large_positive)
-        self.assertAllClose(
-            result_large_positive, expected_large_positive, rtol=1e-05
-        )
+        self.assertAllClose(result_large_positive, expected_large_positive, rtol=1e-05)
 
         # Test large negative values
         x_large_negative = np.random.uniform(-100, -10, (2, 5))
         result_large_negative = activations.softplus(x_large_negative)
         expected_large_negative = np.vectorize(_ref_softplus)(x_large_negative)
-        self.assertAllClose(
-            result_large_negative, expected_large_negative, rtol=1e-05
-        )
+        self.assertAllClose(result_large_negative, expected_large_negative, rtol=1e-05)
 
     def test_softsign(self):
         # Basic test for random values between 0 and 1
@@ -255,17 +251,13 @@ class ActivationsTest(testing.TestCase):
         x_large_positive = np.random.uniform(10, 100, (2, 5))
         result_large_positive = activations.softsign(x_large_positive)
         expected_large_positive = np.vectorize(_ref_softsign)(x_large_positive)
-        self.assertAllClose(
-            result_large_positive, expected_large_positive, rtol=1e-05
-        )
+        self.assertAllClose(result_large_positive, expected_large_positive, rtol=1e-05)
 
         # Test large negative values
         x_large_negative = np.random.uniform(-100, -10, (2, 5))
         result_large_negative = activations.softsign(x_large_negative)
         expected_large_negative = np.vectorize(_ref_softsign)(x_large_negative)
-        self.assertAllClose(
-            result_large_negative, expected_large_negative, rtol=1e-05
-        )
+        self.assertAllClose(result_large_negative, expected_large_negative, rtol=1e-05)
 
     def test_sigmoid(self):
         # Basic test for random values between 0 and 1
@@ -296,17 +288,13 @@ class ActivationsTest(testing.TestCase):
         x_large_positive = np.random.uniform(10, 100, (2, 5))
         result_large_positive = activations.sigmoid(x_large_positive)
         expected_large_positive = np.vectorize(_ref_sigmoid)(x_large_positive)
-        self.assertAllClose(
-            result_large_positive, expected_large_positive, rtol=1e-05
-        )
+        self.assertAllClose(result_large_positive, expected_large_positive, rtol=1e-05)
 
         # Test large negative values
         x_large_negative = np.random.uniform(-100, -10, (2, 5))
         result_large_negative = activations.sigmoid(x_large_negative)
         expected_large_negative = np.vectorize(_ref_sigmoid)(x_large_negative)
-        self.assertAllClose(
-            result_large_negative, expected_large_negative, rtol=1e-05
-        )
+        self.assertAllClose(result_large_negative, expected_large_negative, rtol=1e-05)
 
     def test_hard_sigmoid(self):
         # Basic test for random values between 0 and 1
@@ -328,9 +316,7 @@ class ActivationsTest(testing.TestCase):
         self.assertAllClose(result_3d, expected_3d, rtol=1e-05)
 
         # Test with strictly positive values much larger than 1
-        x_positive_above_1 = np.random.uniform(
-            5, 10, (2, 5)
-        )  # Adjusted this range
+        x_positive_above_1 = np.random.uniform(5, 10, (2, 5))  # Adjusted this range
         result_positive_above_1 = activations.hard_sigmoid(x_positive_above_1)
         expected_positive_above_1 = np.ones((2, 5))
         self.assertAllClose(
@@ -377,9 +363,7 @@ class ActivationsTest(testing.TestCase):
         # Test with only negative_slope
         result_negative_slope = activations.relu(x, negative_slope=0.5)
         expected_negative_slope = np.array([-5.0, -2.5, 0.0, 5.0, 10.0])
-        self.assertAllClose(
-            result_negative_slope, expected_negative_slope, rtol=1e-05
-        )
+        self.assertAllClose(result_negative_slope, expected_negative_slope, rtol=1e-05)
 
     def test_relu_max_value(self):
         # Define the input tensor
@@ -470,9 +454,7 @@ class ActivationsTest(testing.TestCase):
         x_large_negative = np.random.uniform(-1e5, -1e4, (2, 5))
         result_large_negative = activations.relu(x_large_negative)
         expected_large_negative = np.zeros((2, 5))
-        self.assertAllClose(
-            result_large_negative, expected_large_negative, rtol=1e-05
-        )
+        self.assertAllClose(result_large_negative, expected_large_negative, rtol=1e-05)
 
     def test_leaky_relu(self):
         leaky_relu_vectorized = np.vectorize(_ref_leaky_relu)
@@ -562,8 +544,7 @@ class ActivationsTest(testing.TestCase):
                     * (
                         1.0
                         + np.tanh(
-                            np.sqrt(2.0 / np.pi)
-                            * (x + 0.044715 * np.power(x, 3))
+                            np.sqrt(2.0 / np.pi) * (x + 0.044715 * np.power(x, 3))
                         )
                     )
                 )

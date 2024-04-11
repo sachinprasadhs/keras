@@ -242,8 +242,7 @@ class VarianceScaling(Initializer):
     ):
         if scale <= 0.0:
             raise ValueError(
-                "Argument `scale` must be positive float. "
-                f"Received: scale={scale}"
+                "Argument `scale` must be positive float. " f"Received: scale={scale}"
             )
         allowed_modes = {"fan_in", "fan_out", "fan_avg"}
         if mode not in allowed_modes:
@@ -344,14 +343,10 @@ class GlorotUniform(VarianceScaling):
     """
 
     def __init__(self, seed=None):
-        super().__init__(
-            scale=1.0, mode="fan_avg", distribution="uniform", seed=seed
-        )
+        super().__init__(scale=1.0, mode="fan_avg", distribution="uniform", seed=seed)
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 @keras_export(
@@ -402,9 +397,7 @@ class GlorotNormal(VarianceScaling):
         )
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 @keras_export(
@@ -455,9 +448,7 @@ class LecunNormal(VarianceScaling):
         )
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 @keras_export(
@@ -499,14 +490,10 @@ class LecunUniform(VarianceScaling):
     """
 
     def __init__(self, seed=None):
-        super().__init__(
-            scale=1.0, mode="fan_in", distribution="uniform", seed=seed
-        )
+        super().__init__(scale=1.0, mode="fan_in", distribution="uniform", seed=seed)
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 @keras_export(["keras.initializers.HeNormal", "keras.initializers.he_normal"])
@@ -548,9 +535,7 @@ class HeNormal(VarianceScaling):
         )
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 @keras_export(["keras.initializers.HeUniform", "keras.initializers.he_uniform"])
@@ -587,14 +572,10 @@ class HeUniform(VarianceScaling):
     """
 
     def __init__(self, seed=None):
-        super().__init__(
-            scale=2.0, mode="fan_in", distribution="uniform", seed=seed
-        )
+        super().__init__(scale=2.0, mode="fan_in", distribution="uniform", seed=seed)
 
     def get_config(self):
-        return {
-            "seed": serialization_lib.serialize_keras_object(self._init_seed)
-        }
+        return {"seed": serialization_lib.serialize_keras_object(self._init_seed)}
 
 
 def compute_fans(shape):

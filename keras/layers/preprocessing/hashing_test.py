@@ -20,9 +20,7 @@ class ArrayLike:
         return np.array(self.values)
 
 
-@pytest.mark.skipif(
-    backend.backend() == "numpy", reason="Broken with NumPy backend."
-)
+@pytest.mark.skipif(backend.backend() == "numpy", reason="Broken with NumPy backend.")
 class HashingTest(testing.TestCase, parameterized.TestCase):
     def test_config(self):
         layer = layers.Hashing(
@@ -86,9 +84,7 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
 
     def test_hash_dense_input_farmhash(self):
         layer = layers.Hashing(num_bins=2)
-        inp = np.asarray(
-            [["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]]
-        )
+        inp = np.asarray([["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]])
         output = layer(inp)
         # Assert equal for hashed output that should be true on all platforms.
         self.assertAllClose([[0], [0], [1], [0], [0]], output)
@@ -96,9 +92,7 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
     def test_hash_dense_input_mask_value_farmhash(self):
         empty_mask_layer = layers.Hashing(num_bins=3, mask_value="")
         omar_mask_layer = layers.Hashing(num_bins=3, mask_value="omar")
-        inp = np.asarray(
-            [["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]]
-        )
+        inp = np.asarray([["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]])
         empty_mask_output = empty_mask_layer(inp)
         omar_mask_output = omar_mask_layer(inp)
         # Outputs should be one more than test_hash_dense_input_farmhash (the
@@ -128,9 +122,7 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
 
     def test_hash_dense_input_siphash(self):
         layer = layers.Hashing(num_bins=2, salt=[133, 137])
-        inp = np.asarray(
-            [["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]]
-        )
+        inp = np.asarray([["omar"], ["stringer"], ["marlo"], ["wire"], ["skywalker"]])
         output = layer(inp)
         # Assert equal for hashed output that should be true on all platforms.
         # Note the result is different from FarmHash.
@@ -237,17 +229,11 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
             _ = layers.Hashing(num_bins=None)
         with self.assertRaisesRegex(ValueError, "cannot be `None`"):
             _ = layers.Hashing(num_bins=-1)
-        with self.assertRaisesRegex(
-            ValueError, "can only be a tuple of size 2"
-        ):
+        with self.assertRaisesRegex(ValueError, "can only be a tuple of size 2"):
             _ = layers.Hashing(num_bins=2, salt="string")
-        with self.assertRaisesRegex(
-            ValueError, "can only be a tuple of size 2"
-        ):
+        with self.assertRaisesRegex(ValueError, "can only be a tuple of size 2"):
             _ = layers.Hashing(num_bins=2, salt=[1])
-        with self.assertRaisesRegex(
-            ValueError, "can only be a tuple of size 2"
-        ):
+        with self.assertRaisesRegex(ValueError, "can only be a tuple of size 2"):
             _ = layers.Hashing(num_bins=1, salt=[133, 137, 177])
 
     def test_one_hot_output(self):
@@ -339,13 +325,9 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
         layer_1 = layers.Hashing.from_config(config)
         self.assertEqual(layer_1.name, layer.name)
 
-    @pytest.mark.skipif(
-        backend.backend() != "tensorflow", reason="Uses string dtype."
-    )
+    @pytest.mark.skipif(backend.backend() != "tensorflow", reason="Uses string dtype.")
     def test_saving(self):
-        input_data = np.array(
-            ["omar", "stringer", "marlo", "wire", "skywalker"]
-        )
+        input_data = np.array(["omar", "stringer", "marlo", "wire", "skywalker"])
         inputs = layers.Input(shape=(), dtype="string")
         outputs = layers.Hashing(num_bins=100)(inputs)
         model = models.Model(inputs=inputs, outputs=outputs)
@@ -389,9 +371,7 @@ class HashingTest(testing.TestCase, parameterized.TestCase):
     def test_hash_list_input(self, input_data, expected):
         layer = layers.Hashing(num_bins=2)
         out_data = layer(input_data)
-        self.assertAllEqual(
-            expected, backend.convert_to_numpy(out_data).tolist()
-        )
+        self.assertAllEqual(expected, backend.convert_to_numpy(out_data).tolist())
 
 
 # TODO: support tf.RaggedTensor.

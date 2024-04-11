@@ -51,9 +51,7 @@ class TreeTest(testing.TestCase):
         self.assertEqual([np.array([5])], tree.flatten(np.array([5])))
 
         self.assertEqual("a", tree.unflatten_as(5, ["a"]))
-        self.assertEqual(
-            np.array([5]), tree.unflatten_as("scalar", [np.array([5])])
-        )
+        self.assertEqual(np.array([5]), tree.unflatten_as("scalar", [np.array([5])]))
 
         with self.assertRaisesRegex(ValueError, "Structure is a scalar"):
             tree.unflatten_as("scalar", [4, 5])
@@ -68,9 +66,7 @@ class TreeTest(testing.TestCase):
         )
 
     def test_flatten_dict_order(self):
-        ordered = collections.OrderedDict(
-            [("d", 3), ("b", 1), ("a", 0), ("c", 2)]
-        )
+        ordered = collections.OrderedDict([("d", 3), ("b", 1), ("a", 0), ("c", 2)])
         plain = {"d": 3, "b": 1, "a": 0, "c": 2}
         ordered_flat = tree.flatten(ordered)
         plain_flat = tree.flatten(plain)
@@ -78,9 +74,7 @@ class TreeTest(testing.TestCase):
         self.assertEqual([0, 1, 2, 3], plain_flat)
 
     def test_unflatten_dict_order(self):
-        ordered = collections.OrderedDict(
-            [("d", 0), ("b", 0), ("a", 0), ("c", 0)]
-        )
+        ordered = collections.OrderedDict([("d", 0), ("b", 0), ("a", 0), ("c", 0)])
         plain = {"d": 0, "b": 0, "a": 0, "c": 0}
         seq = [0, 1, 2, 3]
         ordered_reconstruction = tree.unflatten_as(ordered, seq)
@@ -113,9 +107,7 @@ class TreeTest(testing.TestCase):
         self.assertEqual([], tree.map_structure(lambda x: x + 1, []))
         self.assertEqual({}, tree.map_structure(lambda x: x + 1, {}))
         empty_nt = collections.namedtuple("empty_nt", "")
-        self.assertEqual(
-            empty_nt(), tree.map_structure(lambda x: x + 1, empty_nt())
-        )
+        self.assertEqual(empty_nt(), tree.map_structure(lambda x: x + 1, empty_nt()))
 
         # This is checking actual equality of types, empty list != empty tuple
         self.assertNotEqual((), tree.map_structure(lambda x: x + 1, []))
@@ -161,24 +153,18 @@ class TreeTest(testing.TestCase):
             name_list,
             data_list,
         )
-        self.assertEqual(
-            out, ["first_4_evens", ["first_5_odds", "first_3_primes"]]
-        )
+        self.assertEqual(out, ["first_4_evens", ["first_5_odds", "first_3_primes"]])
 
     def test_assert_same_structure(self):
         tree.assert_same_structure(STRUCTURE1, STRUCTURE2, check_types=False)
         tree.assert_same_structure("abc", 1.0, check_types=False)
         tree.assert_same_structure(b"abc", 1.0, check_types=False)
         tree.assert_same_structure("abc", 1.0, check_types=False)
-        tree.assert_same_structure(
-            bytearray("abc", "ascii"), 1.0, check_types=False
-        )
+        tree.assert_same_structure(bytearray("abc", "ascii"), 1.0, check_types=False)
         tree.assert_same_structure("abc", np.array([0, 1]), check_types=False)
 
         with self.assertRaisesRegex(ValueError, "have the same structure"):
-            tree.assert_same_structure(
-                STRUCTURE1, STRUCTURE_DIFFERENT_NUM_ELEMENTS
-            )
+            tree.assert_same_structure(STRUCTURE1, STRUCTURE_DIFFERENT_NUM_ELEMENTS)
         with self.assertRaisesRegex(ValueError, "have the same structure"):
             tree.assert_same_structure([0, 1], np.array([0, 1]))
         with self.assertRaisesRegex(ValueError, "have the same structure"):
@@ -196,9 +182,7 @@ class TreeTest(testing.TestCase):
             tree.assert_same_structure(STRUCTURE1, structure1_list)
         tree.assert_same_structure(STRUCTURE1, STRUCTURE2, check_types=False)
         with self.assertRaisesRegex(ValueError, "have the same structure"):
-            tree.assert_same_structure(
-                STRUCTURE1, structure1_list, check_types=False
-            )
+            tree.assert_same_structure(STRUCTURE1, structure1_list, check_types=False)
 
     def test_pack_sequence_as(self):
         structure = {"key3": "", "key1": "", "key2": ""}

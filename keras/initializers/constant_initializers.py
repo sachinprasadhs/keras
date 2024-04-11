@@ -32,9 +32,7 @@ class Constant(Initializer):
 
     def __call__(self, shape, dtype=None):
         dtype = standardize_dtype(dtype)
-        return ops.cast(self.value, dtype=dtype) * ops.ones(
-            shape=shape, dtype=dtype
-        )
+        return ops.cast(self.value, dtype=dtype) * ops.ones(shape=shape, dtype=dtype)
 
     def get_config(self):
         return {"value": serialization_lib.serialize_keras_object(self.value)}

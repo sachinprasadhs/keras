@@ -26,19 +26,13 @@ class PadSequencesTest(testing.TestCase):
         a = [[1.2], [1.2, 2.3], [1.2, 2.3, 3.4]]
 
         # test padding
-        b = sequence_utils.pad_sequences(
-            a, maxlen=3, padding="pre", dtype="float32"
-        )
+        b = sequence_utils.pad_sequences(a, maxlen=3, padding="pre", dtype="float32")
         self.assertAllClose(b, [[0, 0, 1.2], [0, 1.2, 2.3], [1.2, 2.3, 3.4]])
-        b = sequence_utils.pad_sequences(
-            a, maxlen=3, padding="post", dtype="float32"
-        )
+        b = sequence_utils.pad_sequences(a, maxlen=3, padding="post", dtype="float32")
         self.assertAllClose(b, [[1.2, 0, 0], [1.2, 2.3, 0], [1.2, 2.3, 3.4]])
 
         # test truncating
-        b = sequence_utils.pad_sequences(
-            a, maxlen=2, truncating="pre", dtype="float32"
-        )
+        b = sequence_utils.pad_sequences(a, maxlen=2, truncating="pre", dtype="float32")
         self.assertAllClose(b, [[0, 1.2], [1.2, 2.3], [2.3, 3.4]])
         b = sequence_utils.pad_sequences(
             a, maxlen=2, truncating="post", dtype="float32"
@@ -79,9 +73,7 @@ class PadSequencesTest(testing.TestCase):
         with self.assertRaisesRegex(
             ValueError, "`dtype` int32 is not compatible with "
         ):
-            sequence_utils.pad_sequences(
-                a, maxlen=2, truncating="post", value="pad"
-            )
+            sequence_utils.pad_sequences(a, maxlen=2, truncating="post", value="pad")
 
     def test_pad_sequences_vector(self):
         a = [[[1, 1]], [[2, 1], [2, 2]], [[3, 1], [3, 2], [3, 3]]]
@@ -108,14 +100,10 @@ class PadSequencesTest(testing.TestCase):
 
         # test truncating
         b = sequence_utils.pad_sequences(a, maxlen=2, truncating="pre")
-        self.assertAllClose(
-            b, [[[0, 0], [1, 1]], [[2, 1], [2, 2]], [[3, 2], [3, 3]]]
-        )
+        self.assertAllClose(b, [[[0, 0], [1, 1]], [[2, 1], [2, 2]], [[3, 2], [3, 3]]])
 
         b = sequence_utils.pad_sequences(a, maxlen=2, truncating="post")
-        self.assertAllClose(
-            b, [[[0, 0], [1, 1]], [[2, 1], [2, 2]], [[3, 1], [3, 2]]]
-        )
+        self.assertAllClose(b, [[[0, 0], [1, 1]], [[2, 1], [2, 2]], [[3, 1], [3, 2]]])
 
         # test value
         b = sequence_utils.pad_sequences(a, maxlen=3, value=1)

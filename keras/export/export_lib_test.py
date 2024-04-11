@@ -145,9 +145,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
         )
         revived_model = tf.saved_model.load(
             temp_filepath,
-            options=tf.saved_model.LoadOptions(
-                experimental_load_function_aliases=True
-            ),
+            options=tf.saved_model.LoadOptions(experimental_load_function_aliases=True),
         )
         self.assertAllClose(
             ref_output, revived_model.function_aliases["call_alias"](ref_input)
@@ -222,9 +220,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
             export_archive.add_endpoint(
                 "call2",
                 model.__call__,
-                input_signature=[
-                    tf.TensorSpec(shape=(None, 10), dtype=tf.float32)
-                ],
+                input_signature=[tf.TensorSpec(shape=(None, 10), dtype=tf.float32)],
                 jax2tf_kwargs={
                     "native_serialization": True,
                     "native_serialization_platforms": ("cpu", "bogus"),
@@ -332,8 +328,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
         from jax.experimental import jax2tf
 
         native_jax_compatible = not (
-            jax_device() == "gpu"
-            and len(tf.config.list_physical_devices("GPU")) == 0
+            jax_device() == "gpu" and len(tf.config.list_physical_devices("GPU")) == 0
         )
         # now, convert JAX function
         converted_model_call = jax2tf.convert(
@@ -370,9 +365,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
         # Assert all variables wrapped as `tf.Variable`
         assert isinstance(export_archive.variables[0], tf.Variable)
         assert isinstance(export_archive.trainable_variables[0], tf.Variable)
-        assert isinstance(
-            export_archive.non_trainable_variables[0], tf.Variable
-        )
+        assert isinstance(export_archive.non_trainable_variables[0], tf.Variable)
 
     @pytest.mark.skipif(
         backend.backend() != "jax",
@@ -404,8 +397,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
         from jax.experimental import jax2tf
 
         native_jax_compatible = not (
-            jax_device() == "gpu"
-            and len(tf.config.list_physical_devices("GPU")) == 0
+            jax_device() == "gpu" and len(tf.config.list_physical_devices("GPU")) == 0
         )
         # now, convert JAX function
         converted_model_call = jax2tf.convert(
@@ -416,9 +408,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
 
         # you can now build a TF inference function
         @tf.function(
-            input_signature=[
-                tf.TensorSpec(shape=(None, None, 1), dtype=tf.float32)
-            ],
+            input_signature=[tf.TensorSpec(shape=(None, None, 1), dtype=tf.float32)],
             autograph=False,
         )
         def infer_fn(x):
@@ -492,9 +482,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
         self.assertAllClose(ref_outputs[0], revived_model.serve(ref_inputs)[0])
         self.assertAllClose(ref_outputs[1], revived_model.serve(ref_inputs)[1])
         # Test with a different batch size
-        revived_model.serve(
-            [tf.random.normal((6, 2)), tf.random.normal((6, 2))]
-        )
+        revived_model.serve([tf.random.normal((6, 2)), tf.random.normal((6, 2))])
 
         # Now test dict inputs
         model = models.Model({"x1": x1, "x2": x2}, [y1, y2])
@@ -639,9 +627,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
             model.__call__,
             input_signature=[tf.TensorSpec(shape=(None, 10), dtype=tf.float32)],
         )
-        export_archive.add_variable_collection(
-            "my_vars", model.layers[1].weights
-        )
+        export_archive.add_variable_collection("my_vars", model.layers[1].weights)
 
         self.assertLen(export_archive._tf_trackable.my_vars, 2)
         export_archive.write_out(temp_filepath)
@@ -679,9 +665,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
             export_archive.add_endpoint(
                 "call",
                 model.__call__,
-                input_signature=[
-                    tf.TensorSpec(shape=(None, 3), dtype=tf.float32)
-                ],
+                input_signature=[tf.TensorSpec(shape=(None, 3), dtype=tf.float32)],
             )
 
         # Write out with no endpoints
@@ -713,9 +697,7 @@ class ExportArchiveTest(testing.TestCase, parameterized.TestCase):
 
         export_archive = export_lib.ExportArchive()
         export_archive.track(model)
-        with self.assertRaisesRegex(
-            ValueError, "you must either provide a function"
-        ):
+        with self.assertRaisesRegex(ValueError, "you must either provide a function"):
             export_archive.add_endpoint("call", my_endpoint)
 
     def test_export_no_assets(self):
@@ -763,9 +745,7 @@ class TestTFSMLayer(testing.TestCase):
         reloaded_layer = export_lib.TFSMLayer(temp_filepath)
         self.assertAllClose(reloaded_layer(ref_input), ref_output, atol=1e-7)
         self.assertLen(reloaded_layer.weights, len(model.weights))
-        self.assertLen(
-            reloaded_layer.trainable_weights, len(model.trainable_weights)
-        )
+        self.assertLen(reloaded_layer.trainable_weights, len(model.trainable_weights))
         self.assertLen(
             reloaded_layer.non_trainable_weights,
             len(model.non_trainable_weights),
@@ -792,9 +772,7 @@ class TestTFSMLayer(testing.TestCase):
             atol=1e-7,
         )
         self.assertLen(reloaded_layer.weights, len(model.weights))
-        self.assertLen(
-            reloaded_layer.trainable_weights, len(model.trainable_weights)
-        )
+        self.assertLen(reloaded_layer.trainable_weights, len(model.trainable_weights))
         self.assertLen(
             reloaded_layer.non_trainable_weights,
             len(model.non_trainable_weights),
@@ -828,12 +806,8 @@ class TestTFSMLayer(testing.TestCase):
             call_endpoint="call_inference",
             call_training_endpoint="call_training",
         )
-        inference_output = reloaded_layer(
-            tf.random.normal((1, 10)), training=False
-        )
-        training_output = reloaded_layer(
-            tf.random.normal((1, 10)), training=True
-        )
+        inference_output = reloaded_layer(tf.random.normal((1, 10)), training=False)
+        training_output = reloaded_layer(tf.random.normal((1, 10)), training=True)
         self.assertAllClose(np.mean(training_output), 0.0, atol=1e-7)
         self.assertNotAllClose(np.mean(inference_output), 0.0, atol=1e-7)
 

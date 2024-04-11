@@ -63,8 +63,7 @@ def filter_safe_paths(members):
                 yield finfo
         if not valid_path:
             warnings.warn(
-                "Skipping invalid path during archive extraction: "
-                f"'{finfo.name}'.",
+                "Skipping invalid path during archive extraction: " f"'{finfo.name}'.",
                 stacklevel=2,
             )
 
@@ -113,9 +112,7 @@ def extract_archive(file_path, path=".", archive_format="auto"):
                         archive.extractall(path)
                     else:
                         # Tar archive, perhaps unsafe. Filter paths.
-                        archive.extractall(
-                            path, members=filter_safe_paths(archive)
-                        )
+                        archive.extractall(path, members=filter_safe_paths(archive))
                 except (tarfile.TarError, RuntimeError, KeyboardInterrupt):
                     if os.path.exists(path):
                         if os.path.isfile(path):
@@ -204,8 +201,7 @@ def get_file(
     """
     if origin is None:
         raise ValueError(
-            'Please specify the "origin" argument (URL of the file '
-            "to download)."
+            'Please specify the "origin" argument (URL of the file ' "to download)."
         )
 
     if cache_dir is None:

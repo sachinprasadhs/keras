@@ -81,9 +81,7 @@ class MeanSquaredErrorTest(testing.TestCase):
 
 class MeanAbsoluteErrorTest(testing.TestCase):
     def test_config(self):
-        self.run_class_serialization_test(
-            losses.MeanAbsoluteError(name="mymae")
-        )
+        self.run_class_serialization_test(losses.MeanAbsoluteError(name="mymae"))
 
     def test_all_correct_unweighted(self):
         mae_obj = losses.MeanAbsoluteError()
@@ -517,9 +515,7 @@ class HuberLossTest(testing.TestCase):
         self.np_y_true = np.array([[1.0, 0.0, 1.0], [1.0, 0.0, 0.0]])
 
         self.batch_size = 6
-        self.expected_losses = self.huber_loss(
-            self.np_y_true, self.np_y_pred, delta
-        )
+        self.expected_losses = self.huber_loss(self.np_y_true, self.np_y_pred, delta)
 
         self.y_pred = self.np_y_pred
         self.y_true = self.np_y_true
@@ -549,9 +545,7 @@ class HuberLossTest(testing.TestCase):
         h_obj = losses.Huber()
         sample_weight = 2.3
         loss = h_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
-        actual_loss = (
-            sample_weight * np.sum(self.expected_losses) / self.batch_size
-        )
+        actual_loss = sample_weight * np.sum(self.expected_losses) / self.batch_size
         self.assertAlmostEqual(loss, actual_loss, 3)
 
         # Verify we get the same output when the same input is given
@@ -600,9 +594,7 @@ class HuberLossTest(testing.TestCase):
         h_obj = losses.Huber(delta=0.8)
         sample_weight = 2.3
         loss = h_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
-        actual_loss = (
-            sample_weight * np.sum(self.expected_losses) / self.batch_size
-        )
+        actual_loss = sample_weight * np.sum(self.expected_losses) / self.batch_size
         self.assertAlmostEqual(loss, actual_loss, 3)
 
     def test_loss_with_non_default_dtype(self):
@@ -644,18 +636,12 @@ class LogCoshTest(testing.TestCase):
         logcosh_obj = losses.LogCosh()
         sample_weight = 2.3
 
-        loss = logcosh_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
-        expected_loss = (
-            sample_weight * np.sum(self.expected_losses) / self.batch_size
-        )
+        loss = logcosh_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
+        expected_loss = sample_weight * np.sum(self.expected_losses) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
 
         # Verify we get the same output when the same input is given
-        loss_2 = logcosh_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        loss_2 = logcosh_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
         self.assertAlmostEqual(loss, loss_2, 3)
 
     def test_sample_weighted(self):
@@ -663,9 +649,7 @@ class LogCoshTest(testing.TestCase):
         logcosh_obj = losses.LogCosh()
 
         sample_weight = np.asarray([1.2, 3.4])
-        loss = logcosh_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        loss = logcosh_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
 
         expected_loss = np.multiply(
             self.expected_losses,
@@ -688,18 +672,14 @@ class LogCoshTest(testing.TestCase):
             y_pred,
             sample_weight=sample_weight,
         )
-        expected_loss = (
-            np.sum(expected_losses * sample_weight) / self.batch_size
-        )
+        expected_loss = np.sum(expected_losses * sample_weight) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
 
     def test_zero_weighted(self):
         self.setup()
         logcosh_obj = losses.LogCosh()
         sample_weight = 0
-        loss = logcosh_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        loss = logcosh_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
         self.assertAlmostEqual(loss, 0.0, 3)
 
 
@@ -736,9 +716,7 @@ class KLDivergenceTest(testing.TestCase):
         sample_weight = 2.3
 
         loss = k_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
-        expected_loss = (
-            sample_weight * np.sum(self.expected_losses) / self.batch_size
-        )
+        expected_loss = sample_weight * np.sum(self.expected_losses) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
 
         # Verify we get the same output when the same input is given
@@ -753,9 +731,7 @@ class KLDivergenceTest(testing.TestCase):
 
         expected_loss = np.multiply(
             self.expected_losses,
-            np.asarray(
-                [1.2, 1.2, 1.2, 3.4, 3.4, 3.4], dtype=np.float32
-            ).reshape(2, 3),
+            np.asarray([1.2, 1.2, 1.2, 3.4, 3.4, 3.4], dtype=np.float32).reshape(2, 3),
         )
         expected_loss = np.sum(expected_loss) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
@@ -766,9 +742,7 @@ class KLDivergenceTest(testing.TestCase):
         y_true = self.y_true.reshape(2, 3, 1)
         y_pred = self.y_pred.reshape(2, 3, 1)
         sample_weight = np.asarray([3, 6, 5, 0, 4, 2]).reshape(2, 3)
-        expected_losses = np.sum(
-            np.multiply(y_true, np.log(y_true / y_pred)), axis=-1
-        )
+        expected_losses = np.sum(np.multiply(y_true, np.log(y_true / y_pred)), axis=-1)
         loss = k_obj(y_true, y_pred, sample_weight=sample_weight)
 
         num_timesteps = 3
@@ -786,12 +760,8 @@ class KLDivergenceTest(testing.TestCase):
 
 class PoissonTest(testing.TestCase):
     def setup(self):
-        self.y_pred = np.asarray([1, 9, 2, 5, 2, 6], dtype=np.float32).reshape(
-            (2, 3)
-        )
-        self.y_true = np.asarray([4, 8, 12, 8, 1, 3], dtype=np.float32).reshape(
-            (2, 3)
-        )
+        self.y_pred = np.asarray([1, 9, 2, 5, 2, 6], dtype=np.float32).reshape((2, 3))
+        self.y_true = np.asarray([4, 8, 12, 8, 1, 3], dtype=np.float32).reshape((2, 3))
 
         self.batch_size = 6
         self.expected_losses = self.y_pred - np.multiply(
@@ -815,19 +785,13 @@ class PoissonTest(testing.TestCase):
         self.setup()
         poisson_obj = losses.Poisson()
         sample_weight = 2.3
-        loss = poisson_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
-        expected_loss = (
-            sample_weight * np.sum(self.expected_losses) / self.batch_size
-        )
+        loss = poisson_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
+        expected_loss = sample_weight * np.sum(self.expected_losses) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
         self.assertAlmostEqual(loss, expected_loss, 3)
 
         # Verify we get the same output when the same input is given
-        loss_2 = poisson_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        loss_2 = poisson_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
         self.assertAlmostEqual(loss, loss_2, 3)
 
     def test_sample_weighted(self):
@@ -835,9 +799,7 @@ class PoissonTest(testing.TestCase):
         poisson_obj = losses.Poisson()
 
         sample_weight = np.asarray([1.2, 3.4]).reshape((2, 1))
-        loss = poisson_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        loss = poisson_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
 
         expected_loss = np.multiply(
             self.expected_losses,
@@ -859,9 +821,7 @@ class PoissonTest(testing.TestCase):
             y_pred,
             sample_weight=np.asarray(sample_weight).reshape((2, 3)),
         )
-        expected_loss = (
-            np.sum(expected_losses * sample_weight) / self.batch_size
-        )
+        expected_loss = np.sum(expected_losses * sample_weight) / self.batch_size
         self.assertAlmostEqual(loss, expected_loss, 3)
 
     def test_zero_weighted(self):
@@ -967,9 +927,7 @@ class BinaryCrossentropyTest(testing.TestCase):
 
     def test_shape_mismatch(self):
         y_true = np.array([[0], [1], [2]])
-        y_pred = np.array(
-            [[0.9, 0.05, 0.05], [0.5, 0.89, 0.6], [0.05, 0.01, 0.94]]
-        )
+        y_pred = np.array([[0.9, 0.05, 0.05], [0.5, 0.89, 0.6], [0.05, 0.01, 0.94]])
         cce_obj = losses.BinaryCrossentropy()
         with self.assertRaisesRegex(ValueError, "must have the same shape"):
             cce_obj(y_true, y_pred)
@@ -992,9 +950,7 @@ class CategoricalCrossentropyTest(testing.TestCase):
         self.assertAlmostEqual(loss, 0.0)
 
         # Test with logits.
-        logits = np.array(
-            [[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]]
-        )
+        logits = np.array([[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])
         cce_obj = losses.CategoricalCrossentropy(from_logits=True)
         loss = cce_obj(y_true, logits)
         self.assertAlmostEqual(loss, 0.0)
@@ -1051,9 +1007,7 @@ class CategoricalCrossentropyTest(testing.TestCase):
     def test_no_reduction(self):
         y_true = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
         logits = np.array([[8.0, 1.0, 1.0], [0.0, 9.0, 1.0], [2.0, 3.0, 5.0]])
-        cce_obj = losses.CategoricalCrossentropy(
-            from_logits=True, reduction=None
-        )
+        cce_obj = losses.CategoricalCrossentropy(from_logits=True, reduction=None)
         loss = cce_obj(y_true, logits)
         self.assertAllClose((0.001822, 0.000459, 0.169846), loss, 3)
 
@@ -1081,9 +1035,7 @@ class CategoricalCrossentropyTest(testing.TestCase):
 
     def test_shape_mismatch(self):
         y_true = np.array([[0], [1], [2]])
-        y_pred = np.array(
-            [[0.9, 0.05, 0.05], [0.5, 0.89, 0.6], [0.05, 0.01, 0.94]]
-        )
+        y_pred = np.array([[0.9, 0.05, 0.05], [0.5, 0.89, 0.6], [0.05, 0.01, 0.94]])
 
         cce_obj = losses.CategoricalCrossentropy()
         with self.assertRaisesRegex(ValueError, "must have the same shape"):
@@ -1107,9 +1059,7 @@ class SparseCategoricalCrossentropyTest(testing.TestCase):
         self.assertAlmostEqual(loss, 0.0, 3)
 
         # Test with logits.
-        logits = np.array(
-            [[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]]
-        )
+        logits = np.array([[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])
         cce_obj = losses.SparseCategoricalCrossentropy(from_logits=True)
         loss = cce_obj(y_true, logits)
         self.assertAlmostEqual(loss, 0.0, 3)
@@ -1166,9 +1116,7 @@ class SparseCategoricalCrossentropyTest(testing.TestCase):
     def test_no_reduction(self):
         y_true = np.array([[0], [1], [2]])
         logits = np.array([[8.0, 1.0, 1.0], [0.0, 9.0, 1.0], [2.0, 3.0, 5.0]])
-        cce_obj = losses.SparseCategoricalCrossentropy(
-            from_logits=True, reduction=None
-        )
+        cce_obj = losses.SparseCategoricalCrossentropy(from_logits=True, reduction=None)
         loss = cce_obj(y_true, logits)
         self.assertAllClose((0.001822, 0.000459, 0.169846), loss, 3)
 
@@ -1184,9 +1132,7 @@ class SparseCategoricalCrossentropyTest(testing.TestCase):
 
 class BinaryFocalCrossentropyTest(testing.TestCase):
     def test_config(self):
-        self.run_class_serialization_test(
-            losses.BinaryFocalCrossentropy(name="bfce")
-        )
+        self.run_class_serialization_test(losses.BinaryFocalCrossentropy(name="bfce"))
 
     def test_all_correct_unweighted(self):
         y_true = np.array(
@@ -1215,9 +1161,7 @@ class BinaryFocalCrossentropyTest(testing.TestCase):
 
     def test_unweighted(self):
         y_true = np.asarray([1, 0, 1, 0]).reshape([2, 2])
-        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape(
-            [2, 2]
-        )
+        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape([2, 2])
         obj = losses.BinaryFocalCrossentropy(gamma=2.0)
         loss = obj(y_true, y_pred)
         self.assertAlmostEqual(loss, 0.268, 3)
@@ -1231,9 +1175,7 @@ class BinaryFocalCrossentropyTest(testing.TestCase):
 
     def test_scalar_weighted(self):
         y_true = np.asarray([1, 0, 1, 0]).reshape([2, 2])
-        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape(
-            [2, 2]
-        )
+        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape([2, 2])
         obj = losses.BinaryFocalCrossentropy(gamma=2.0)
         loss = obj(y_true, y_pred, sample_weight=1.23)
         self.assertAlmostEqual(loss, 0.3296, 3)
@@ -1247,9 +1189,7 @@ class BinaryFocalCrossentropyTest(testing.TestCase):
 
     def test_sample_weighted(self):
         y_true = np.asarray([1, 0, 1, 0]).reshape([2, 2])
-        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape(
-            [2, 2]
-        )
+        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape([2, 2])
         sample_weight = np.array([1.2, 3.4]).reshape((2, 1))
         obj = losses.BinaryFocalCrossentropy(gamma=2.0)
         loss = obj(y_true, y_pred, sample_weight=sample_weight)
@@ -1264,9 +1204,7 @@ class BinaryFocalCrossentropyTest(testing.TestCase):
 
     def test_no_reduction(self):
         y_true = np.asarray([1, 0, 1, 0]).reshape([2, 2])
-        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape(
-            [2, 2]
-        )
+        y_pred = np.asarray([0.9, 0.8, 0.7, 0.2], dtype=np.float32).reshape([2, 2])
         obj = losses.BinaryFocalCrossentropy(
             gamma=2.0,
             reduction=None,
@@ -1292,9 +1230,7 @@ class CategoricalFocalCrossentropyTest(testing.TestCase):
         self.assertAlmostEqual(loss, 0.0, 3)
 
         # Test with logits.
-        logits = np.array(
-            [[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]]
-        )
+        logits = np.array([[10.0, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])
         cce_obj = losses.CategoricalFocalCrossentropy(from_logits=True)
         loss = cce_obj(y_true, logits)
         self.assertAlmostEqual(loss, 0.0, 3)
@@ -1351,9 +1287,7 @@ class CategoricalFocalCrossentropyTest(testing.TestCase):
     def test_no_reduction(self):
         y_true = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
         logits = np.array([[8.0, 1.0, 1.0], [0.0, 9.0, 1.0], [2.0, 3.0, 5.0]])
-        cce_obj = losses.CategoricalFocalCrossentropy(
-            from_logits=True, reduction=None
-        )
+        cce_obj = losses.CategoricalFocalCrossentropy(from_logits=True, reduction=None)
         loss = cce_obj(y_true, logits)
         self.assertAllClose(
             (1.5096224e-09, 2.4136547e-11, 1.0360638e-03),
@@ -1401,11 +1335,7 @@ class DiceTest(testing.TestCase):
         self.assertAllClose(output, -0.55555546)
 
     def test_binary_segmentation(self):
-        y_true = np.array(
-            ([[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1]])
-        )
-        y_pred = np.array(
-            ([[0, 1, 0, 1], [1, 0, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1]])
-        )
+        y_true = np.array(([[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1]]))
+        y_pred = np.array(([[0, 1, 0, 1], [1, 0, 1, 1], [0, 1, 0, 1], [1, 0, 1, 1]]))
         output = losses.Dice()(y_true, y_pred)
         self.assertAllClose(output, 0.77777773)

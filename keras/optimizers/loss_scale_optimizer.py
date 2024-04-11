@@ -127,9 +127,7 @@ class LossScaleOptimizer(optimizer.Optimizer):
 
             # Unscale gradients.
             scale = self.dynamic_scale
-            unscaled_grads = [
-                g if g is None else ops.divide(g, scale) for g in grads
-            ]
+            unscaled_grads = [g if g is None else ops.divide(g, scale) for g in grads]
             (
                 new_trainable_variables,
                 new_inner_variables,
@@ -169,9 +167,7 @@ class LossScaleOptimizer(optimizer.Optimizer):
     def _stateful_handle_finite_grads(self, grads, trainable_variables):
         scale = self.dynamic_scale
         # Unscale gradients.
-        unscaled_grads = [
-            g if g is None else ops.divide(g, scale) for g in grads
-        ]
+        unscaled_grads = [g if g is None else ops.divide(g, scale) for g in grads]
         self.inner_optimizer.apply(
             unscaled_grads, trainable_variables=trainable_variables
         )
@@ -199,9 +195,7 @@ class LossScaleOptimizer(optimizer.Optimizer):
         finite = self.check_finite(grads)
         ops.cond(
             finite,
-            lambda: self._stateful_handle_finite_grads(
-                grads, trainable_variables
-            ),
+            lambda: self._stateful_handle_finite_grads(grads, trainable_variables),
             self._stateful_handle_non_finite_grads,
         )
 
@@ -217,17 +211,13 @@ class LossScaleOptimizer(optimizer.Optimizer):
         else:
 
             def _handle_cross_replica(distribution, grads, trainable_variables):
-                finite_per_replica = (
-                    distribution.extended.call_for_each_replica(
-                        self.check_finite, args=(grads,)
-                    )
+                finite_per_replica = distribution.extended.call_for_each_replica(
+                    self.check_finite, args=(grads,)
                 )
                 # Each replica computed the same `finite` value, since
                 # `grads` is all-reduced across replicas. Arbitrarily take
                 # `finite` from the first replica.
-                finite = distribution.experimental_local_results(
-                    finite_per_replica
-                )[0]
+                finite = distribution.experimental_local_results(finite_per_replica)[0]
 
                 def apply_fn():
                     distribution.extended.call_for_each_replica(
@@ -239,9 +229,7 @@ class LossScaleOptimizer(optimizer.Optimizer):
                 # DistributionStrategy does not support having a cond in a
                 # replica context with a branch that calls `merge_call`, and
                 # self._optimizer.apply_gradients calls `merge_call`.
-                ops.cond(
-                    finite, apply_fn, self._stateful_handle_non_finite_grads
-                )
+                ops.cond(finite, apply_fn, self._stateful_handle_non_finite_grads)
 
             tf.distribute.get_replica_context().merge_call(
                 _handle_cross_replica, args=(grads, trainable_variables)

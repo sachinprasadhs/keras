@@ -121,9 +121,7 @@ class UpSampling2dTest(testing.TestCase, parameterized.TestCase):
         if backend.config.image_data_format() == "channels_first":
             expected_output = expected_output.transpose((0, 3, 1, 2))
             x = x.transpose((0, 3, 1, 2))
-        self.assertAllClose(
-            layers.UpSampling2D(size=(1, 2))(x), expected_output
-        )
+        self.assertAllClose(layers.UpSampling2D(size=(1, 2))(x), expected_output)
 
     def test_upsampling_2d_various_interpolation_methods(self):
         input_shape = (2, 2, 1, 3)

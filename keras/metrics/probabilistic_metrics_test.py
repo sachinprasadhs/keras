@@ -53,12 +53,8 @@ class KLDivergenceTest(testing.TestCase):
 
 class PoissonTest(testing.TestCase):
     def setup(self):
-        self.y_pred = np.asarray([1, 9, 2, 5, 2, 6], dtype=np.float32).reshape(
-            (2, 3)
-        )
-        self.y_true = np.asarray([4, 8, 12, 8, 1, 3], dtype=np.float32).reshape(
-            (2, 3)
-        )
+        self.y_pred = np.asarray([1, 9, 2, 5, 2, 6], dtype=np.float32).reshape((2, 3))
+        self.y_true = np.asarray([4, 8, 12, 8, 1, 3], dtype=np.float32).reshape((2, 3))
         self.batch_size = 6
         self.expected_results = self.y_pred - np.multiply(
             self.y_true, np.log(self.y_pred)
@@ -81,9 +77,7 @@ class PoissonTest(testing.TestCase):
         poisson_obj = metrics.Poisson()
         sample_weight = np.asarray([1.2, 3.4], dtype=np.float32).reshape((2, 1))
 
-        result = poisson_obj(
-            self.y_true, self.y_pred, sample_weight=sample_weight
-        )
+        result = poisson_obj(self.y_true, self.y_pred, sample_weight=sample_weight)
         sample_weight = np.asarray(
             [1.2, 1.2, 1.2, 3.4, 3.4, 3.4], dtype=np.float32
         ).reshape((2, 3))
@@ -95,9 +89,7 @@ class PoissonTest(testing.TestCase):
 class BinaryCrossentropyTest(testing.TestCase):
     def test_config(self):
         self.run_class_serialization_test(
-            metrics.BinaryCrossentropy(
-                name="bce", dtype="int32", label_smoothing=0.2
-            )
+            metrics.BinaryCrossentropy(name="bce", dtype="int32", label_smoothing=0.2)
         )
 
     def test_unweighted(self):

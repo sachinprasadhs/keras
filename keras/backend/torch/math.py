@@ -14,15 +14,11 @@ from keras.backend.torch.numpy import pad
 def segment_sum(data, segment_ids, num_segments=None, **kwargs):
     data = convert_to_tensor(data)
     segment_ids = convert_to_tensor(segment_ids)
-    num_repeats = torch.prod(
-        torch.tensor(data.shape[1:], device=get_device())
-    ).long()
+    num_repeats = torch.prod(torch.tensor(data.shape[1:], device=get_device())).long()
     # To use `scatter_add` in torch, we need to replicate `segment_ids` into the
     # shape of `data`.
     segment_ids = (
-        segment_ids.repeat_interleave(num_repeats)
-        .view(*data.shape)
-        .type(torch.int64)
+        segment_ids.repeat_interleave(num_repeats).view(*data.shape).type(torch.int64)
     )
     num_segments = num_segments or len(torch.unique(segment_ids))
 
@@ -32,9 +28,7 @@ def segment_sum(data, segment_ids, num_segments=None, **kwargs):
 
     # Replacing the out-of-bound indices.
     segment_ids = torch.where(segment_ids >= 0, segment_ids, num_segments)
-    segment_ids = torch.where(
-        segment_ids < num_segments, segment_ids, num_segments
-    )
+    segment_ids = torch.where(segment_ids < num_segments, segment_ids, num_segments)
 
     # Add one more dimension to the result shape with the "+1".
     shape = (num_segments + 1,) + tuple(data.shape[1:])
@@ -52,15 +46,11 @@ def segment_sum(data, segment_ids, num_segments=None, **kwargs):
 def segment_max(data, segment_ids, num_segments=None, **kwargs):
     data = convert_to_tensor(data)
     segment_ids = convert_to_tensor(segment_ids)
-    num_repeats = torch.prod(
-        torch.tensor(data.shape[1:], device=get_device())
-    ).long()
+    num_repeats = torch.prod(torch.tensor(data.shape[1:], device=get_device())).long()
     # To use `scatter_reduce` in torch, we need to replicate `segment_ids` into
     # the shape of `data`.
     segment_ids = (
-        segment_ids.repeat_interleave(num_repeats)
-        .view(*data.shape)
-        .type(torch.int64)
+        segment_ids.repeat_interleave(num_repeats).view(*data.shape).type(torch.int64)
     )
     num_segments = num_segments or len(torch.unique(segment_ids))
 
@@ -70,9 +60,7 @@ def segment_max(data, segment_ids, num_segments=None, **kwargs):
 
     # Replacing the out-of-bound indices.
     segment_ids = torch.where(segment_ids >= 0, segment_ids, num_segments)
-    segment_ids = torch.where(
-        segment_ids < num_segments, segment_ids, num_segments
-    )
+    segment_ids = torch.where(segment_ids < num_segments, segment_ids, num_segments)
 
     # Add one more dimension to the result shape with the "+1".
     shape = (num_segments + 1,) + tuple(data.shape[1:])
@@ -109,10 +97,7 @@ def logsumexp(x, axis=None, keepdims=False):
         return torch.log(torch.sum(torch.exp(x - max_x))) + max_x
 
     max_x = torch.amax(x, dim=axis, keepdim=True)
-    result = (
-        torch.log(torch.sum(torch.exp(x - max_x), dim=axis, keepdim=True))
-        + max_x
-    )
+    result = torch.log(torch.sum(torch.exp(x - max_x), dim=axis, keepdim=True)) + max_x
     return torch.squeeze(result, dim=axis) if not keepdims else result
 
 
@@ -206,8 +191,7 @@ def _get_complex_tensor_from_tuple(x):
     # Ensure dtype is float.
     if not torch.is_floating_point(real) or not torch.is_floating_point(imag):
         raise ValueError(
-            "At least one tensor in input `x` is not of type float."
-            f"Received: x={x}."
+            "At least one tensor in input `x` is not of type float." f"Received: x={x}."
         )
 
     complex_input = torch.complex(real, imag)
@@ -237,9 +221,7 @@ def irfft(x, fft_length=None):
     return torch.fft.irfft(complex_input, n=fft_length, dim=-1, norm="backward")
 
 
-def stft(
-    x, sequence_length, sequence_stride, fft_length, window="hann", center=True
-):
+def stft(x, sequence_length, sequence_stride, fft_length, window="hann", center=True):
     if standardize_dtype(x.dtype) not in {"float32", "float64"}:
         raise TypeError(
             "Invalid input type. Expected `float32` or `float64`. "

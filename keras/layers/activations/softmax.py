@@ -50,17 +50,15 @@ class Softmax(Layer):
 
     def call(self, inputs, mask=None):
         if mask is not None:
-            adder = (
-                1.0 - backend.cast(mask, inputs.dtype)
-            ) * _large_negative_number(inputs.dtype)
+            adder = (1.0 - backend.cast(mask, inputs.dtype)) * _large_negative_number(
+                inputs.dtype
+            )
             inputs += adder
         if isinstance(self.axis, (tuple, list)):
             if len(self.axis) > 1:
                 return backend.numpy.exp(
                     inputs
-                    - backend.math.logsumexp(
-                        inputs, axis=self.axis, keepdims=True
-                    )
+                    - backend.math.logsumexp(inputs, axis=self.axis, keepdims=True)
                 )
             else:
                 return activations.softmax(inputs, axis=self.axis[0])

@@ -15,15 +15,9 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
-        self.assertEqual(
-            [sample for sample in dataset_right][0][0].shape, (n_cols)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
+        self.assertEqual([sample for sample in dataset_right][0][0].shape, (n_cols))
 
         n_sample, n_cols, n_pred, left_size, right_size = 100, 2, 1, 0.2, 0.8
         dataset = [
@@ -33,12 +27,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (100, n_cols)
         )
@@ -51,12 +41,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (10, 10, n_cols)
         )
@@ -69,12 +55,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape,
             (100, 10, 30, n_cols),
@@ -89,15 +71,9 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
-        self.assertEqual(
-            [sample for sample in dataset_right][0][0].shape, (n_cols)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
+        self.assertEqual([sample for sample in dataset_right][0][0].shape, (n_cols))
 
         n_sample, n_cols, n_pred, left_size, right_size = 100, 2, 1, 0.2, 0.8
         dataset = (
@@ -107,12 +83,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (100, n_cols)
         )
@@ -125,12 +97,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (10, 10, n_cols)
         )
@@ -143,12 +111,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape,
             (100, 10, 30, n_cols),
@@ -164,15 +128,9 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             tf_dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
-        self.assertEqual(
-            [sample for sample in dataset_right][0][0].shape, (n_cols)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
+        self.assertEqual([sample for sample in dataset_right][0][0].shape, (n_cols))
 
         n_sample, n_cols, n_pred, left_size, right_size = 100, 2, 1, 0.2, 0.8
         features, labels = (
@@ -183,12 +141,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             tf_dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (100, n_cols)
         )
@@ -202,12 +156,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             tf_dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape, (10, 10, n_cols)
         )
@@ -221,12 +171,8 @@ class DatasetUtilsTest(test_case.TestCase):
         dataset_left, dataset_right = split_dataset(
             tf_dataset, left_size=left_size, right_size=right_size
         )
-        self.assertEqual(
-            int(dataset_left.cardinality()), int(n_sample * left_size)
-        )
-        self.assertEqual(
-            int(dataset_right.cardinality()), int(n_sample * right_size)
-        )
+        self.assertEqual(int(dataset_left.cardinality()), int(n_sample * left_size))
+        self.assertEqual(int(dataset_right.cardinality()), int(n_sample * right_size))
         self.assertEqual(
             [sample for sample in dataset_right][0][0].shape,
             (100, 10, 30, n_cols),
@@ -268,9 +214,7 @@ class DatasetUtilsTest(test_case.TestCase):
             len([sample for sample in dataset_right]),
             int(n_sample * right_size),
         )
-        self.assertEqual(
-            [sample for sample in dataset_right][0][0].shape, (n_cols,)
-        )
+        self.assertEqual([sample for sample in dataset_right][0][0].shape, (n_cols,))
 
         n_sample, n_cols, n_pred, left_size, right_size = 100, 2, 1, 0.2, 0.8
         features, labels = (

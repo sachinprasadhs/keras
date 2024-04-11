@@ -116,15 +116,9 @@ def initialize(job_addresses=None, num_processes=None, process_id=None):
         reduced to just the master/coordinator address, which is
         `10.0.0.1:1234`.
     """
-    if (
-        job_addresses is None
-        and "KERAS_DISTRIBUTION_JOB_ADDRESSES" in os.environ
-    ):
+    if job_addresses is None and "KERAS_DISTRIBUTION_JOB_ADDRESSES" in os.environ:
         job_addresses = os.environ["KERAS_DISTRIBUTION_JOB_ADDRESSES"]
-    if (
-        num_processes is None
-        and "KERAS_DISTRIBUTION_NUM_PROCESSES" in os.environ
-    ):
+    if num_processes is None and "KERAS_DISTRIBUTION_NUM_PROCESSES" in os.environ:
         num_processes = int(os.environ["KERAS_DISTRIBUTION_NUM_PROCESSES"])
     if process_id is None and "KERAS_DISTRIBUTION_PROCESS_ID" in os.environ:
         process_id = int(os.environ["KERAS_DISTRIBUTION_PROCESS_ID"])
@@ -639,14 +633,10 @@ class ModelParallel(Distribution):
         #         | w3_1 |
         #         --------
         # And the data batch will be fully replicated for each of the worker.
-        mesh_batch_dim_index = self.device_mesh.axis_names.index(
-            self._batch_dim_name
-        )
+        mesh_batch_dim_index = self.device_mesh.axis_names.index(self._batch_dim_name)
         mesh_batch_dim_size = self.device_mesh.shape[mesh_batch_dim_index]
         # TODO(scottzhu): local device count can be a field of the mesh.
-        local_device_count = (
-            np.prod(self.device_mesh.shape) // self._num_process
-        )
+        local_device_count = np.prod(self.device_mesh.shape) // self._num_process
         if mesh_batch_dim_size < local_device_count:
             # No sharding is needed in this case. The worker will have the
             # global batch size, and data from the iterator will need to be

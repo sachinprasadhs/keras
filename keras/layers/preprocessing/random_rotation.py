@@ -146,8 +146,7 @@ class RandomRotation(TFDataLayer):
     def _check_factor_range(self, input_number):
         if input_number > 1.0 or input_number < -1.0:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: input_number={input_number}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: input_number={input_number}"
             )
 
     """

@@ -111,8 +111,7 @@ class RandomBrightness(TFDataLayer):
     def _check_factor_range(self, input_number):
         if input_number > 1.0 or input_number < -1.0:
             raise ValueError(
-                self._FACTOR_VALIDATION_ERROR
-                + f"Received: input_number={input_number}"
+                self._FACTOR_VALIDATION_ERROR + f"Received: input_number={input_number}"
             )
 
     def call(self, inputs, training=True):
@@ -147,9 +146,7 @@ class RandomBrightness(TFDataLayer):
         rgb_delta = rgb_delta * (self.value_range[1] - self.value_range[0])
         rgb_delta = self.backend.cast(rgb_delta, images.dtype)
         images += rgb_delta
-        return self.backend.numpy.clip(
-            images, self.value_range[0], self.value_range[1]
-        )
+        return self.backend.numpy.clip(images, self.value_range[0], self.value_range[1])
 
     def compute_output_shape(self, input_shape):
         return input_shape

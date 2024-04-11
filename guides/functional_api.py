@@ -117,9 +117,7 @@ And, optionally, display the input and output shapes of each layer
 in the plotted graph:
 """
 
-keras.utils.plot_model(
-    model, "my_first_model_with_shape_info.png", show_shapes=True
-)
+keras.utils.plot_model(model, "my_first_model_with_shape_info.png", show_shapes=True)
 
 """
 This figure and the code are almost identical. In the code version,
@@ -157,9 +155,7 @@ model.compile(
     metrics=["accuracy"],
 )
 
-history = model.fit(
-    x_train, y_train, batch_size=64, epochs=2, validation_split=0.2
-)
+history = model.fit(x_train, y_train, batch_size=64, epochs=2, validation_split=0.2)
 
 test_scores = model.evaluate(x_test, y_test, verbose=2)
 print("Test loss:", test_scores[0])
@@ -335,9 +331,7 @@ num_departments = 4  # Number of departments for predictions
 title_input = keras.Input(
     shape=(None,), name="title"
 )  # Variable-length sequence of ints
-body_input = keras.Input(
-    shape=(None,), name="body"
-)  # Variable-length sequence of ints
+body_input = keras.Input(shape=(None,), name="body")  # Variable-length sequence of ints
 tags_input = keras.Input(
     shape=(num_tags,), name="tags"
 )  # Binary vectors of size `num_tags`
@@ -370,9 +364,7 @@ model = keras.Model(
 Now plot the model:
 """
 
-keras.utils.plot_model(
-    model, "multi_input_and_output_model.png", show_shapes=True
-)
+keras.utils.plot_model(model, "multi_input_and_output_model.png", show_shapes=True)
 
 """
 When compiling this model, you can assign different losses to each output.
@@ -650,9 +642,7 @@ outputs = CustomDense(10)(inputs)
 model = keras.Model(inputs, outputs)
 config = model.get_config()
 
-new_model = keras.Model.from_config(
-    config, custom_objects={"CustomDense": CustomDense}
-)
+new_model = keras.Model.from_config(config, custom_objects={"CustomDense": CustomDense})
 
 """
 Optionally, implement the class method `from_config(cls, config)` which is used
